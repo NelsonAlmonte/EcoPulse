@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum Status {
+  ACTIVE
+  PENDING
+  RESOLVED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  last      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  role      Role     @default(USER)
+  zone      Zone @relation(fields: [zoneId], references: [id])
+  zoneId String
+  issues    Issue[]
+}
+
+model Zone {
+  id          String   @id @default(cuid())
+  name        String
+  coordinates String
+  createdAt   DateTime @default(now())
+  users User[]
+}
+
+model Issue {
+  id          String    @id @default(cuid())
+  photo       String
+  status      Status    @default(PENDING)
+  coordinates String
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  icon      String
+  createdAt DateTime @default(now())
+  issues   Issue[]
+}
