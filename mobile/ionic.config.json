@@ -1,0 +1,7 @@
+{
+  "name": "EcoPulse",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
