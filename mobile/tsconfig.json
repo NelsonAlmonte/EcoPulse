@@ -21,7 +21,7 @@
     "lib": ["es2018", "dom"],
     "useDefineForClassFields": false,
     "paths": {
-      "@map/*": ["./src/app/features/map/*"],
+      "@features/*": ["./src/app/features/*"],
       "@shared/*": ["./src/app/shared/*"],
       "@core/*": ["./src/app/core/*"],
     }

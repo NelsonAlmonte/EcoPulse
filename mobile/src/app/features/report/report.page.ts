@@ -7,12 +7,12 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { MapViewComponent } from '@features/map/components/map-view/map-view.component';
+import { CameraViewComponent } from '@features/report/components/camera-view/camera-view.component';
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.page.html',
-  styleUrls: ['./map.page.scss'],
+  selector: 'app-report',
+  templateUrl: './report.page.html',
+  styleUrls: ['./report.page.scss'],
   imports: [
     IonContent,
     IonHeader,
@@ -20,10 +20,10 @@ import { MapViewComponent } from '@features/map/components/map-view/map-view.com
     IonToolbar,
     CommonModule,
     FormsModule,
-    MapViewComponent,
+    CameraViewComponent,
   ],
 })
-export class MapPage implements OnInit {
+export class ReportPage implements OnInit {
   constructor() {}
 
   ngOnInit() {}

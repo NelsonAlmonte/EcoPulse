@@ -13,7 +13,8 @@ export const routes: Routes = [
       },
       {
         path: 'tab2',
-        loadComponent: () => import('./tab2/tab2.page').then((m) => m.Tab2Page),
+        loadComponent: () =>
+          import('../features/report/report.page').then((m) => m.ReportPage),
       },
       {
         path: 'tab3',
@@ -21,14 +22,14 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/tab2',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/tabs/tab2',
     pathMatch: 'full',
   },
 ];

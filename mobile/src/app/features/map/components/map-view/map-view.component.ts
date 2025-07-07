@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
@@ -6,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { GoogleMap } from '@capacitor/google-maps';
+import { Geolocation } from '@capacitor/geolocation';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -14,26 +16,33 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./map-view.component.scss'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class MapViewComponent implements OnInit {
-  @ViewChild('map')
-  mapRef!: ElementRef<HTMLElement>;
+export class MapViewComponent implements OnInit, AfterViewInit {
+  @ViewChild('map') mapRef!: ElementRef<HTMLElement>;
   map!: GoogleMap;
-
-  constructor() {}
 
   ngOnInit() {}
 
+  async ngAfterViewInit() {
+    await this.initMap();
+  }
+
   async initMap() {
+    const position = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true,
+    });
     this.map = await GoogleMap.create({
       id: 'my-cool-map',
       element: this.mapRef.nativeElement,
       apiKey: environment.googleMapsApiKey,
       config: {
         center: {
-          lat: 33.6,
-          lng: -117.9,
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
         },
-        zoom: 8,
+        zoom: 18,
+        streetViewControl: false,
+        mapTypeControl: false,
+        fullscreenControl: false,
       },
     });
   }
