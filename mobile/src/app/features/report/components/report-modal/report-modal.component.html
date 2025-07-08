@@ -1,0 +1,11 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Detalles del reporte</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <app-category-list
+    (selectedCategory)="selectedCategory = $event"
+  ></app-category-list>
+  <ion-button (click)="sendReport()" [strong]="true">Enviar reporte</ion-button>
+</ion-content>

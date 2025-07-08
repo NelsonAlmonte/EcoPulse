@@ -4,12 +4,16 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Reportar</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <app-camera-view></app-camera-view>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="center">
+    <ion-button (click)="takePicture()">
+      <ion-icon slot="start" name="camera-outline"></ion-icon>
+      Abrir cámara
+    </ion-button>
+  </ion-fab>
 </ion-content>
