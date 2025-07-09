@@ -1,7 +1,6 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import {
   IonButton,
-  IonButtons,
   IonContent,
   IonHeader,
   IonTitle,
@@ -19,7 +18,6 @@ import { CreateIssueDto } from '@shared/dto/issue.dto';
   styleUrls: ['./report-modal.component.scss'],
   imports: [
     IonButton,
-    IonButtons,
     IonContent,
     IonHeader,
     IonTitle,
@@ -57,6 +55,11 @@ export class ReportModalComponent implements OnInit {
     this.issueService.createIssue(issue).subscribe((result) => {
       if (result.error) console.log('ERROR', result.error);
       this.modalController.dismiss(result.data, 'confirm');
+
+      this.issueService.issues.update((current) => ({
+        ...current,
+        data: [...(current.data ?? []), result.data!],
+      }));
     });
   }
 }

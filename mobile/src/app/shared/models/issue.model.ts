@@ -3,6 +3,6 @@ export interface Issue {
   photo: string;
   status: string;
   coordinates: string;
-  category: string;
-  user: string;
+  categoryId: string;
+  userId: string;
 }

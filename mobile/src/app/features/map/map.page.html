@@ -4,12 +4,11 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" [scrollY]="false" class="no-scroll">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Mapa</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <app-map-view></app-map-view>
+  <app-map-view [issues]="issueService.issues()"></app-map-view>
 </ion-content>

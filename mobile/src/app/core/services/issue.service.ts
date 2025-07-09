@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '@core/services/api.service';
 import { ApiResult } from '@core/interfaces/api.interface';
@@ -13,11 +13,19 @@ import { environment } from 'src/environments/environment';
 export class IssueService {
   apiService = inject(ApiService);
   http = inject(HttpClient);
+  issues = signal<ApiResult<Issue[]>>({
+    data: [],
+    error: null,
+  });
+  URL = `${environment.apiUrl}issue`;
 
   createIssue(issue: CreateIssueDto): Observable<ApiResult<Issue>> {
-    return this.apiService.doPost<Issue, CreateIssueDto>(
-      `${environment.apiUrl}issue`,
-      issue
-    );
+    return this.apiService.doPost<Issue, CreateIssueDto>(this.URL, issue);
+  }
+
+  getIssues() {
+    this.apiService
+      .doFetch<Issue[]>(this.URL)
+      .subscribe((result) => this.issues.set(result));
   }
 }
