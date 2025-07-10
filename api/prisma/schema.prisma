@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -30,8 +30,8 @@ model User {
   password  String
   createdAt DateTime @default(now())
   role      Role     @default(USER)
-  zone      Zone @relation(fields: [zoneId], references: [id])
-  zoneId String
+  zone      Zone     @relation(fields: [zoneId], references: [id])
+  zoneId    String
   issues    Issue[]
 }
 
@@ -40,18 +40,19 @@ model Zone {
   name        String
   coordinates String
   createdAt   DateTime @default(now())
-  users User[]
+  users       User[]
 }
 
 model Issue {
-  id          String    @id @default(cuid())
-  photo       String
-  status      Status    @default(PENDING)
-  coordinates String
-  category    Category @relation(fields: [categoryId], references: [id])
-  categoryId    String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
+  id         String   @id @default(cuid())
+  photo      String
+  status     Status   @default(PENDING)
+  latitude   String
+  longitude  String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
 }
 
 model Category {
@@ -59,5 +60,5 @@ model Category {
   name      String
   icon      String
   createdAt DateTime @default(now())
-  issues   Issue[]
+  issues    Issue[]
 }

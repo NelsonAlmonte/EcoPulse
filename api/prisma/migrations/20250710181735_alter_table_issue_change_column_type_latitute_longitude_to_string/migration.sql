@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Issue" ALTER COLUMN "latitute" SET DATA TYPE TEXT,
+ALTER COLUMN "longitude" SET DATA TYPE TEXT;

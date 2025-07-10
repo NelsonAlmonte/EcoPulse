@@ -28,14 +28,11 @@ import { ReportModalComponent } from '@features/report/components/report-modal/r
     IonTitle,
     IonToolbar,
     IonIcon,
-    IonGrid,
-    IonRow,
     IonFab,
     IonIcon,
     IonButton,
     CommonModule,
     FormsModule,
-    ReportModalComponent,
   ],
 })
 export class ReportPage implements OnInit {

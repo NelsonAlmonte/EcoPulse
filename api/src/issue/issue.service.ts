@@ -6,14 +6,21 @@ import { PrismaService } from 'src/prisma.service';
 export class IssueService {
   constructor(private prisma: PrismaService) {}
 
-  async getIssues(): Promise<Issue[]> {
-    return this.prisma.issue.findMany();
+  async getIssues(): Promise<Issue[] | null> {
+    return this.prisma.issue.findMany({
+      include: {
+        category: true,
+      },
+    });
   }
 
-  async getIssue(id: string): Promise<Issue> {
+  async getIssue(id: string): Promise<Issue | null> {
     return this.prisma.issue.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        category: true,
       },
     });
   }
@@ -21,6 +28,9 @@ export class IssueService {
   async createIssue(createIssueDto: Prisma.IssueCreateInput): Promise<Issue> {
     return this.prisma.issue.create({
       data: createIssueDto,
+      include: {
+        category: true,
+      },
     });
   }
 
@@ -33,6 +43,9 @@ export class IssueService {
       where: {
         id: id,
       },
+      include: {
+        category: true,
+      },
     });
   }
 
@@ -40,6 +53,24 @@ export class IssueService {
     return this.prisma.issue.delete({
       where: {
         id: id,
+      },
+      include: {
+        category: true,
+      },
+    });
+  }
+
+  async getIssueByCoords(
+    latitude: string,
+    longitude: string,
+  ): Promise<Issue | null> {
+    return this.prisma.issue.findFirst({
+      where: {
+        latitude: latitude,
+        longitude: longitude,
+      },
+      include: {
+        category: true,
       },
     });
   }

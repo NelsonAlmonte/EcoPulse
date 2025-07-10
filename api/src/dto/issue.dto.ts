@@ -2,7 +2,8 @@ import { Status } from '@prisma/client';
 
 export interface CreateIssueDto {
   photo: string;
-  coordinates: string;
+  latitude: string;
+  longitude: string;
   category: string;
   user: string;
 }
@@ -10,7 +11,8 @@ export interface CreateIssueDto {
 export interface UpdateIssueDto {
   photo: string;
   status: Status;
-  coordinates: string;
+  latitude: string;
+  longitude: string;
   category: string;
   user: string;
 }

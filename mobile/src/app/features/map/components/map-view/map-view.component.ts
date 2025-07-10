@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   Component,
-  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   effect,
   ElementRef,
@@ -16,22 +15,8 @@ import { Geolocation } from '@capacitor/geolocation';
 import { environment } from 'src/environments/environment';
 import { ApiResult } from '@core/interfaces/api.interface';
 import { Issue } from '@shared/models/issue.model';
-
-interface MarkerCallbackData {
-  markerId: string;
-  latitude: number;
-  longitude: number;
-  title: string;
-  snippet: string;
-}
-
-interface ClusterClickCallbackData {
-  mapId: string;
-  latitude: number;
-  longitude: number;
-  size: number;
-  items: MarkerCallbackData[];
-}
+import { ModalController } from '@ionic/angular/standalone';
+import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
 
 interface UnsafeCluster {
   latitude: number | (() => number);
@@ -44,12 +29,12 @@ interface UnsafeCluster {
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MapViewComponent implements OnInit, AfterViewInit {
-  @ViewChild('map') mapRef!: ElementRef<HTMLElement>;
   issues = input.required<ApiResult<Issue[]>>();
+  injector = inject(Injector);
+  modalController = inject(ModalController);
+  @ViewChild('map') mapRef!: ElementRef<HTMLElement>;
   map!: GoogleMap;
   markerIds: string[] = [];
-  injector = inject(Injector);
-  mapZoom: number = 14;
 
   constructor() {}
 
@@ -73,7 +58,7 @@ export class MapViewComponent implements OnInit, AfterViewInit {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         },
-        zoom: this.mapZoom,
+        zoom: 14,
         streetViewControl: false,
         mapTypeControl: false,
         fullscreenControl: false,
@@ -82,8 +67,23 @@ export class MapViewComponent implements OnInit, AfterViewInit {
     });
 
     await this.addMarkers();
-    await this.map.enableClustering();
     await this.zoomOnCluster();
+    await this.viewIssueDetail();
+  }
+
+  async viewIssueDetail() {
+    await this.map.setOnMarkerClickListener(async (marker) => {
+      const modal = await this.modalController.create({
+        component: IssueDetailComponent,
+        cssClass: 'issue-modal',
+        componentProps: {
+          latitude: marker.latitude,
+          longitude: marker.longitude,
+        },
+      });
+
+      modal.present();
+    });
   }
 
   async addMarkers() {
@@ -96,14 +96,14 @@ export class MapViewComponent implements OnInit, AfterViewInit {
           const markers: Marker[] = this.issues().data!.map((issue) => {
             return {
               coordinate: {
-                lat: Number(issue.coordinates.split(',')[0]),
-                lng: Number(issue.coordinates.split(',')[1]),
+                lat: Number(issue.latitude),
+                lng: Number(issue.longitude),
               },
-              title: issue.categoryId,
             };
           });
 
           this.markerIds = await this.map.addMarkers(markers);
+
           await this.map.enableClustering();
         }
       },
@@ -122,12 +122,9 @@ export class MapViewComponent implements OnInit, AfterViewInit {
           lat: lat,
           lng: lng,
         },
-        zoom: this.mapZoom + 2,
-        animate: true,
-        animationDuration: 2000,
+        zoom: 18,
+        animationDuration: 500,
       });
-
-      this.mapZoom += 2;
     });
   }
 }

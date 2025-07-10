@@ -6,6 +6,7 @@ import {
   IonTitle,
   IonToolbar,
   ModalController,
+  IonModal,
 } from '@ionic/angular/standalone';
 import { Geolocation } from '@capacitor/geolocation';
 import { IssueService } from '@core/services/issue.service';
@@ -47,7 +48,8 @@ export class ReportModalComponent implements OnInit {
     const issue: CreateIssueDto = {
       photo: this.photo.toString(),
       status: this.DEFAULT_STATUS,
-      coordinates: `${coordinates.coords.latitude},${coordinates.coords.longitude}`,
+      latitude: coordinates.coords.latitude.toString(),
+      longitude: coordinates.coords.longitude.toString(),
       category: this.selectedCategory,
       user: '1',
     };

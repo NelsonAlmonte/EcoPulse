@@ -17,12 +17,12 @@ export class IssueController {
   constructor(private issueService: IssueService) {}
 
   @Get()
-  async issues(): Promise<Issue[]> {
+  async issues(): Promise<Issue[] | null> {
     return await this.issueService.getIssues();
   }
 
   @Get(':id')
-  async issue(@Param('id') id: string): Promise<Issue> {
+  async issue(@Param('id') id: string): Promise<Issue | null> {
     return await this.issueService.getIssue(id);
   }
 
@@ -32,7 +32,8 @@ export class IssueController {
   ): Promise<Issue | BadRequestException> {
     const issue: Prisma.IssueCreateInput = {
       photo: createIssueDto.photo,
-      coordinates: createIssueDto.coordinates,
+      latitude: createIssueDto.latitude,
+      longitude: createIssueDto.longitude,
       category: {
         connect: { id: createIssueDto.category },
       },
@@ -55,7 +56,8 @@ export class IssueController {
     const issue: Prisma.IssueUpdateInput = {
       photo: updateIssueDto.photo,
       status: updateIssueDto.status,
-      coordinates: updateIssueDto.coordinates,
+      latitude: updateIssueDto.latitude,
+      longitude: updateIssueDto.longitude,
       category: {
         connect: { id: updateIssueDto.category },
       },
@@ -79,5 +81,13 @@ export class IssueController {
     }
 
     return issue;
+  }
+
+  @Get(':latitude/:longitude')
+  async issueByCoords(
+    @Param('latitude') latitude: string,
+    @Param('longitude') longitude: string,
+  ): Promise<Issue | null> {
+    return await this.issueService.getIssueByCoords(latitude, longitude);
   }
 }
