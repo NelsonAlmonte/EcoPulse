@@ -11,13 +11,15 @@ export class ApiService {
 
   doFetch<T = unknown>(url: string): Observable<ApiResult<T>> {
     return this.http.get<T>(url).pipe(
-      map((data) => ({ data: data, error: null })),
-      catchError((err) =>
-        of({
+      map((data) => ({ status: 'SUCCESS' as const, data: data, error: null })),
+      catchError((err) => {
+        console.log(err);
+        return of({
+          status: 'ERROR' as const,
           data: null,
           error: err instanceof Error ? err : new Error('Unknown error'),
-        })
-      )
+        });
+      })
     );
   }
 
@@ -26,13 +28,15 @@ export class ApiService {
     body: U
   ): Observable<ApiResult<T>> {
     return this.http.post<T>(url, body).pipe(
-      map((data) => ({ data: data, error: null })),
-      catchError((err) =>
-        of({
+      map((data) => ({ status: 'SUCCESS' as const, data: data, error: null })),
+      catchError((err) => {
+        console.log(err);
+        return of({
+          status: 'ERROR' as const,
           data: null,
           error: err instanceof Error ? err : new Error('Unknown error'),
-        })
-      )
+        });
+      })
     );
   }
 }

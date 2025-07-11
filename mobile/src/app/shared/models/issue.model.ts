@@ -1,4 +1,5 @@
 import { Category } from './category.model';
+import { User } from './user.model';
 
 export interface Issue {
   id: string;
@@ -9,4 +10,6 @@ export interface Issue {
   categoryId: string;
   userId: string;
   category: Category;
+  createdAt: string;
+  user: User;
 }

@@ -1,3 +1,49 @@
-<p>
-  issue-detail works!
-</p>
+@if (issueService.issue().status === 'LOADING') {
+<ion-card class="ion-no-margin">
+  <img
+    alt="Silhouette of mountains"
+    src="https://ionicframework.com/docs/img/demos/card-media.png"
+  />
+  <ion-card-header>
+    <ion-card-title>Cargando...</ion-card-title>
+    <ion-card-subtitle>Cargando...</ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content> Cargando... </ion-card-content>
+</ion-card>
+} @if (issueService.issue().status === 'ERROR') {
+<p>Handle error</p>
+} @if (issueService.issue().status === 'SUCCESS') {
+<ion-card class="ion-no-margin">
+  <img
+    alt="Silhouette of mountains"
+    src="https://ionicframework.com/docs/img/demos/card-media.png"
+  />
+  <ion-card-header class="ion-margin-bottom">
+    <ion-card-title>{{ issue.category.name }}</ion-card-title>
+    <ion-card-subtitle>{{
+      issue.createdAt | relativeTime : "es-ES"
+    }}</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-align-items-center">
+        <ion-col class="ion-padding-end" size="auto">
+          <ion-avatar>
+            <img
+              alt="Silhouette of a person's head"
+              src="https://ionicframework.com/docs/img/demos/avatar.svg"
+              width="80"
+              height="80"
+            />
+          </ion-avatar>
+        </ion-col>
+        <ion-col>
+          <strong>{{ issue.user.name }} {{ issue.user.last }}</strong>
+          <p>De por ahi</p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card>
+}

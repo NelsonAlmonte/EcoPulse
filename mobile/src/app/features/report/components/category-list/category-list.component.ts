@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import { Component, inject, OnInit, output } from '@angular/core';
 import { ApiResult } from '@core/interfaces/api.interface';
 import { CategoryService } from '@core/services/category.service';
@@ -12,7 +11,7 @@ import { Observable } from 'rxjs';
   selector: 'app-category-list',
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
-  imports: [AsyncPipe, IonChip, IonIcon, IonLabel],
+  imports: [IonChip, IonIcon, IonLabel],
 })
 export class CategoryListComponent implements OnInit {
   categoryService = inject(CategoryService);
@@ -24,7 +23,7 @@ export class CategoryListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.categories$ = this.categoryService.getCategories();
+    this.categoryService.getCategories();
   }
 
   selectCategory(id: string): void {

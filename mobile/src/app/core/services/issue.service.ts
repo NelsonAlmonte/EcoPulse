@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '@core/services/api.service';
@@ -12,9 +11,14 @@ import { environment } from 'src/environments/environment';
 })
 export class IssueService {
   apiService = inject(ApiService);
-  http = inject(HttpClient);
   issues = signal<ApiResult<Issue[]>>({
+    status: 'LOADING',
     data: [],
+    error: null,
+  });
+  issue = signal<ApiResult<Issue>>({
+    status: 'LOADING',
+    data: null,
     error: null,
   });
   URL = `${environment.apiUrl}issue`;
@@ -23,9 +27,19 @@ export class IssueService {
     return this.apiService.doPost<Issue, CreateIssueDto>(this.URL, issue);
   }
 
-  getIssues() {
+  getIssues(): void {
+    this.issues.set({ status: 'LOADING', data: [], error: null });
+
     this.apiService
       .doFetch<Issue[]>(this.URL)
       .subscribe((result) => this.issues.set(result));
+  }
+
+  getIssueByCoords(latitude: string, longitude: string): void {
+    this.issue.set({ status: 'LOADING', data: null, error: null });
+
+    this.apiService
+      .doFetch<Issue>(`${this.URL}/${latitude}/${longitude}`)
+      .subscribe((result) => this.issue.set(result));
   }
 }

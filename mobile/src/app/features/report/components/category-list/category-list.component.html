@@ -1,5 +1,9 @@
-@if ((categories$ | async); as result) { @for (category of result.data; track
-$index) {
+@if (categoryService.categories().status === 'LOADING') {
+<p>Cargando...</p>
+} @if (categoryService.categories().status === 'ERROR') {
+<p>Handle error</p>
+} @if (categoryService.categories().status === 'SUCCESS') { @for (category of
+categoryService.categories().data; track $index) {
 <ion-chip (click)="selectCategory(category.id)">
   <ion-icon name="pin" color="primary"></ion-icon>
   <ion-label>{{ category.name }}</ion-label>

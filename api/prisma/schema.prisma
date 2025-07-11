@@ -53,6 +53,7 @@ model Issue {
   categoryId String
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
+  createdAt  DateTime @default(now())
 }
 
 model Category {

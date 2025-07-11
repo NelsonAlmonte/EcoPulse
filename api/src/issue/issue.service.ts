@@ -21,6 +21,7 @@ export class IssueService {
       },
       include: {
         category: true,
+        user: true,
       },
     });
   }
@@ -30,6 +31,7 @@ export class IssueService {
       data: createIssueDto,
       include: {
         category: true,
+        user: true,
       },
     });
   }
@@ -45,6 +47,7 @@ export class IssueService {
       },
       include: {
         category: true,
+        user: true,
       },
     });
   }
@@ -56,6 +59,7 @@ export class IssueService {
       },
       include: {
         category: true,
+        user: true,
       },
     });
   }
@@ -71,6 +75,7 @@ export class IssueService {
       },
       include: {
         category: true,
+        user: true,
       },
     });
   }
