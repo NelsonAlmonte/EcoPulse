@@ -48,10 +48,11 @@ export class ReportPage implements OnInit {
     const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: false,
-      resultType: CameraResultType.Uri,
+      resultType: CameraResultType.DataUrl,
+      saveToGallery: false,
     });
 
-    this.openReportModal(image.webPath!);
+    this.openReportModal(image.dataUrl!);
   }
 
   async openReportModal(photo: string): Promise<void> {

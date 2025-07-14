@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ApiService } from '@core/services/api.service';
 import { ApiResult } from '@core/interfaces/api.interface';
 import { CreateIssueDto } from '@shared/dto/issue.dto';
-import { Issue } from '@shared/models/issue.model';
+import { Issue, SupaBaseUploadFileResponse } from '@shared/models/issue.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -41,5 +41,12 @@ export class IssueService {
     this.apiService
       .doFetch<Issue>(`${this.URL}/${latitude}/${longitude}`)
       .subscribe((result) => this.issue.set(result));
+  }
+
+  uploadPhoto(formData: FormData) {
+    return this.apiService.doPost<SupaBaseUploadFileResponse, FormData>(
+      `${this.URL}/upload`,
+      formData
+    );
   }
 }

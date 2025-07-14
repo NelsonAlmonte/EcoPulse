@@ -16,3 +16,9 @@ export interface UpdateIssueDto {
   category: string;
   user: string;
 }
+
+export interface SupaBaseUploadFileResponse {
+  id: string;
+  path: string;
+  fullPath: string;
+}

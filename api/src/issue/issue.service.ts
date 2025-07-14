@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Issue, Prisma } from '@prisma/client';
+import { createClient } from '@supabase/supabase-js';
+import { SupaBaseUploadFileResponse } from 'src/dto/issue.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -78,5 +80,23 @@ export class IssueService {
         user: true,
       },
     });
+  }
+
+  async uploadPhoto(
+    file: Express.Multer.File,
+  ): Promise<SupaBaseUploadFileResponse | null> {
+    const supabase = createClient(
+      process.env.PUBLIC_SUPABASE_URL,
+      process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
+    );
+    const { data } = await supabase.storage
+      .from('issues')
+      .upload(file.originalname, file.buffer, {
+        contentType: 'image/jpeg',
+      });
+
+    if (!data) return null;
+
+    return data;
   }
 }

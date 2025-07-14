@@ -7,10 +7,17 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { IssueService } from './issue.service';
 import { Issue, Prisma } from '@prisma/client';
-import { CreateIssueDto, UpdateIssueDto } from 'src/dto/issue.dto';
+import {
+  CreateIssueDto,
+  SupaBaseUploadFileResponse,
+  UpdateIssueDto,
+} from 'src/dto/issue.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('issue')
 export class IssueController {
@@ -89,5 +96,21 @@ export class IssueController {
     @Param('longitude') longitude: string,
   ): Promise<Issue | null> {
     return await this.issueService.getIssueByCoords(latitude, longitude);
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('photo'))
+  async uploadPhoto(
+    @UploadedFile() photo: Express.Multer.File,
+  ): Promise<SupaBaseUploadFileResponse | BadRequestException> {
+    const uploadedPhoto = await this.issueService.uploadPhoto(photo);
+
+    if (!uploadedPhoto) {
+      throw new BadRequestException(
+        'Unexpected error when uploading the photo',
+      );
+    }
+
+    return uploadedPhoto;
   }
 }

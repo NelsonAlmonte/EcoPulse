@@ -13,3 +13,9 @@ export interface Issue {
   createdAt: string;
   user: User;
 }
+
+export interface SupaBaseUploadFileResponse {
+  id: string;
+  path: string;
+  fullPath: string;
+}
