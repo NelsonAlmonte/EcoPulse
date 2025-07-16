@@ -40,7 +40,13 @@ export class IssueService {
 
     this.apiService
       .doFetch<Issue>(`${this.URL}/${latitude}/${longitude}`)
-      .subscribe((result) => this.issue.set(result));
+      .subscribe((result) => {
+        result.data!.photo = `${environment.publicBucketUrl}/${
+          result.data!.photo
+        }`;
+        console.log(result);
+        this.issue.set(result);
+      });
   }
 
   uploadPhoto(formData: FormData) {

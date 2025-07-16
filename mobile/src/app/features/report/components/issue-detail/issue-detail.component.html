@@ -14,15 +14,9 @@
 <p>Handle error</p>
 } @if (issueService.issue().status === 'SUCCESS') {
 <ion-card class="ion-no-margin">
-  <img
-    alt="Silhouette of mountains"
-    src="https://ionicframework.com/docs/img/demos/card-media.png"
-  />
-  <ion-card-header class="ion-margin-bottom">
+  <img alt="Silhouette of mountains" src="{{ issue.photo }}" />
+  <ion-card-header>
     <ion-card-title>{{ issue.category.name }}</ion-card-title>
-    <ion-card-subtitle>{{
-      issue.createdAt | relativeTime : "es-ES"
-    }}</ion-card-subtitle>
   </ion-card-header>
 
   <ion-card-content>
@@ -40,7 +34,9 @@
         </ion-col>
         <ion-col>
           <strong>{{ issue.user.name }} {{ issue.user.last }}</strong>
-          <p>De por ahi</p>
+          <ion-card-subtitle>{{
+            issue.createdAt | relativeTime : "es-ES"
+          }}</ion-card-subtitle>
         </ion-col>
       </ion-row>
     </ion-grid>

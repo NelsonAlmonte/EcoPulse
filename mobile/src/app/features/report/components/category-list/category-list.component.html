@@ -2,10 +2,24 @@
 <p>Cargando...</p>
 } @if (categoryService.categories().status === 'ERROR') {
 <p>Handle error</p>
-} @if (categoryService.categories().status === 'SUCCESS') { @for (category of
-categoryService.categories().data; track $index) {
-<ion-chip (click)="selectCategory(category.id)">
-  <ion-icon name="pin" color="primary"></ion-icon>
-  <ion-label>{{ category.name }}</ion-label>
-</ion-chip>
-} }
+} @if (categoryService.categories().status === 'SUCCESS') {
+<div class="grid grid-cols-2 gap-2 ion-margin-bottom ion-margin-top">
+  @for (category of categoryService.categories().data; track $index) {
+  <div
+    class="flex justify-between items-center px-3 py-4 rounded-xl"
+    (click)="selectCategory(category.id)"
+    appSelected
+    defaultClass="bg-light"
+  >
+    <span class="text-sm">{{ category.name }}</span>
+    <div class="me-2">
+      <lucide-angular
+        [img]="showIcon(category.icon)"
+        size="18"
+        class="stroke-primary"
+      ></lucide-angular>
+    </div>
+  </div>
+  }
+</div>
+}

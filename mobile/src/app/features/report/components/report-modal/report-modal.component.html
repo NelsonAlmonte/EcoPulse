@@ -4,6 +4,11 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
+  <h4>¿Esta es la foto que quieres reportar?</h4>
+  <img class="rounded-xl" src="{{ photo }}" alt="Issue photo" />
+  <h4>¿Ese es el lugar del problema?</h4>
+  <app-location-preview></app-location-preview>
+  <h4>¿Qué tipo de problema estás reportando?</h4>
   <app-category-list
     (selectedCategory)="selectedCategory = $event"
   ></app-category-list>

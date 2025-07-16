@@ -28,7 +28,7 @@ interface UnsafeCluster {
   styleUrls: ['./map-view.component.scss'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class MapViewComponent implements OnInit, AfterViewInit {
+export class MapViewComponent implements AfterViewInit {
   issues = input.required<ApiResult<Issue[]>>();
   injector = inject(Injector);
   modalController = inject(ModalController);
@@ -37,8 +37,6 @@ export class MapViewComponent implements OnInit, AfterViewInit {
   markerIds: string[] = [];
 
   constructor() {}
-
-  ngOnInit() {}
 
   async ngAfterViewInit() {
     await this.initMap();

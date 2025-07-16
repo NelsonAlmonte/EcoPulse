@@ -6,10 +6,8 @@ import {
   IonButton,
   IonContent,
   IonFab,
-  IonGrid,
   IonHeader,
   IonIcon,
-  IonRow,
   IonTitle,
   IonToolbar,
   ModalController,
@@ -37,12 +35,15 @@ import { ReportModalComponent } from '@features/report/components/report-modal/r
 })
 export class ReportPage implements OnInit {
   modalController = inject(ModalController);
-
+  icon = 'add-circle-outline';
   constructor() {
     addIcons({ cameraOutline });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const image = `https://ionicframework.com/docs/img/demos/card-media.png`;
+    // this.openReportModal(image);
+  }
 
   async takePicture(): Promise<void> {
     const image = await Camera.getPhoto({

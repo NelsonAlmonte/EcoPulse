@@ -7,11 +7,12 @@ import {
   IonToolbar,
   ModalController,
 } from '@ionic/angular/standalone';
+import { switchMap } from 'rxjs';
 import { Geolocation } from '@capacitor/geolocation';
 import { IssueService } from '@core/services/issue.service';
 import { CategoryListComponent } from '@features/report/components/category-list/category-list.component';
+import { LocationPreviewComponent } from '@features/report/components/location-preview/location-preview.component';
 import { CreateIssueDto } from '@shared/dto/issue.dto';
-import { switchMap } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
@@ -25,12 +26,13 @@ import { v4 as uuidv4 } from 'uuid';
     IonTitle,
     IonToolbar,
     CategoryListComponent,
+    LocationPreviewComponent,
   ],
 })
 export class ReportModalComponent implements OnInit {
   issueService = inject(IssueService);
   modalController = inject(ModalController);
-  photo = input('');
+  photo = input.required<string>();
   selectedCategory: string = '';
   DEFAULT_STATUS: string = 'PENDING';
 
