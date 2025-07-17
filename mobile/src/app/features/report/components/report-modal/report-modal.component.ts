@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 @Component({
   selector: 'app-report-modal',
   templateUrl: './report-modal.component.html',
-  styleUrls: ['./report-modal.component.scss'],
+  styleUrls: ['./report-modal.component.css'],
   imports: [
     IonButton,
     IonContent,

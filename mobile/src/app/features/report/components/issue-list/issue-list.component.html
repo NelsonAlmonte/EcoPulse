@@ -1,0 +1,36 @@
+@if (userService.issues().status === 'LOADING') {
+<p>Cargando...</p>
+} @if (userService.issues().status === 'ERROR') {
+<p>Handle error</p>
+} @if (userService.issues().status === 'SUCCESS') { @for (issue of
+userService.issues().data; track $index) {
+<div
+  class="max-w-sm bg-white border border-gray-200 rounded-xl shadow-sm ion-margin-bottom"
+>
+  <img
+    class="rounded-t-xl w-full h-40 object-cover"
+    src="{{ issue.photo }}"
+    alt="{{ issue.category.name }}"
+  />
+  <div class="px-4 py-3">
+    <div class="flex items-center justify-between">
+      <div>
+        <h5 class="mb-2 mt-0 text-2xl font-bold tracking-tight text-gray-900">
+          {{ issue.category.name }}
+        </h5>
+        <p class="mb-3 font-normal text-gray-700">
+          {{ issue.createdAt | relativeTime : "es-ES" }}
+        </p>
+      </div>
+      <div class="flex flex-col content-center items-center">
+        <button
+          class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg p-2.5 text-sm text-gray-500"
+        >
+          <lucide-angular [img]="headsUpIcon"></lucide-angular>
+        </button>
+        <span class="text-xs text-gray-500">12</span>
+      </div>
+    </div>
+  </div>
+</div>
+} }

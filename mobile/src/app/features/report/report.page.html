@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="px-4">
   <ion-toolbar>
     <ion-title>Reportar</ion-title>
   </ion-toolbar>
@@ -10,10 +10,19 @@
       <ion-title size="large">Reportar</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-fab slot="fixed" vertical="bottom" horizontal="center">
-    <ion-button (click)="takePicture()">
-      <ion-icon slot="start" name="camera-outline"></ion-icon>
+
+  <h4>Ubicación actual</h4>
+  <app-location-preview></app-location-preview>
+
+  <h4>Tus últimos reportes</h4>
+  <app-issue-list></app-issue-list>
+
+  <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+    <button
+      (click)="takePicture()"
+      class="bg-blue-700 text-white px-6 py-3 rounded-full shadow-lg"
+    >
       Abrir cámara
-    </ion-button>
-  </ion-fab>
+    </button>
+  </div>
 </ion-content>

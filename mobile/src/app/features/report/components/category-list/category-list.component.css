@@ -1,0 +1,15 @@
+.category-item {
+  background-color: var(--ion-color-light);
+
+  svg.category-icon {
+    stroke: var(--ion-color-primary);
+  }
+
+  &.selected {
+    background-color: var(--ion-color-primary);
+
+    svg.category-icon {
+      stroke: white;
+    }
+  }
+}

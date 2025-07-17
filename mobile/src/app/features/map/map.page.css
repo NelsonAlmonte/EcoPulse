@@ -1,0 +1,5 @@
+.no-scroll {
+  /* --overflow: hidden;
+  overflow: hidden; */
+  touch-action: none;
+}

@@ -1,6 +1,11 @@
-import { Component, inject, OnInit, output } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { CategoryService } from '@core/services/category.service';
-import { SelectedDirective } from '@shared/directives/selected.directive';
 import {
   LucideAngularModule,
   TreePineIcon,
@@ -15,13 +20,15 @@ import {
   TrashIcon,
   DropletsIcon,
   LucideIconData,
+  FrownIcon,
 } from 'lucide-angular';
 
 @Component({
   selector: 'app-category-list',
   templateUrl: './category-list.component.html',
-  styleUrls: ['./category-list.component.scss'],
-  imports: [LucideAngularModule, SelectedDirective],
+  styleUrls: ['./category-list.component.css'],
+  imports: [LucideAngularModule],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CategoryListComponent implements OnInit {
   categoryService = inject(CategoryService);
@@ -38,15 +45,22 @@ export class CategoryListComponent implements OnInit {
     TrashIcon,
     TreePineIcon,
     DropletsIcon,
+    FrownIcon,
   };
-
-  constructor() {}
+  selectedElement: HTMLDivElement | null = null;
 
   ngOnInit(): void {
     this.categoryService.getCategories();
   }
 
-  selectCategory(id: string): void {
+  selectCategory(id: string, event: MouseEvent): void {
+    const element = event.currentTarget as HTMLDivElement;
+
+    if (this.selectedElement) this.selectedElement.classList.remove('selected');
+
+    element.classList.add('selected');
+    this.selectedElement = element;
+
     this.selectedCategory.emit(id);
   }
 

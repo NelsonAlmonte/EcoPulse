@@ -25,7 +25,7 @@ interface UnsafeCluster {
 @Component({
   selector: 'app-map-view',
   templateUrl: './map-view.component.html',
-  styleUrls: ['./map-view.component.scss'],
+  styleUrls: ['./map-view.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MapViewComponent implements AfterViewInit {

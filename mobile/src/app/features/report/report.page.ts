@@ -3,11 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import {
-  IonButton,
   IonContent,
-  IonFab,
   IonHeader,
-  IonIcon,
   IonTitle,
   IonToolbar,
   ModalController,
@@ -15,22 +12,22 @@ import {
 import { addIcons } from 'ionicons';
 import { cameraOutline } from 'ionicons/icons';
 import { ReportModalComponent } from '@features/report/components/report-modal/report-modal.component';
+import { LocationPreviewComponent } from '@features/report/components/location-preview/location-preview.component';
+import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
 
 @Component({
   selector: 'app-report',
   templateUrl: './report.page.html',
-  styleUrls: ['./report.page.scss'],
+  styleUrls: ['./report.page.css'],
   imports: [
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
-    IonIcon,
-    IonFab,
-    IonIcon,
-    IonButton,
     CommonModule,
     FormsModule,
+    LocationPreviewComponent,
+    IssueListComponent,
   ],
 })
 export class ReportPage implements OnInit {
@@ -41,7 +38,7 @@ export class ReportPage implements OnInit {
   }
 
   ngOnInit(): void {
-    const image = `https://ionicframework.com/docs/img/demos/card-media.png`;
+    // const image = `https://ionicframework.com/docs/img/demos/card-media.png`;
     // this.openReportModal(image);
   }
 

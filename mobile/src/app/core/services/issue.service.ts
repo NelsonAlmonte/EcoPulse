@@ -41,15 +41,16 @@ export class IssueService {
     this.apiService
       .doFetch<Issue>(`${this.URL}/${latitude}/${longitude}`)
       .subscribe((result) => {
-        result.data!.photo = `${environment.publicBucketUrl}/${
-          result.data!.photo
-        }`;
-        console.log(result);
-        this.issue.set(result);
+        if (result.data) {
+          result.data.photo = `${environment.publicBucketUrl}/${result.data.photo}`;
+          this.issue.set(result);
+        }
       });
   }
 
-  uploadPhoto(formData: FormData) {
+  uploadPhoto(
+    formData: FormData
+  ): Observable<ApiResult<SupaBaseUploadFileResponse>> {
     return this.apiService.doPost<SupaBaseUploadFileResponse, FormData>(
       `${this.URL}/upload`,
       formData

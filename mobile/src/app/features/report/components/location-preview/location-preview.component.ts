@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-location-preview',
   templateUrl: './location-preview.component.html',
-  styleUrls: ['./location-preview.component.scss'],
+  styleUrls: ['./location-preview.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class LocationPreviewComponent implements OnInit, AfterViewInit {

@@ -1,0 +1,46 @@
+@theme {
+  --color-primary: var(--ion-color-primary);
+  --color-primary-contrast: var(--ion-color-primary-contrast);
+  --color-primary-shade: var(--ion-color-primary-shade);
+  --color-primary-tint: var(--ion-color-primary-tint);
+
+  --color-secondary: var(--ion-color-secondary);
+  --color-secondary-contrast: var(--ion-color-secondary-contrast);
+  --color-secondary-shade: var(--ion-color-secondary-shade);
+  --color-secondary-tint: var(--ion-color-secondary-tint);
+
+  --color-tertiary: var(--ion-color-tertiary);
+  --color-tertiary-contrast: var(--ion-color-tertiary-contrast);
+  --color-tertiary-shade: var(--ion-color-tertiary-shade);
+  --color-tertiary-tint: var(--ion-color-tertiary-tint);
+
+  --color-light: var(--ion-color-light);
+  --color-light-contrast: var(--ion-color-light-contrast);
+  --color-light-shade: var(--ion-color-light-shade);
+  --color-light-tint: var(--ion-color-light-tint);
+
+  --color-medium: var(--ion-color-medium);
+  --color-medium-contrast: var(--ion-color-medium-contrast);
+  --color-medium-shade: var(--ion-color-medium-shade);
+  --color-medium-tint: var(--ion-color-medium-tint);
+
+  --color-dark: var(--ion-color-dark);
+  --color-dark-contrast: var(--ion-color-dark-contrast);
+  --color-dark-shade: var(--ion-color-dark-shade);
+  --color-dark-tint: var(--ion-color-dark-tint);
+
+  --color-success: var(--ion-color-success);
+  --color-success-contrast: var(--ion-color-success-contrast);
+  --color-success-shade: var(--ion-color-success-shade);
+  --color-success-tint: var(--ion-color-success-tint);
+
+  --color-warning: var(--ion-color-warning);
+  --color-warning-contrast: var(--ion-color-warning-contrast);
+  --color-warning-shade: var(--ion-color-warning-shade);
+  --color-warning-tint: var(--ion-color-warning-tint);
+
+  --color-danger: var(--ion-color-danger);
+  --color-danger-contrast: var(--ion-color-danger-contrast);
+  --color-danger-shade: var(--ion-color-danger-shade);
+  --color-danger-tint: var(--ion-color-danger-tint);
+}

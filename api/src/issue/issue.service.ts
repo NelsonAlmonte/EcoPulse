@@ -19,7 +19,7 @@ export class IssueService {
   async getIssue(id: string): Promise<Issue | null> {
     return this.prisma.issue.findUnique({
       where: {
-        id: id,
+        id,
       },
       include: {
         category: true,
@@ -45,7 +45,7 @@ export class IssueService {
     return this.prisma.issue.update({
       data: updateIssueDto,
       where: {
-        id: id,
+        id,
       },
       include: {
         category: true,
@@ -72,8 +72,8 @@ export class IssueService {
   ): Promise<Issue | null> {
     return this.prisma.issue.findFirst({
       where: {
-        latitude: latitude,
-        longitude: longitude,
+        latitude,
+        longitude,
       },
       include: {
         category: true,

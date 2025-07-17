@@ -16,7 +16,7 @@ import { RelativeTimePipe } from '@shared/pipes/relative-time.pipe';
 @Component({
   selector: 'app-issue-detail',
   templateUrl: './issue-detail.component.html',
-  styleUrls: ['./issue-detail.component.scss'],
+  styleUrls: ['./issue-detail.component.css'],
   imports: [
     IonCard,
     IonCardContent,

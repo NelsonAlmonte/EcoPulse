@@ -13,7 +13,7 @@ import { IssueService } from '@core/services/issue.service';
 @Component({
   selector: 'app-map',
   templateUrl: './map.page.html',
-  styleUrls: ['./map.page.scss'],
+  styleUrls: ['./map.page.css'],
   imports: [
     IonContent,
     IonHeader,
