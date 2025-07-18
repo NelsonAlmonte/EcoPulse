@@ -19,9 +19,15 @@
 
   <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
     <button
+      type="button"
+      class="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-7 py-4 text-center inline-flex items-center shadow-lg"
       (click)="takePicture()"
-      class="bg-blue-700 text-white px-6 py-3 rounded-full shadow-lg"
     >
+      <lucide-angular
+        class="me-0.5"
+        [img]="cameraIcon"
+        size="18"
+      ></lucide-angular>
       Abrir cámara
     </button>
   </div>

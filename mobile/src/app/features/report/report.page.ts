@@ -9,11 +9,10 @@ import {
   IonToolbar,
   ModalController,
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { cameraOutline } from 'ionicons/icons';
 import { ReportModalComponent } from '@features/report/components/report-modal/report-modal.component';
 import { LocationPreviewComponent } from '@features/report/components/location-preview/location-preview.component';
 import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
+import { CameraIcon, LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-report',
@@ -28,18 +27,16 @@ import { IssueListComponent } from '@features/report/components/issue-list/issue
     FormsModule,
     LocationPreviewComponent,
     IssueListComponent,
+    LucideAngularModule,
   ],
 })
 export class ReportPage implements OnInit {
   modalController = inject(ModalController);
-  icon = 'add-circle-outline';
-  constructor() {
-    addIcons({ cameraOutline });
-  }
+  cameraIcon = CameraIcon;
 
   ngOnInit(): void {
-    // const image = `https://ionicframework.com/docs/img/demos/card-media.png`;
-    // this.openReportModal(image);
+    const image = `https://ionicframework.com/docs/img/demos/card-media.png`;
+    this.openReportModal(image);
   }
 
   async takePicture(): Promise<void> {

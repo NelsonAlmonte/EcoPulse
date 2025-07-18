@@ -7,7 +7,8 @@
 
   &.selected {
     background-color: var(--ion-color-primary);
-
+    color: white;
+    
     svg.category-icon {
       stroke: white;
     }

@@ -3,6 +3,7 @@ export interface CreateIssueDto {
   status: string;
   latitude: string;
   longitude: string;
+  comment?: string;
   category: string;
   user: string;
 }

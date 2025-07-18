@@ -14,21 +14,64 @@ userService.issues().data; track $index) {
   />
   <div class="px-4 py-3">
     <div class="flex items-center justify-between">
+      @if (issue.status === DEFAULT_STATUS) {
+      <span
+        class="inline-flex items-center capitalize text-xs text-amber-800 bg-amber-500/30 font-medium px-2.5 py-1 rounded-2xl"
+      >
+        <lucide-angular
+          class="me-0.5"
+          [img]="clockIcon"
+          size="12"
+        ></lucide-angular>
+        {{ issue.status.toLocaleLowerCase() }}
+      </span>
+      } @else {
+      <span
+        class="inline-flex items-center capitalize text-xs text-emerald-800 bg-emerald-500/30 font-medium px-2.5 py-1 rounded-2xl"
+      >
+        <lucide-angular
+          class="me-0.5"
+          [img]="checkCircle"
+          size="12"
+        ></lucide-angular>
+        {{ issue.status.toLocaleLowerCase() }}
+      </span>
+      }
+      <span class="text-xs text-gray-500">
+        {{ issue.createdAt | relativeTime : "es-ES" }}
+      </span>
+    </div>
+    <div class="flex items-center justify-between mb-4">
       <div>
-        <h5 class="mb-2 mt-0 text-2xl font-bold tracking-tight text-gray-900">
+        <h5 class="my-2! text-2xl! font-bold text-gray-900">
           {{ issue.category.name }}
         </h5>
-        <p class="mb-3 font-normal text-gray-700">
-          {{ issue.createdAt | relativeTime : "es-ES" }}
+        @if (issue.comment) {
+        <p class="font-normal text-gray-600">
+          {{ issue.comment }}
         </p>
+        }
       </div>
-      <div class="flex flex-col content-center items-center">
-        <button
-          class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg p-2.5 text-sm text-gray-500"
-        >
-          <lucide-angular [img]="headsUpIcon"></lucide-angular>
-        </button>
-        <span class="text-xs text-gray-500">12</span>
+    </div>
+    <div class="flex items-center justify-between">
+      <div>
+        <span class="inline-flex items-center text-gray-700">
+          <lucide-angular
+            class="me-1 text-gray-500"
+            [img]="userIcon"
+          ></lucide-angular>
+          {{ issue.user.name + " " + issue.user.last }}
+        </span>
+      </div>
+      <div>
+        <div class="flex flex-col content-center items-center">
+          <button
+            class="inline-flex cursor-pointer items-center justify-center rounded-lg text-sm text-gray-500 mb-0.5"
+          >
+            <lucide-angular [img]="headsUpIcon"></lucide-angular>
+          </button>
+          <span class="text-xs text-gray-500">12</span>
+        </div>
       </div>
     </div>
   </div>

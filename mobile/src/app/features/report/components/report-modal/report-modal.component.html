@@ -1,16 +1,150 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Detalles del reporte</ion-title>
+    <ion-title class="px-4">Detalles del reporte</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content class="ion-padding">
-  <h4>¿Esta es la foto que quieres reportar?</h4>
-  <img class="rounded-xl" src="{{ photo }}" alt="Issue photo" />
-  <h4>¿Ese es el lugar del problema?</h4>
-  <app-location-preview></app-location-preview>
-  <h4>¿Qué tipo de problema estás reportando?</h4>
-  <app-category-list
-    (selectedCategory)="selectedCategory = $event"
-  ></app-category-list>
-  <ion-button (click)="sendReport()" [strong]="true">Enviar reporte</ion-button>
+<ion-content [scrollY]="false">
+  <ion-segment class="px-4" [value]="currentSegment" [swipeGesture]="false">
+    <ion-segment-button
+      class="opacity-100"
+      [disabled]="true"
+      value="photo"
+      content-id="photo"
+    >
+      <ion-label>Foto</ion-label>
+    </ion-segment-button>
+    <ion-segment-button
+      class="opacity-100"
+      [disabled]="true"
+      value="location"
+      content-id="location"
+    >
+      <ion-label>Lugar</ion-label>
+    </ion-segment-button>
+    <ion-segment-button
+      class="opacity-100"
+      [disabled]="true"
+      value="categories"
+      content-id="categories"
+    >
+      <ion-label>Incidencia</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-segment-view>
+    <ion-segment-content class="relative ion-padding" id="photo">
+      <div class="flex justify-center my-4">
+        <h4 class="text-2xl! text-gray-800">Foto de la incidencia</h4>
+      </div>
+      <img class="rounded-xl" src="{{ photo }}" alt="Issue photo" />
+      <div
+        class="flex justify-between w-full absolute ion-padding bottom-10 left-1/2 -translate-x-1/2"
+      >
+        <button
+          type="button"
+          class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
+          (click)="cancel()"
+        >
+          <lucide-angular
+            class="me-0.5"
+            [img]="cancelIcon"
+            size="18"
+          ></lucide-angular>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
+          (click)="next()"
+        >
+          Siguiente
+          <lucide-angular
+            class="ms-0.5"
+            [img]="nextIcon"
+            size="18"
+          ></lucide-angular>
+        </button>
+      </div>
+    </ion-segment-content>
+    <ion-segment-content class="relative ion-padding" id="location">
+      <div class="flex justify-center my-4">
+        <h4 class="text-2xl! text-gray-800">Lugar de la incidencia</h4>
+      </div>
+      <app-location-preview></app-location-preview>
+      <div
+        class="flex justify-between w-full absolute ion-padding bottom-10 left-1/2 -translate-x-1/2 mt-4"
+      >
+        <button
+          type="button"
+          class="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
+          (click)="back()"
+        >
+          <lucide-angular
+            class="me-0.5"
+            [img]="prevIcon"
+            size="18"
+          ></lucide-angular>
+          Anterior
+        </button>
+        <button
+          type="button"
+          class="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
+          (click)="next()"
+        >
+          Siguiente
+          <lucide-angular
+            class="ms-0.5"
+            [img]="nextIcon"
+            size="18"
+          ></lucide-angular>
+        </button>
+      </div>
+    </ion-segment-content>
+    <ion-segment-content class="relative ion-padding" id="categories">
+      <div class="flex justify-center my-4">
+        <h4 class="text-2xl! text-gray-800">Tipo de incidencia</h4>
+      </div>
+      <app-category-list
+        (selectedCategory)="selectedCategory = $event"
+      ></app-category-list>
+      <div class="flex justify-center my-4">
+        <h4 class="text-2xl! text-gray-800">Comentario (opcional)</h4>
+      </div>
+      <div>
+        <ion-textarea
+          label="Default counter"
+          labelPlacement="floating"
+          [counter]="true"
+          maxlength="20"
+        ></ion-textarea>
+      </div>
+      <div
+        class="flex justify-between w-full absolute ion-padding bottom-10 left-1/2 -translate-x-1/2 mt-4"
+      >
+        <button
+          type="button"
+          class="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
+          (click)="back()"
+        >
+          <lucide-angular
+            class="me-0.5"
+            [img]="prevIcon"
+            size="18"
+          ></lucide-angular>
+          Anterior
+        </button>
+        <button
+          type="button"
+          class="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
+          (click)="sendReport()"
+        >
+          <lucide-angular
+            class="me-0.5"
+            [img]="sendIcon"
+            size="18"
+          ></lucide-angular>
+          Enviar
+        </button>
+      </div>
+    </ion-segment-content>
+  </ion-segment-view>
 </ion-content>

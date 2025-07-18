@@ -13,6 +13,7 @@ export class UserService {
       },
       include: {
         category: true,
+        user: true,
       },
       take: 3,
     });

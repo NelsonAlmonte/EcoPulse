@@ -17,9 +17,9 @@ enum Role {
 }
 
 enum Status {
-  ACTIVE
-  PENDING
-  RESOLVED
+  PENDIENTE
+  RESUELTO
+  DESCARTADO
 }
 
 model User {
@@ -30,25 +30,16 @@ model User {
   password  String
   createdAt DateTime @default(now())
   role      Role     @default(USER)
-  zone      Zone     @relation(fields: [zoneId], references: [id])
-  zoneId    String
   issues    Issue[]
-}
-
-model Zone {
-  id          String   @id @default(cuid())
-  name        String
-  coordinates String
-  createdAt   DateTime @default(now())
-  users       User[]
 }
 
 model Issue {
   id         String   @id @default(cuid())
   photo      String
-  status     Status   @default(PENDING)
+  status     Status   @default(PENDIENTE)
   latitude   String
   longitude  String
+  comment    String?
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId String
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -7,6 +7,7 @@ export interface Issue {
   status: string;
   latitude: string;
   longitude: string;
+  comment?: string;
   categoryId: string;
   userId: string;
   category: Category;

@@ -1,8 +1,13 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import {
-  IonButton,
   IonContent,
   IonHeader,
+  IonLabel,
+  IonSegment,
+  IonSegmentButton,
+  IonSegmentContent,
+  IonSegmentView,
+  IonTextarea,
   IonTitle,
   IonToolbar,
   ModalController,
@@ -14,19 +19,33 @@ import { CategoryListComponent } from '@features/report/components/category-list
 import { LocationPreviewComponent } from '@features/report/components/location-preview/location-preview.component';
 import { CreateIssueDto } from '@shared/dto/issue.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { DEFAULT_STATUS } from '@shared/constants/system.constant';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  BanIcon,
+  LucideAngularModule,
+  SendIcon,
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-report-modal',
   templateUrl: './report-modal.component.html',
   styleUrls: ['./report-modal.component.css'],
   imports: [
-    IonButton,
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
+    IonSegment,
+    IonSegmentButton,
+    IonLabel,
+    IonSegmentView,
+    IonSegmentContent,
+    IonTextarea,
     CategoryListComponent,
     LocationPreviewComponent,
+    LucideAngularModule,
   ],
 })
 export class ReportModalComponent implements OnInit {
@@ -34,7 +53,12 @@ export class ReportModalComponent implements OnInit {
   modalController = inject(ModalController);
   photo = input.required<string>();
   selectedCategory: string = '';
-  DEFAULT_STATUS: string = 'PENDING';
+  currentSegment: string = 'photo';
+  segments: string[] = ['photo', 'location', 'categories'];
+  nextIcon = ArrowRightIcon;
+  prevIcon = ArrowLeftIcon;
+  sendIcon = SendIcon;
+  cancelIcon = BanIcon;
 
   constructor() {}
 
@@ -50,7 +74,7 @@ export class ReportModalComponent implements OnInit {
     });
     const issue: CreateIssueDto = {
       photo: '',
-      status: this.DEFAULT_STATUS,
+      status: DEFAULT_STATUS,
       latitude: coordinates.coords.latitude.toString(),
       longitude: coordinates.coords.longitude.toString(),
       category: this.selectedCategory,
@@ -93,5 +117,23 @@ export class ReportModalComponent implements OnInit {
     }
 
     return new File([array], filename, { type: mime });
+  }
+
+  next() {
+    const index = this.segments.indexOf(this.currentSegment);
+    if (index < this.segments.length - 1) {
+      this.currentSegment = this.segments[index + 1];
+    }
+  }
+
+  back() {
+    const index = this.segments.indexOf(this.currentSegment);
+    if (index > 0) {
+      this.currentSegment = this.segments[index - 1];
+    }
+  }
+
+  customCounterFormatter(inputLength: number, maxLength: number) {
+    return `${maxLength - inputLength} characters remaining`;
   }
 }

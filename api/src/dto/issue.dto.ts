@@ -4,6 +4,7 @@ export interface CreateIssueDto {
   photo: string;
   latitude: string;
   longitude: string;
+  comment?: string;
   category: string;
   user: string;
 }
@@ -13,6 +14,7 @@ export interface UpdateIssueDto {
   status: Status;
   latitude: string;
   longitude: string;
+  comment?: string;
   category: string;
   user: string;
 }
