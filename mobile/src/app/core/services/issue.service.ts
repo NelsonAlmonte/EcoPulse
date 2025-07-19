@@ -41,10 +41,7 @@ export class IssueService {
     this.apiService
       .doFetch<Issue>(`${this.URL}/${latitude}/${longitude}`)
       .subscribe((result) => {
-        if (result.data) {
-          result.data.photo = `${environment.publicBucketUrl}/${result.data.photo}`;
-          this.issue.set(result);
-        }
+        if (result.data) this.issue.set(result);
       });
   }
 

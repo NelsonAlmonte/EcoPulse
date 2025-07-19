@@ -34,6 +34,7 @@ export class MapViewComponent implements AfterViewInit {
   @ViewChild('map') mapRef!: ElementRef<HTMLElement>;
   map!: GoogleMap;
   markerIds: string[] = [];
+  markerData = new Map<string, Issue>();
 
   constructor() {}
 
@@ -70,23 +71,13 @@ export class MapViewComponent implements AfterViewInit {
 
   async viewIssueDetail() {
     await this.map.setOnMarkerClickListener(async (marker) => {
+      const issue = this.markerData.get(marker.markerId);
+      console.log(issue);
       const modal = await this.modalController.create({
         component: IssueDetailComponent,
-        // cssClass: [
-        //   'rounded-2xl',
-        //   'w-full',
-        //   // 'max-w-[400px]',
-        //   'h-auto',
-        //   'max-h-1/2',
-        //   'shadow-lg',
-        //   // 'left-1/2',
-        //   // '-translate-x-1/2',
-        //   // 'translate-y-1/2',
-        // ],
-        // backdropDismiss: true,
+        cssClass: 'issue-detail-modal',
         componentProps: {
-          latitude: marker.latitude,
-          longitude: marker.longitude,
+          issue: issue,
         },
       });
 
@@ -97,23 +88,28 @@ export class MapViewComponent implements AfterViewInit {
   async addMarkers() {
     effect(
       async () => {
-        if (this.issues().data) {
-          if (this.markerIds.length > 0)
-            await this.map.removeMarkers(this.markerIds);
+        const issues = this.issues().data;
 
-          const markers: Marker[] = this.issues().data!.map((issue) => {
-            return {
-              coordinate: {
-                lat: Number(issue.latitude),
-                lng: Number(issue.longitude),
-              },
-            };
-          });
+        if (!issues) return;
 
-          this.markerIds = await this.map.addMarkers(markers);
-
-          await this.map.enableClustering();
+        if (this.markerIds.length > 0) {
+          await this.map.removeMarkers(this.markerIds);
         }
+
+        const markers: Marker[] = issues.map(({ latitude, longitude }) => ({
+          coordinate: {
+            lat: Number(latitude),
+            lng: Number(longitude),
+          },
+        }));
+
+        this.markerIds = await this.map.addMarkers(markers);
+
+        this.markerIds.forEach((id, index) => {
+          this.markerData.set(id, issues[index]);
+        });
+
+        await this.map.enableClustering();
       },
       { injector: this.injector }
     );

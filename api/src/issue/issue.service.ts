@@ -12,6 +12,7 @@ export class IssueService {
     return this.prisma.issue.findMany({
       include: {
         category: true,
+        user: true,
       },
     });
   }

@@ -1,45 +1,71 @@
-@if (issueService.issue().status === 'LOADING') {
-<ion-card class="ion-no-margin">
+<div
+  class="max-w-sm bg-white border border-gray-200 rounded-3xl mb-4 issue-detail-card"
+>
   <img
-    alt="Silhouette of mountains"
-    src="https://ionicframework.com/docs/img/demos/card-media.png"
+    class="rounded-t-3xl w-full h-40 object-cover"
+    src="{{ issue().photo }}"
+    alt="{{ issue().category.name }}"
   />
-  <ion-card-header>
-    <ion-card-title>Cargando...</ion-card-title>
-    <ion-card-subtitle>Cargando...</ion-card-subtitle>
-  </ion-card-header>
-  <ion-card-content> Cargando... </ion-card-content>
-</ion-card>
-} @if (issueService.issue().status === 'ERROR') {
-<p>Handle error</p>
-} @if (issueService.issue().status === 'SUCCESS') {
-<ion-card class="ion-no-margin">
-  <img alt="Foto del incidente" src="{{ issue.photo }}" />
-  <ion-card-header>
-    <ion-card-title>{{ issue.category.name }}</ion-card-title>
-  </ion-card-header>
-
-  <ion-card-content>
-    <ion-grid class="ion-no-padding">
-      <ion-row class="ion-align-items-center">
-        <ion-col class="ion-padding-end" size="auto">
-          <ion-avatar>
-            <img
-              alt="Silhouette of a person's head"
-              src="https://ionicframework.com/docs/img/demos/avatar.svg"
-              width="80"
-              height="80"
-            />
-          </ion-avatar>
-        </ion-col>
-        <ion-col>
-          <strong>{{ issue.user.name }} {{ issue.user.last }}</strong>
-          <ion-card-subtitle>{{
-            issue.createdAt | relativeTime : "es-ES"
-          }}</ion-card-subtitle>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-card-content>
-</ion-card>
-}
+  <div class="px-4 py-3">
+    <div class="flex items-center justify-between">
+      @if (issue().status === DEFAULT_STATUS) {
+      <span
+        class="inline-flex items-center capitalize text-xs text-amber-800 bg-amber-500/30 font-medium px-2.5 py-1 rounded-2xl"
+      >
+        <lucide-angular
+          class="me-0.5"
+          [img]="clockIcon"
+          size="12"
+        ></lucide-angular>
+        {{ issue().status.toLocaleLowerCase() }}
+      </span>
+      } @else {
+      <span
+        class="inline-flex items-center capitalize text-xs text-emerald-800 bg-emerald-500/30 font-medium px-2.5 py-1 rounded-2xl"
+      >
+        <lucide-angular
+          class="me-0.5"
+          [img]="checkCircle"
+          size="12"
+        ></lucide-angular>
+        {{ issue().status.toLocaleLowerCase() }}
+      </span>
+      }
+      <span class="text-xs text-gray-500">
+        {{ issue().createdAt | relativeTime : "es-ES" }}
+      </span>
+    </div>
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h5 class="my-2! text-2xl! font-bold text-gray-900">
+          {{ issue().category.name }}
+        </h5>
+        @if (issue().comment) {
+        <p class="font-normal text-gray-600">
+          {{ issue().comment }}
+        </p>
+        }
+      </div>
+    </div>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-start">
+        <lucide-angular
+          class="me-1 text-gray-500"
+          [img]="userIcon"
+          size="22"
+        ></lucide-angular>
+        <span class="text-gray-700 text-sm">
+          {{ issue().user.name + " " + issue().user.last }}
+        </span>
+      </div>
+      <div class="flex flex-col content-center items-center">
+        <button
+          class="inline-flex cursor-pointer items-center justify-center rounded-lg text-sm text-gray-500 mb-0.5"
+        >
+          <lucide-angular [img]="headsUpIcon"></lucide-angular>
+        </button>
+        <span class="text-xs text-gray-500">12</span>
+      </div>
+    </div>
+  </div>
+</div>

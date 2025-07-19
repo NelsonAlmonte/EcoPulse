@@ -25,7 +25,14 @@ export class IssueController {
 
   @Get()
   async issues(): Promise<Issue[] | null> {
-    return await this.issueService.getIssues();
+    const issues = await this.issueService.getIssues();
+
+    if (!issues) return null;
+
+    return issues.map((issue) => ({
+      ...issue,
+      photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+    }));
   }
 
   @Get(':id')
@@ -52,7 +59,10 @@ export class IssueController {
       throw new BadRequestException('Unexpected error when creating a issue');
     }
 
-    return createdIssue;
+    return {
+      ...createdIssue,
+      photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+    };
   }
 
   @Put(':id')
@@ -76,7 +86,10 @@ export class IssueController {
       throw new BadRequestException('Unexpected error when updating a issue');
     }
 
-    return updatedIssue;
+    return {
+      ...updatedIssue,
+      photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+    };
   }
 
   @Delete(':id')
@@ -87,7 +100,10 @@ export class IssueController {
       throw new BadRequestException('Unexpected error when deleting a issue');
     }
 
-    return issue;
+    return {
+      ...issue,
+      photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+    };
   }
 
   @Get(':latitude/:longitude')
