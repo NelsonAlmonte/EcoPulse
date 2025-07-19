@@ -54,24 +54,22 @@ userService.issues().data; track $index) {
       </div>
     </div>
     <div class="flex items-center justify-between">
-      <div>
-        <span class="inline-flex items-center text-gray-700">
-          <lucide-angular
-            class="me-1 text-gray-500"
-            [img]="userIcon"
-          ></lucide-angular>
+      <div class="flex items-center justify-start">
+        <lucide-angular
+          class="me-1 text-gray-500"
+          [img]="userIcon"
+        ></lucide-angular>
+        <span class="text-gray-700">
           {{ issue.user.name + " " + issue.user.last }}
         </span>
       </div>
-      <div>
-        <div class="flex flex-col content-center items-center">
-          <button
-            class="inline-flex cursor-pointer items-center justify-center rounded-lg text-sm text-gray-500 mb-0.5"
-          >
-            <lucide-angular [img]="headsUpIcon"></lucide-angular>
-          </button>
-          <span class="text-xs text-gray-500">12</span>
-        </div>
+      <div class="flex flex-col content-center items-center">
+        <button
+          class="inline-flex cursor-pointer items-center justify-center rounded-lg text-sm text-gray-500 mb-0.5"
+        >
+          <lucide-angular [img]="headsUpIcon"></lucide-angular>
+        </button>
+        <span class="text-xs text-gray-500">12</span>
       </div>
     </div>
   </div>

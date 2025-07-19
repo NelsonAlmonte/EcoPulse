@@ -35,8 +35,8 @@ export class ReportPage implements OnInit {
   cameraIcon = CameraIcon;
 
   ngOnInit(): void {
-    const image = `https://ionicframework.com/docs/img/demos/card-media.png`;
-    this.openReportModal(image);
+    // const image = `https://ionicframework.com/docs/img/demos/card-media.png`;
+    // this.openReportModal(image);
   }
 
   async takePicture(): Promise<void> {

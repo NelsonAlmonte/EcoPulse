@@ -7,7 +7,6 @@ import {
   inject,
   Injector,
   input,
-  OnInit,
   ViewChild,
 } from '@angular/core';
 import { GoogleMap, Marker } from '@capacitor/google-maps';
@@ -73,7 +72,18 @@ export class MapViewComponent implements AfterViewInit {
     await this.map.setOnMarkerClickListener(async (marker) => {
       const modal = await this.modalController.create({
         component: IssueDetailComponent,
-        cssClass: 'issue-modal',
+        // cssClass: [
+        //   'rounded-2xl',
+        //   'w-full',
+        //   // 'max-w-[400px]',
+        //   'h-auto',
+        //   'max-h-1/2',
+        //   'shadow-lg',
+        //   // 'left-1/2',
+        //   // '-translate-x-1/2',
+        //   // 'translate-y-1/2',
+        // ],
+        // backdropDismiss: true,
         componentProps: {
           latitude: marker.latitude,
           longitude: marker.longitude,
