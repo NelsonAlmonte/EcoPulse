@@ -1,6 +1,7 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import {
   IonContent,
+  IonFooter,
   IonHeader,
   IonLabel,
   IonSegment,
@@ -8,9 +9,9 @@ import {
   IonSegmentContent,
   IonSegmentView,
   IonTextarea,
-  IonTitle,
   IonToolbar,
   ModalController,
+  SegmentChangeEventDetail,
 } from '@ionic/angular/standalone';
 import { switchMap } from 'rxjs';
 import { Geolocation } from '@capacitor/geolocation';
@@ -27,6 +28,7 @@ import {
   LucideAngularModule,
   SendIcon,
 } from 'lucide-angular';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-report-modal',
@@ -35,7 +37,6 @@ import {
   imports: [
     IonContent,
     IonHeader,
-    IonTitle,
     IonToolbar,
     IonSegment,
     IonSegmentButton,
@@ -43,15 +44,18 @@ import {
     IonSegmentView,
     IonSegmentContent,
     IonTextarea,
+    IonFooter,
     CategoryListComponent,
     LocationPreviewComponent,
+    FormsModule,
     LucideAngularModule,
   ],
 })
-export class ReportModalComponent implements OnInit {
+export class ReportModalComponent {
   issueService = inject(IssueService);
   modalController = inject(ModalController);
   photo = input.required<string>();
+  comment: string = '';
   selectedCategory: string = '';
   currentSegment: string = 'photo';
   segments: string[] = ['photo', 'location', 'categories'];
@@ -59,10 +63,6 @@ export class ReportModalComponent implements OnInit {
   prevIcon = ArrowLeftIcon;
   sendIcon = SendIcon;
   cancelIcon = BanIcon;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   cancel(): Promise<boolean> {
     return this.modalController.dismiss(null, 'cancel');
@@ -77,6 +77,7 @@ export class ReportModalComponent implements OnInit {
       status: DEFAULT_STATUS,
       latitude: coordinates.coords.latitude.toString(),
       longitude: coordinates.coords.longitude.toString(),
+      comment: this.comment,
       category: this.selectedCategory,
       user: '1',
     };
@@ -106,7 +107,16 @@ export class ReportModalComponent implements OnInit {
       });
   }
 
-  dataUrlToFile(dataUrl: string, filename: string): File {
+  dataUrlToFile(input: string, filename: string): File {
+    const match = input.match(/\[Input Signal:\s*(.*?)\s*\]/);
+
+    if (!match || !match[1]) {
+      throw new Error(
+        'Base64 inválido o no encontrado en el formato esperado.'
+      );
+    }
+
+    const dataUrl = match[1];
     const [metadata, base64] = dataUrl.split(',');
     const mime = metadata.match(/:(.*?);/)![1];
     const binary = atob(base64);
@@ -119,21 +129,25 @@ export class ReportModalComponent implements OnInit {
     return new File([array], filename, { type: mime });
   }
 
-  next() {
+  next(): void {
     const index = this.segments.indexOf(this.currentSegment);
     if (index < this.segments.length - 1) {
       this.currentSegment = this.segments[index + 1];
     }
   }
 
-  back() {
+  back(): void {
     const index = this.segments.indexOf(this.currentSegment);
     if (index > 0) {
       this.currentSegment = this.segments[index - 1];
     }
   }
 
-  customCounterFormatter(inputLength: number, maxLength: number) {
-    return `${maxLength - inputLength} characters remaining`;
+  customCounterFormatter(inputLength: number, maxLength: number): string {
+    return `${maxLength - inputLength} caracteres restantes`;
+  }
+
+  changeCurrentSegment(event: CustomEvent<SegmentChangeEventDetail>): void {
+    this.currentSegment = event.detail.value as string;
   }
 }

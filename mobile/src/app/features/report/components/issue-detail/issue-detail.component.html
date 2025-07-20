@@ -1,12 +1,10 @@
-<div
-  class="max-w-sm bg-white border border-gray-200 rounded-3xl mb-4 issue-detail-card"
->
+<div class="bg-white border border-gray-200 rounded-2xl mb-4 issue-detail-card">
   <img
-    class="rounded-t-3xl w-full h-40 object-cover"
+    class="rounded-t-2xl rounded-b-2xl w-full h-50 object-cover"
     src="{{ issue().photo }}"
     alt="{{ issue().category.name }}"
   />
-  <div class="px-4 py-3">
+  <div class="px-4 py-5">
     <div class="flex items-center justify-between">
       @if (issue().status === DEFAULT_STATUS) {
       <span
@@ -35,7 +33,7 @@
         {{ issue().createdAt | relativeTime : "es-ES" }}
       </span>
     </div>
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center justify-between mb-6">
       <div>
         <h5 class="my-2! text-2xl! font-bold text-gray-900">
           {{ issue().category.name }}
@@ -58,11 +56,15 @@
           {{ issue().user.name + " " + issue().user.last }}
         </span>
       </div>
-      <div class="flex flex-col content-center items-center">
+      <div class="flex content-center items-center">
         <button
-          class="inline-flex cursor-pointer items-center justify-center rounded-lg text-sm text-gray-500 mb-0.5"
+          class="inline-flex cursor-pointer items-center justify-center rounded-lg text-sm text-gray-500"
         >
-          <lucide-angular [img]="headsUpIcon"></lucide-angular>
+          <lucide-angular
+            class="me-0.5"
+            [img]="headsUpIcon"
+            size="22"
+          ></lucide-angular>
         </button>
         <span class="text-xs text-gray-500">12</span>
       </div>

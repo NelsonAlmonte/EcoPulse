@@ -48,6 +48,7 @@ export class IssueController {
       photo: createIssueDto.photo,
       latitude: createIssueDto.latitude,
       longitude: createIssueDto.longitude,
+      comment: createIssueDto.comment,
       category: {
         connect: { id: createIssueDto.category },
       },

@@ -16,6 +16,9 @@ export class UserService {
         user: true,
       },
       take: 3,
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 }

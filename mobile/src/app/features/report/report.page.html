@@ -17,18 +17,14 @@
   <h4>Tus últimos reportes</h4>
   <app-issue-list></app-issue-list>
 
-  <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+  <div class="fixed bottom-6 right-0 z-50 ion-padding-end">
     <button
       type="button"
-      class="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-7 py-4 text-center inline-flex items-center shadow-lg"
+      class="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center shadow-xl"
       (click)="takePicture()"
     >
-      <lucide-angular
-        class="me-0.5"
-        [img]="cameraIcon"
-        size="18"
-      ></lucide-angular>
-      Abrir cámara
+      <lucide-angular [img]="cameraIcon" size="24"></lucide-angular>
+      <!-- Abrir cámara -->
     </button>
   </div>
 </ion-content>
