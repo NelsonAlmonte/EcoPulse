@@ -16,7 +16,7 @@ import {
   CreateIssueDto,
   SupaBaseUploadFileResponse,
   UpdateIssueDto,
-} from 'src/dto/issue.dto';
+} from 'src/issue/issue.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('issue')

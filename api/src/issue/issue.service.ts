@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Issue, Prisma } from '@prisma/client';
 import { createClient } from '@supabase/supabase-js';
-import { SupaBaseUploadFileResponse } from 'src/dto/issue.dto';
+import { SupaBaseUploadFileResponse } from 'src/issue/issue.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()

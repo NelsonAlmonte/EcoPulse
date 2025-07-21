@@ -100,6 +100,7 @@ export class ReportModalComponent {
         if (result.error) console.log('ERROR', result.error);
         this.modalController.dismiss(result.data, 'confirm');
 
+        //TODO: Update user issues
         this.issueService.issues.update((current) => ({
           ...current,
           data: [...(current.data ?? []), result.data!],
