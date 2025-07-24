@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
 import { PrismaService } from 'src/prisma.service';
-import { LogInUserDto, SignupUserDto, ValidatedUser } from './auth.dto';
+import { AuthResponseDto, LogInUserDto, SignupUserDto } from './auth.dto';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/user.dto';
 import * as bcrypt from 'bcrypt';
@@ -14,25 +14,25 @@ export class AuthService {
     private userService: UserService,
   ) {}
 
-  async validateUser(
-    email: string,
-    pass: string,
-  ): Promise<ValidatedUser | null> {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
+  // async validateUser(
+  //   email: string,
+  //   pass: string,
+  // ): Promise<ValidatedUser | null> {
+  //   const user = await this.prisma.user.findUnique({
+  //     where: {
+  //       email,
+  //     },
+  //   });
 
-    if (user && (await bcrypt.compare(pass, user.password))) {
-      const { password, ...result } = user;
-      return result;
-    }
+  //   if (user && (await bcrypt.compare(pass, user.password))) {
+  //     const { password, ...result } = user;
+  //     return result;
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 
-  async login(logInUserDto: LogInUserDto): Promise<string> {
+  async login(logInUserDto: LogInUserDto): Promise<AuthResponseDto> {
     const supabase = createClient(
       process.env.PUBLIC_SUPABASE_URL,
       process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
@@ -44,14 +44,19 @@ export class AuthService {
     });
 
     if (error) {
-      console.log(error);
-      return null;
+      throw new UnauthorizedException('Credenciales invalidas');
     }
 
-    return data.session.access_token;
+    const reponse: AuthResponseDto = {
+      id: data.user.id,
+      email: data.user.email,
+      token: data.session.access_token,
+    };
+
+    return reponse;
   }
 
-  async signUpUser(signupUserDto: SignupUserDto) {
+  async signUpUser(signupUserDto: SignupUserDto): Promise<AuthResponseDto> {
     const supabase = createClient(
       process.env.PUBLIC_SUPABASE_URL,
       process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
@@ -79,7 +84,13 @@ export class AuthService {
 
     if (!createdUser) return null;
 
-    return data;
+    const response: AuthResponseDto = {
+      id: data.user.id,
+      email: data.user.email,
+      token: data.session.access_token,
+    };
+
+    return response;
   }
 
   async encryptPassword(password: string): Promise<string> {

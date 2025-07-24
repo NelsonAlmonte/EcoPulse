@@ -16,3 +16,9 @@ export type ValidatedUser = Pick<
   User,
   'id' | 'name' | 'last' | 'email' | 'role' | 'createdAt'
 >;
+
+export interface AuthResponseDto {
+  id: string;
+  email: string;
+  token: string;
+}

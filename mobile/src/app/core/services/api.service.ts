@@ -14,10 +14,13 @@ export class ApiService {
       map((data) => ({ status: 'SUCCESS' as const, data: data, error: null })),
       catchError((err) => {
         console.log(err);
+        const errorMessage =
+          err?.error?.message || err?.message || 'Unknown error';
+
         return of({
           status: 'ERROR' as const,
           data: null,
-          error: err instanceof Error ? err : new Error('Unknown error'),
+          error: new Error(errorMessage),
         });
       })
     );
@@ -31,10 +34,13 @@ export class ApiService {
       map((data) => ({ status: 'SUCCESS' as const, data: data, error: null })),
       catchError((err) => {
         console.log(err);
+        const errorMessage =
+          err?.error?.message || err?.message || 'Unknown error';
+
         return of({
           status: 'ERROR' as const,
           data: null,
-          error: err instanceof Error ? err : new Error('Unknown error'),
+          error: new Error(errorMessage),
         });
       })
     );
