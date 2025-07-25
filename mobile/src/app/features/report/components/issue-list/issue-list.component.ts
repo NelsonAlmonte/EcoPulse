@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
 import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
 import { DEFAULT_STATUS } from '@shared/constants/system.constant';
@@ -18,6 +19,7 @@ import {
 })
 export class IssueListComponent implements OnInit {
   userService = inject(UserService);
+  authService = inject(AuthService);
   DEFAULT_STATUS = DEFAULT_STATUS;
   checkCircle = CheckCircleIcon;
   clockIcon = ClockIcon;
@@ -25,7 +27,6 @@ export class IssueListComponent implements OnInit {
   userIcon = CircleUserIcon;
 
   ngOnInit() {
-    // TODO: Get logged in user id
-    this.userService.getUserIssues('1');
+    this.userService.getUserIssues(this.authService.loggedUserData().id);
   }
 }

@@ -16,13 +16,14 @@ export class SupabaseAuthGuard implements CanActivate {
       throw new UnauthorizedException('Usuario no autenticado');
     }
 
-    const token = authHeader.split(' ')[1];
+    const accessToken = authHeader.split(' ')[1];
     const supabase = createClient(
       process.env.PUBLIC_SUPABASE_URL,
       process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
     );
 
-    const authenticatedUser: UserResponse = await supabase.auth.getUser(token);
+    const authenticatedUser: UserResponse =
+      await supabase.auth.getUser(accessToken);
 
     if (authenticatedUser.error) {
       throw new UnauthorizedException('Token invalido');

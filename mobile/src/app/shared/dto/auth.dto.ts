@@ -6,7 +6,8 @@ export interface LoginUserDto {
 export interface AuthResponseDto {
   id: string;
   email: string;
-  token: string;
+  access_token: string;
+  refresh_token: string;
 }
 
 export interface SignupUserDto {
@@ -14,4 +15,8 @@ export interface SignupUserDto {
   last: string;
   email: string;
   password: string;
+}
+
+export interface RefreshUserSessionDto {
+  refresh_token: string;
 }

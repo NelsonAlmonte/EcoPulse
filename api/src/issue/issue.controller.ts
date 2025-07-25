@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { IssueService } from './issue.service';
@@ -18,11 +19,13 @@ import {
   UpdateIssueDto,
 } from 'src/issue/issue.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 
 @Controller('issue')
 export class IssueController {
   constructor(private issueService: IssueService) {}
 
+  @UseGuards(SupabaseAuthGuard)
   @Get()
   async issues(): Promise<Issue[] | null> {
     const issues = await this.issueService.getIssues();
@@ -35,11 +38,13 @@ export class IssueController {
     }));
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Get(':id')
   async issue(@Param('id') id: string): Promise<Issue | null> {
     return await this.issueService.getIssue(id);
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Post()
   async create(
     @Body() createIssueDto: CreateIssueDto,
@@ -66,6 +71,7 @@ export class IssueController {
     };
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Put(':id')
   async update(
     @Body() updateIssueDto: UpdateIssueDto,
@@ -93,6 +99,7 @@ export class IssueController {
     };
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Issue | BadRequestException> {
     const issue = await this.issueService.deleteIssue(id);
@@ -107,6 +114,7 @@ export class IssueController {
     };
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Get(':latitude/:longitude')
   async issueByCoords(
     @Param('latitude') latitude: string,
@@ -115,6 +123,7 @@ export class IssueController {
     return await this.issueService.getIssueByCoords(latitude, longitude);
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Post('upload')
   @UseInterceptors(FileInterceptor('photo'))
   async uploadPhoto(

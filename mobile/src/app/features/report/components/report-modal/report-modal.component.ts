@@ -1,4 +1,5 @@
 import { Component, inject, input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonFooter,
@@ -16,11 +17,12 @@ import {
 import { switchMap } from 'rxjs';
 import { Geolocation } from '@capacitor/geolocation';
 import { IssueService } from '@core/services/issue.service';
+import { AuthService } from '@core/services/auth.service';
 import { CategoryListComponent } from '@features/report/components/category-list/category-list.component';
 import { LocationPreviewComponent } from '@features/report/components/location-preview/location-preview.component';
 import { CreateIssueDto } from '@shared/dto/issue.dto';
-import { v4 as uuidv4 } from 'uuid';
 import { DEFAULT_STATUS } from '@shared/constants/system.constant';
+import { v4 as uuidv4 } from 'uuid';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -28,7 +30,6 @@ import {
   LucideAngularModule,
   SendIcon,
 } from 'lucide-angular';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-report-modal',
@@ -53,6 +54,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ReportModalComponent {
   issueService = inject(IssueService);
+  authService = inject(AuthService);
   modalController = inject(ModalController);
   photo = input.required<string>();
   comment: string = '';
@@ -79,7 +81,7 @@ export class ReportModalComponent {
       longitude: coordinates.coords.longitude.toString(),
       comment: this.comment,
       category: this.selectedCategory,
-      user: '1',
+      user: this.authService.loggedUserData().id,
     };
     const formData = new FormData();
 

@@ -1,6 +1,6 @@
-import { Body, Controller, Post, UseGuards, Get } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LogInUserDto, SignupUserDto } from './auth.dto';
+import { LogInUserDto, RefreshUserSessionDto, SignupUserDto } from './auth.dto';
 import { SupabaseAuthGuard } from './supabase-auth.guard';
 
 @Controller('auth')
@@ -12,14 +12,13 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
-  @UseGuards(SupabaseAuthGuard)
-  @Get('foo')
-  foo() {
-    return 'Siuuuuuuu';
-  }
-
   @Post('signup')
   async sigup(@Body() signupUserDto: SignupUserDto) {
     return this.authService.signUpUser(signupUserDto);
+  }
+
+  @Post('refresh')
+  async refresh(@Body() refreshUserSessionDto: RefreshUserSessionDto) {
+    return this.authService.refreshSession(refreshUserSessionDto);
   }
 }

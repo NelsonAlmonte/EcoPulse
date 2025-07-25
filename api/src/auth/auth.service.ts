@@ -1,11 +1,15 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
 import { PrismaService } from 'src/prisma.service';
-import { AuthResponseDto, LogInUserDto, SignupUserDto } from './auth.dto';
+import {
+  AuthResponseDto,
+  LogInUserDto,
+  RefreshUserSessionDto,
+  SignupUserDto,
+} from './auth.dto';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/user.dto';
 import * as bcrypt from 'bcrypt';
-import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -50,7 +54,8 @@ export class AuthService {
     const reponse: AuthResponseDto = {
       id: data.user.id,
       email: data.user.email,
-      token: data.session.access_token,
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
     };
 
     return reponse;
@@ -87,7 +92,8 @@ export class AuthService {
     const response: AuthResponseDto = {
       id: data.user.id,
       email: data.user.email,
-      token: data.session.access_token,
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
     };
 
     return response;
@@ -96,5 +102,31 @@ export class AuthService {
   async encryptPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
+  }
+
+  async refreshSession(
+    refreshUserSessionDto: RefreshUserSessionDto,
+  ): Promise<AuthResponseDto> {
+    const supabase = createClient(
+      process.env.PUBLIC_SUPABASE_URL,
+      process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
+    );
+
+    const { data, error } = await supabase.auth.refreshSession({
+      refresh_token: refreshUserSessionDto.refresh_token,
+    });
+
+    if (error) {
+      throw new UnauthorizedException('Error al refrescar la sesión');
+    }
+
+    const response: AuthResponseDto = {
+      id: data.user.id,
+      email: data.user.email,
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+    };
+
+    return response;
   }
 }

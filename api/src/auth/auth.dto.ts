@@ -20,5 +20,10 @@ export type ValidatedUser = Pick<
 export interface AuthResponseDto {
   id: string;
   email: string;
-  token: string;
+  access_token: string;
+  refresh_token: string;
+}
+
+export interface RefreshUserSessionDto {
+  refresh_token: string;
 }

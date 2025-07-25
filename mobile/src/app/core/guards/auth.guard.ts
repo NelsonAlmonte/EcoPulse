@@ -13,7 +13,7 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   const parsedData: AuthResponseDto = JSON.parse(authData);
 
-  if (!parsedData.token) {
+  if (!parsedData.access_token) {
     router.navigate(['/login']);
     return false;
   }

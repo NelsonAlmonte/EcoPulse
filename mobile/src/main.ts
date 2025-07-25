@@ -14,7 +14,13 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { environment } from './environments/environment';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
+import { refreshTokenInterceptorInterceptor } from '@core/interceptors/refresh-token-interceptor-interceptor';
+import { addTokenToHeaderInterceptor } from '@core/interceptors/add-token-to-header-interceptor';
 
 defineCustomElements(window);
 if (environment.production) {
@@ -25,6 +31,12 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular({ useSetInputAPI: true }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(withFetch()),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([
+        addTokenToHeaderInterceptor,
+        refreshTokenInterceptorInterceptor,
+      ])
+    ),
   ],
 });
