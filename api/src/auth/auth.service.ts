@@ -1,6 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { createClient } from '@supabase/supabase-js';
-import { PrismaService } from 'src/prisma.service';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
   AuthResponseDto,
   LogInUserDto,
@@ -13,36 +12,22 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private prisma: PrismaService,
-    private userService: UserService,
-  ) {}
+  supabase: SupabaseClient;
 
-  // async validateUser(
-  //   email: string,
-  //   pass: string,
-  // ): Promise<ValidatedUser | null> {
-  //   const user = await this.prisma.user.findUnique({
-  //     where: {
-  //       email,
-  //     },
-  //   });
-
-  //   if (user && (await bcrypt.compare(pass, user.password))) {
-  //     const { password, ...result } = user;
-  //     return result;
-  //   }
-
-  //   return null;
-  // }
-
-  async login(logInUserDto: LogInUserDto): Promise<AuthResponseDto> {
-    const supabase = createClient(
+  constructor(private userService: UserService) {
+    this.supabase = createClient(
       process.env.PUBLIC_SUPABASE_URL,
       process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
+      {
+        auth: {
+          autoRefreshToken: false,
+        },
+      },
     );
+  }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+  async login(logInUserDto: LogInUserDto): Promise<AuthResponseDto> {
+    const { data, error } = await this.supabase.auth.signInWithPassword({
       email: logInUserDto.email,
       password: logInUserDto.password,
     });
@@ -62,12 +47,7 @@ export class AuthService {
   }
 
   async signUpUser(signupUserDto: SignupUserDto): Promise<AuthResponseDto> {
-    const supabase = createClient(
-      process.env.PUBLIC_SUPABASE_URL,
-      process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
-    );
-
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await this.supabase.auth.signUp({
       email: signupUserDto.email,
       password: signupUserDto.password,
     });
@@ -107,12 +87,7 @@ export class AuthService {
   async refreshSession(
     refreshUserSessionDto: RefreshUserSessionDto,
   ): Promise<AuthResponseDto> {
-    const supabase = createClient(
-      process.env.PUBLIC_SUPABASE_URL,
-      process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
-    );
-
-    const { data, error } = await supabase.auth.refreshSession({
+    const { data, error } = await this.supabase.auth.refreshSession({
       refresh_token: refreshUserSessionDto.refresh_token,
     });
 

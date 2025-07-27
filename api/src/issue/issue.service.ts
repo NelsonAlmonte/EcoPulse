@@ -90,13 +90,13 @@ export class IssueService {
       process.env.PUBLIC_SUPABASE_URL,
       process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
     );
-    const { data } = await supabase.storage
+    const { data, error } = await supabase.storage
       .from('issues')
       .upload(file.originalname, file.buffer, {
         contentType: 'image/jpeg',
       });
 
-    if (!data) return null;
+    if (error) return null;
 
     return data;
   }

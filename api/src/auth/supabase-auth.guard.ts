@@ -4,10 +4,14 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { createClient, UserResponse } from '@supabase/supabase-js';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 @Injectable()
 export class SupabaseAuthGuard implements CanActivate {
+  private jwks = createRemoteJWKSet(
+    new URL(`${process.env.PUBLIC_SUPABASE_URL}/auth/v1/.well-known/jwks.json`),
+  );
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers['authorization'] as string;
@@ -17,18 +21,17 @@ export class SupabaseAuthGuard implements CanActivate {
     }
 
     const accessToken = authHeader.split(' ')[1];
-    const supabase = createClient(
-      process.env.PUBLIC_SUPABASE_URL,
-      process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
-    );
 
-    const authenticatedUser: UserResponse =
-      await supabase.auth.getUser(accessToken);
+    try {
+      const { payload } = await jwtVerify(accessToken, this.jwks, {
+        algorithms: ['ES256'],
+      });
 
-    if (authenticatedUser.error) {
-      throw new UnauthorizedException('Token invalido');
+      if (payload.aud !== 'authenticated') throw new UnauthorizedException();
+
+      return true;
+    } catch (err) {
+      throw new UnauthorizedException('Token inválido o expirado');
     }
-
-    return true;
   }
 }

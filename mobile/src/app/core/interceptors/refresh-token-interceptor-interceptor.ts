@@ -9,7 +9,7 @@ export const refreshTokenInterceptorInterceptor: HttpInterceptorFn = (
 ) => {
   const authService = inject(AuthService);
   const loggedUserData = authService.loggedUserData();
-  //TODO: Arreglar esto. NEcesita el token para refrescar la sesion
+
   return next(req).pipe(
     catchError((error) => {
       if (
