@@ -38,10 +38,13 @@ export class IssueController {
     }));
   }
 
-  @UseGuards(SupabaseAuthGuard)
-  @Get(':id')
-  async issue(@Param('id') id: string): Promise<Issue | null> {
-    return await this.issueService.getIssue(id);
+  // @UseGuards(SupabaseAuthGuard)
+  @Get(':issueId/:userId')
+  async issue(
+    @Param('issueId') issueId: string,
+    @Param('userId') userId: string,
+  ): Promise<Issue | null> {
+    return await this.issueService.getIssue(issueId, userId);
   }
 
   @UseGuards(SupabaseAuthGuard)

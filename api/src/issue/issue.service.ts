@@ -17,14 +17,27 @@ export class IssueService {
     });
   }
 
-  async getIssue(id: string): Promise<Issue | null> {
+  async getIssue(issueId: string, userId: string): Promise<Issue | null> {
     return this.prisma.issue.findUnique({
       where: {
-        id,
+        id: issueId,
       },
       include: {
         category: true,
         user: true,
+        highlights: {
+          where: {
+            userId,
+          },
+          select: {
+            createdAt: true,
+          },
+        },
+        _count: {
+          select: {
+            highlights: true,
+          },
+        },
       },
     });
   }
