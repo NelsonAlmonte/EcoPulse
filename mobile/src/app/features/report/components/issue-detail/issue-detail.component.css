@@ -2,3 +2,8 @@ ion-avatar {
   width: 50px;
   height: 50px;
 }
+
+::ng-deep lucide-angular.highlighted svg {
+  stroke: var(--color-amber-500);
+  fill: var(--color-amber-500);
+}

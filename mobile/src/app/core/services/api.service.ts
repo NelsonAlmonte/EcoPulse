@@ -39,4 +39,18 @@ export class ApiService {
       })
     );
   }
+
+  doDelete<T = unknown>(url: string): Observable<ApiResult<T>> {
+    return this.http.delete<T>(url).pipe(
+      map((data) => ({ status: 'SUCCESS' as const, data: data, error: null })),
+      catchError((err) => {
+        console.log(err);
+        return of({
+          status: 'ERROR' as const,
+          data: null,
+          error: err.error,
+        });
+      })
+    );
+  }
 }

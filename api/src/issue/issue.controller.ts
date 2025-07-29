@@ -15,6 +15,7 @@ import { IssueService } from './issue.service';
 import { Issue, Prisma } from '@prisma/client';
 import {
   CreateIssueDto,
+  GetIssueDto,
   SupaBaseUploadFileResponse,
   UpdateIssueDto,
 } from 'src/issue/issue.dto';
@@ -38,13 +39,18 @@ export class IssueController {
     }));
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get(':issueId/:userId')
   async issue(
     @Param('issueId') issueId: string,
     @Param('userId') userId: string,
-  ): Promise<Issue | null> {
-    return await this.issueService.getIssue(issueId, userId);
+  ): Promise<GetIssueDto | null> {
+    const issue = await this.issueService.getIssue(issueId, userId);
+
+    return {
+      ...issue,
+      photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+    };
   }
 
   @UseGuards(SupabaseAuthGuard)

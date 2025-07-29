@@ -15,7 +15,9 @@
   <app-location-preview></app-location-preview>
 
   <h4>Tus últimos reportes</h4>
-  <app-issue-list></app-issue-list>
+  <div class="mb-20">
+    <app-issue-list></app-issue-list>
+  </div>
 
   <div class="fixed bottom-6 right-0 z-50 ion-padding-end">
     <button
@@ -24,7 +26,6 @@
       (click)="takePicture()"
     >
       <lucide-angular [img]="cameraIcon" size="24"></lucide-angular>
-      <!-- Abrir cámara -->
     </button>
   </div>
 </ion-content>

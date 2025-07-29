@@ -53,4 +53,14 @@ export class IssueService {
       formData
     );
   }
+
+  getIssue(issueId: string, userId: string): void {
+    this.issue.set({ status: 'LOADING', data: null, error: null });
+
+    this.apiService
+      .doFetch<Issue>(`${this.URL}/${issueId}/${userId}`)
+      .subscribe((result) => {
+        if (result.data) this.issue.set(result);
+      });
+  }
 }

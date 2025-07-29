@@ -13,6 +13,8 @@ export interface Issue {
   category: Category;
   createdAt: string;
   user: User;
+  highlights: number;
+  hasCurrentUserHighlight: boolean;
 }
 
 export interface SupaBaseUploadFileResponse {

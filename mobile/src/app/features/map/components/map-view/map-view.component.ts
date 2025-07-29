@@ -7,6 +7,7 @@ import {
   inject,
   Injector,
   input,
+  signal,
   ViewChild,
 } from '@angular/core';
 import { GoogleMap, Marker } from '@capacitor/google-maps';
@@ -16,6 +17,8 @@ import { ApiResult } from '@core/interfaces/api.interface';
 import { Issue } from '@shared/models/issue.model';
 import { ModalController } from '@ionic/angular/standalone';
 import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
+import { IssueService } from '@core/services/issue.service';
+import { AuthService } from '@core/services/auth.service';
 
 interface UnsafeCluster {
   latitude: number | (() => number);
@@ -31,10 +34,12 @@ export class MapViewComponent implements AfterViewInit {
   issues = input.required<ApiResult<Issue[]>>();
   injector = inject(Injector);
   modalController = inject(ModalController);
+  issueService = inject(IssueService);
+  authService = inject(AuthService);
   @ViewChild('map') mapRef!: ElementRef<HTMLElement>;
   map!: GoogleMap;
   markerIds: string[] = [];
-  markerData = new Map<string, Issue>();
+  markerData = new Map<string, string>();
 
   constructor() {}
 
@@ -71,17 +76,19 @@ export class MapViewComponent implements AfterViewInit {
 
   async viewIssueDetail() {
     await this.map.setOnMarkerClickListener(async (marker) => {
-      const issue = this.markerData.get(marker.markerId);
-      console.log(issue);
+      const issueId = this.markerData.get(marker.markerId);
+      const userId = this.authService.loggedUserData().id;
       const modal = await this.modalController.create({
         component: IssueDetailComponent,
         cssClass: 'issue-detail-modal',
         componentProps: {
-          issue: issue,
+          issue: {},
         },
       });
 
       modal.present();
+
+      this.issueService.getIssue(issueId!, userId);
     });
   }
 
@@ -106,7 +113,7 @@ export class MapViewComponent implements AfterViewInit {
         this.markerIds = await this.map.addMarkers(markers);
 
         this.markerIds.forEach((id, index) => {
-          this.markerData.set(id, issues[index]);
+          this.markerData.set(id, issues[index].id);
         });
 
         await this.map.enableClustering();

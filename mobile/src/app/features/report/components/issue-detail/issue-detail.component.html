@@ -1,12 +1,15 @@
+@if (!issueData) {
+<p>CARGANDO...</p>
+} @if (issueData) {
 <div class="bg-white border border-gray-200 rounded-2xl mb-4 issue-detail-card">
   <img
     class="rounded-t-2xl rounded-b-2xl w-full h-50 object-cover"
-    src="{{ issue().photo }}"
-    alt="{{ issue().category.name }}"
+    src="{{ issueData.photo }}"
+    alt="{{ issueData.category.name }}"
   />
   <div class="px-4 py-5">
     <div class="flex items-center justify-between">
-      @if (issue().status === DEFAULT_STATUS) {
+      @if (issueData.status === DEFAULT_STATUS) {
       <span
         class="inline-flex items-center capitalize text-xs text-amber-800 bg-amber-500/30 font-medium px-2.5 py-1 rounded-2xl"
       >
@@ -15,7 +18,7 @@
           [img]="clockIcon"
           size="12"
         ></lucide-angular>
-        {{ issue().status.toLocaleLowerCase() }}
+        {{ issueData.status.toLocaleLowerCase() }}
       </span>
       } @else {
       <span
@@ -26,21 +29,21 @@
           [img]="checkCircle"
           size="12"
         ></lucide-angular>
-        {{ issue().status.toLocaleLowerCase() }}
+        {{ issueData.status.toLocaleLowerCase() }}
       </span>
       }
       <span class="text-xs text-gray-500">
-        {{ issue().createdAt | relativeTime : "es-ES" }}
+        {{ issueData.createdAt | relativeTime : "es-ES" }}
       </span>
     </div>
     <div class="flex items-center justify-between mb-6">
       <div>
         <h5 class="my-2! text-2xl! font-bold text-gray-900">
-          {{ issue().category.name }}
+          {{ issueData.category.name }}
         </h5>
-        @if (issue().comment) {
+        @if (issueData.comment) {
         <p class="font-normal text-gray-600">
-          {{ issue().comment }}
+          {{ issueData.comment }}
         </p>
         }
       </div>
@@ -53,21 +56,11 @@
           size="22"
         ></lucide-angular>
         <span class="text-gray-700 text-sm">
-          {{ issue().user.name + " " + issue().user.last }}
+          {{ issueData.user.name + " " + issueData.user.last }}
         </span>
       </div>
-      <div class="flex content-center items-center">
-        <button
-          class="inline-flex cursor-pointer items-center justify-center rounded-lg text-sm text-gray-500"
-        >
-          <lucide-angular
-            class="me-0.5"
-            [img]="headsUpIcon"
-            size="22"
-          ></lucide-angular>
-        </button>
-        <span class="text-xs text-gray-500">12</span>
-      </div>
+      <app-highlight-button [issue]="issueData"></app-highlight-button>
     </div>
   </div>
 </div>
+}

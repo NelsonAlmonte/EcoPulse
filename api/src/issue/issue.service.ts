@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Issue, Prisma } from '@prisma/client';
 import { createClient } from '@supabase/supabase-js';
-import { SupaBaseUploadFileResponse } from 'src/issue/issue.dto';
+import { GetIssueDto, SupaBaseUploadFileResponse } from 'src/issue/issue.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class IssueService {
   constructor(private prisma: PrismaService) {}
 
-  async getIssues(): Promise<Issue[] | null> {
+  getIssues(): Promise<Issue[] | null> {
     return this.prisma.issue.findMany({
       include: {
         category: true,
@@ -17,8 +17,8 @@ export class IssueService {
     });
   }
 
-  async getIssue(issueId: string, userId: string): Promise<Issue | null> {
-    return this.prisma.issue.findUnique({
+  async getIssue(issueId: string, userId: string): Promise<GetIssueDto | null> {
+    const issue = await this.prisma.issue.findUnique({
       where: {
         id: issueId,
       },
@@ -32,6 +32,7 @@ export class IssueService {
           select: {
             createdAt: true,
           },
+          take: 1,
         },
         _count: {
           select: {
@@ -40,9 +41,18 @@ export class IssueService {
         },
       },
     });
+    const transformedIssue = {
+      ...issue,
+      highlights: issue._count.highlights ? issue._count.highlights : 0,
+      hasCurrentUserHighlight: issue.highlights.length ? true : false,
+    };
+
+    delete transformedIssue._count;
+
+    return transformedIssue;
   }
 
-  async createIssue(createIssueDto: Prisma.IssueCreateInput): Promise<Issue> {
+  createIssue(createIssueDto: Prisma.IssueCreateInput): Promise<Issue> {
     return this.prisma.issue.create({
       data: createIssueDto,
       include: {
@@ -52,7 +62,7 @@ export class IssueService {
     });
   }
 
-  async updateIssue(
+  updateIssue(
     updateIssueDto: Prisma.IssueUpdateInput,
     id: string,
   ): Promise<Issue> {
@@ -68,7 +78,7 @@ export class IssueService {
     });
   }
 
-  async deleteIssue(id: string): Promise<Issue> {
+  deleteIssue(id: string): Promise<Issue> {
     return this.prisma.issue.delete({
       where: {
         id: id,
@@ -80,10 +90,7 @@ export class IssueService {
     });
   }
 
-  async getIssueByCoords(
-    latitude: string,
-    longitude: string,
-  ): Promise<Issue | null> {
+  getIssueByCoords(latitude: string, longitude: string): Promise<Issue | null> {
     return this.prisma.issue.findFirst({
       where: {
         latitude,

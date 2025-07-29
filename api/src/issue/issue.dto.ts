@@ -1,4 +1,4 @@
-import { Status } from '@prisma/client';
+import { Category, Status, User } from '@prisma/client';
 
 export interface CreateIssueDto {
   photo: string;
@@ -23,4 +23,20 @@ export interface SupaBaseUploadFileResponse {
   id: string;
   path: string;
   fullPath: string;
+}
+
+export interface GetIssueDto {
+  id: string;
+  photo: string;
+  status: string;
+  latitude: string;
+  longitude: string;
+  comment?: string;
+  categoryId: string;
+  userId: string;
+  category: Category;
+  createdAt: Date;
+  user: User;
+  highlights: number;
+  hasCurrentUserHighlight: boolean;
 }
