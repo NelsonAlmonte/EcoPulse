@@ -12,7 +12,12 @@ export class IssueService {
     return this.prisma.issue.findMany({
       include: {
         category: true,
-        user: true,
+        user: {
+          omit: {
+            password: true,
+            role: true,
+          },
+        },
       },
     });
   }
@@ -24,7 +29,12 @@ export class IssueService {
       },
       include: {
         category: true,
-        user: true,
+        user: {
+          omit: {
+            password: true,
+            role: true,
+          },
+        },
         highlights: {
           where: {
             userId,
@@ -73,7 +83,12 @@ export class IssueService {
       },
       include: {
         category: true,
-        user: true,
+        user: {
+          omit: {
+            password: true,
+            role: true,
+          },
+        },
       },
     });
   }
@@ -85,7 +100,12 @@ export class IssueService {
       },
       include: {
         category: true,
-        user: true,
+        user: {
+          omit: {
+            password: true,
+            role: true,
+          },
+        },
       },
     });
   }
@@ -98,7 +118,12 @@ export class IssueService {
       },
       include: {
         category: true,
-        user: true,
+        user: {
+          omit: {
+            password: true,
+            role: true,
+          },
+        },
       },
     });
   }

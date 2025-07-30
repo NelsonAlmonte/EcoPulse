@@ -1,4 +1,5 @@
 import { Category, Status, User } from '@prisma/client';
+import { GetUserDto } from 'src/user/user.dto';
 
 export interface CreateIssueDto {
   photo: string;
@@ -36,7 +37,7 @@ export interface GetIssueDto {
   userId: string;
   category: Category;
   createdAt: Date;
-  user: User;
+  user: GetUserDto;
   highlights: number;
   hasCurrentUserHighlight: boolean;
 }

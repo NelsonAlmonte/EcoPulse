@@ -60,6 +60,7 @@ export class IssueService {
     this.apiService
       .doFetch<Issue>(`${this.URL}/${issueId}/${userId}`)
       .subscribe((result) => {
+        console.log(result.data);
         if (result.data) this.issue.set(result);
       });
   }

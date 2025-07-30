@@ -4,6 +4,4 @@ export interface User {
   last: string;
   email: string;
   createdAt: string;
-  role: string;
-  zoneId: string;
 }

@@ -18,7 +18,8 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
-        loadComponent: () => import('./tab3/tab3.page').then((m) => m.Tab3Page),
+        loadComponent: () =>
+          import('../features/profile/profile.page').then((m) => m.ProfilePage),
       },
       {
         path: '',

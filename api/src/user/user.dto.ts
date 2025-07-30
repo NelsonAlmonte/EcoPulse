@@ -8,3 +8,10 @@ export interface CreateUserDto {
   password: string;
   role: Role;
 }
+
+export interface GetUserDto {
+  name: string;
+  last: string;
+  email: string;
+  createdAt: Date;
+}

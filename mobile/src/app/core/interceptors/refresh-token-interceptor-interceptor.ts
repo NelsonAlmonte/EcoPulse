@@ -3,7 +3,8 @@ import { inject } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
 import { catchError, EMPTY, switchMap, throwError } from 'rxjs';
 
-const RETRY_HEADER = 'x-refresh-retry';
+const MAX_RETRIES = 1;
+const retryCounts = new Map<string, number>();
 
 export const refreshTokenInterceptorInterceptor: HttpInterceptorFn = (
   req,
@@ -14,14 +15,17 @@ export const refreshTokenInterceptorInterceptor: HttpInterceptorFn = (
 
   return next(req).pipe(
     catchError((error) => {
-      const alreadyRetried = req.headers.has(RETRY_HEADER);
+      const url = req.url;
+      const currentRetry = retryCounts.get(url) || 0;
 
       if (
         error instanceof HttpErrorResponse &&
         error.status === 401 &&
         loggedUserData &&
-        !alreadyRetried
+        currentRetry < MAX_RETRIES
       ) {
+        retryCounts.set(url, currentRetry + 1);
+
         return authService
           .refreshSession({ refresh_token: loggedUserData.refresh_token })
           .pipe(
@@ -33,7 +37,6 @@ export const refreshTokenInterceptorInterceptor: HttpInterceptorFn = (
                   setHeaders: {
                     Authorization: `Bearer ${result.data.access_token}`,
                   },
-                  headers: req.headers.set(RETRY_HEADER, '1'),
                 });
 
                 return next(retryReq);
@@ -49,6 +52,7 @@ export const refreshTokenInterceptorInterceptor: HttpInterceptorFn = (
           );
       }
 
+      retryCounts.delete(url);
       return throwError(() => error);
     })
   );
