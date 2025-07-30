@@ -30,6 +30,9 @@ import {
   LucideAngularModule,
   SendIcon,
 } from 'lucide-angular';
+import { UserService } from '@core/services/user.service';
+import { ApiResult } from '@core/interfaces/api.interface';
+import { Issue } from '@shared/models/issue.model';
 
 @Component({
   selector: 'app-report-modal',
@@ -55,6 +58,7 @@ import {
 export class ReportModalComponent {
   issueService = inject(IssueService);
   authService = inject(AuthService);
+  userService = inject(UserService);
   modalController = inject(ModalController);
   photo = input.required<string>();
   comment: string = '';
@@ -70,15 +74,39 @@ export class ReportModalComponent {
     return this.modalController.dismiss(null, 'cancel');
   }
 
+  //NOTE: Test
+  getRandomCoordinatesInDominicanRepublic(): {
+    latitude: number;
+    longitude: number;
+  } {
+    // Algunas regiones terrestres de RD aproximadas (simplificado)
+    const landAreas = [
+      { minLat: 18.4, maxLat: 19.9, minLng: -71.8, maxLng: -69.9 }, // Norte-centro
+      { minLat: 18.0, maxLat: 18.6, minLng: -71.5, maxLng: -70.0 }, // Sur
+      { minLat: 18.4, maxLat: 18.7, minLng: -70.0, maxLng: -68.5 }, // Este
+    ];
+
+    const area = landAreas[Math.floor(Math.random() * landAreas.length)];
+
+    const latitude = Math.random() * (area.maxLat - area.minLat) + area.minLat;
+    const longitude = Math.random() * (area.maxLng - area.minLng) + area.minLng;
+
+    return { latitude, longitude };
+  }
+
   async sendReport(): Promise<void> {
     const coordinates = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
     });
+    const { latitude, longitude } =
+      this.getRandomCoordinatesInDominicanRepublic();
     const issue: CreateIssueDto = {
       photo: '',
       status: DEFAULT_STATUS,
-      latitude: coordinates.coords.latitude.toString(),
-      longitude: coordinates.coords.longitude.toString(),
+      latitude: latitude.toString(),
+      longitude: longitude.toString(),
+      // latitude: coordinates.coords.latitude.toString(),
+      // longitude: coordinates.coords.longitude.toString(),
       comment: this.comment,
       category: this.selectedCategory,
       user: this.authService.loggedUserData().id,
@@ -93,21 +121,48 @@ export class ReportModalComponent {
     this.issueService
       .uploadPhoto(formData)
       .pipe(
-        switchMap((uploadedPhoto) => {
-          issue.photo = `${uploadedPhoto.data!.fullPath}`;
+        switchMap((result) => {
+          if (result.error) {
+            //TODO: Handle error
+            console.log(result.error);
+          }
+
+          issue.photo = `${result.data!.fullPath}`;
           return this.issueService.createIssue(issue);
         })
       )
       .subscribe((result) => {
-        if (result.error) console.log('ERROR', result.error);
+        if (result.error) {
+          //TODO: Handle error
+          console.log('ERROR', result.error);
+        }
+
         this.modalController.dismiss(result.data, 'confirm');
 
-        //TODO: Update user issues
+        this.userService.issues.update((current) =>
+          this.updateUserIssues(current, result)
+        );
+
         this.issueService.issues.update((current) => ({
           ...current,
           data: [...(current.data ?? []), result.data!],
         }));
       });
+  }
+
+  updateUserIssues(
+    currentData: ApiResult<Issue[]>,
+    apiResult: ApiResult<Issue>
+  ) {
+    const updatedData = [
+      apiResult.data!,
+      ...(currentData.data?.slice(0, -1) ?? []),
+    ];
+
+    return {
+      ...currentData,
+      data: updatedData,
+    };
   }
 
   dataUrlToFile(input: string, filename: string): File {

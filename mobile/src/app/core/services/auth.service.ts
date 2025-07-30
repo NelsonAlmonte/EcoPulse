@@ -25,7 +25,6 @@ export class AuthService {
       .subscribe((result) => {
         console.log(result.error);
         if (result.data) {
-          console.log(result.data);
           localStorage.setItem('auth', JSON.stringify(result.data));
           this.router.navigate(['/']);
         }

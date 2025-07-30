@@ -27,6 +27,6 @@ export class IssueListComponent implements OnInit {
   userIcon = CircleUserIcon;
 
   ngOnInit() {
-    this.userService.getUserIssues(this.authService.loggedUserData().id);
+    // this.userService.getUserIssues(this.authService.loggedUserData().id);
   }
 }

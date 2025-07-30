@@ -3,7 +3,6 @@ import {
   ElementRef,
   inject,
   input,
-  OnInit,
   Renderer2,
   ViewChild,
 } from '@angular/core';
@@ -19,15 +18,13 @@ import { LucideAngularModule, StarIcon } from 'lucide-angular';
   styleUrls: ['./highlight-button.component.css'],
   imports: [LucideAngularModule],
 })
-export class HighlightButtonComponent implements OnInit {
+export class HighlightButtonComponent {
   issue = input.required<Issue>();
   renderer = inject(Renderer2);
   highlightService = inject(HighlightService);
   authService = inject(AuthService);
   @ViewChild('highlightsCount') highlightsCount!: ElementRef<HTMLSpanElement>;
   highlightIcon = StarIcon;
-
-  ngOnInit() {}
 
   manageHighlight(event: MouseEvent): void {
     const element = event.currentTarget as HTMLDivElement;
@@ -55,6 +52,7 @@ export class HighlightButtonComponent implements OnInit {
         this.updateHighlightCounter(-1);
         this.handleError(result.error);
       }
+
       this.renderer.setProperty(element, 'disabled', false);
     });
   }
@@ -69,6 +67,7 @@ export class HighlightButtonComponent implements OnInit {
         this.updateHighlightCounter(1);
         this.handleError(result.error);
       }
+
       this.renderer.setProperty(element, 'disabled', false);
     });
   }
@@ -78,18 +77,11 @@ export class HighlightButtonComponent implements OnInit {
     console.error('Highlight error:', error);
   }
 
-  private updateHighlightCounter(delta: number): void {
+  private updateHighlightCounter(value: number): void {
     const el = this.highlightsCount.nativeElement;
     const current = Number(el.innerText) || 0;
-    const updated = current + delta;
+    const updated = current + value;
+
     this.renderer.setProperty(el, 'innerText', updated.toString());
-  }
-
-  addCounter(): void {
-    this.updateHighlightCounter(1);
-  }
-
-  deductCounter(): void {
-    this.updateHighlightCounter(-1);
   }
 }
