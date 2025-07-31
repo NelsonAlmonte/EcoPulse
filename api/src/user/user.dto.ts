@@ -10,8 +10,14 @@ export interface CreateUserDto {
 }
 
 export interface GetUserDto {
+  id: string;
   name: string;
   last: string;
   email: string;
   createdAt: Date;
+}
+
+export interface UpdateUserDto {
+  name: string;
+  last: string;
 }

@@ -156,7 +156,9 @@ export class ReportModalComponent {
   ) {
     const updatedData = [
       apiResult.data!,
-      ...(currentData.data?.slice(0, -1) ?? []),
+      ...(currentData.data!.length >= 3
+        ? currentData.data!.slice(0, -1) ?? []
+        : currentData.data!),
     ];
 
     return {

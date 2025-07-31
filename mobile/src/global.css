@@ -100,3 +100,9 @@
   border-color: transparent !important;
   margin-bottom: 0px !important;
 }
+
+ion-header {
+  box-shadow: none !important;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+}

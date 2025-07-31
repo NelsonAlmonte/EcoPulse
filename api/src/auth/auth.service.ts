@@ -104,4 +104,15 @@ export class AuthService {
 
     return response;
   }
+
+  async getLoggedUserId(accessToken: string): Promise<string> {
+    const { data, error } = await this.supabase.auth.getUser(accessToken);
+
+    if (error) {
+      console.log(error);
+      throw new UnauthorizedException('Error al obtener el usuario');
+    }
+
+    return data.user.id;
+  }
 }

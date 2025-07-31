@@ -1,12 +1,10 @@
 @if (!userData) {
 <h1>Cargando...</h1>
 } @if (userData) {
-<div
-  class="flex flex-col items-center h-full bg-gray-100 rounded-2xl px-4 py-5"
->
+<div class="flex flex-col items-center bg-gray-100 rounded-2xl p-2 mb-4">
   <div>
     <lucide-angular
-      class="text-gray-500"
+      class="text-gray-600"
       [img]="userIcon"
       size="60"
     ></lucide-angular>
@@ -14,20 +12,22 @@
   <span class="text-gray-900 text-lg"
     >{{ userData.name }} {{ userData.last }}</span
   >
-  <span class="text-gray-500">{{ userData.email }}</span>
-  <div class="grid grid-cols-3 gap-4 mt-4">
-    <div class="text-center rounded-2xl w-full bg-white p-5">
+  <div class="grid grid-cols-3 gap-2 mt-6 w-full">
+    <div class="text-center rounded-2xl bg-white p-5 counter">
       <span class="text-md text-gray-900 font-medium">900</span><br />
       <span class="text-sm text-gray-500">Reportes</span>
     </div>
-    <div class="text-center rounded-2xl w-full bg-white p-5">
+    <div class="text-center rounded-2xl bg-white p-5 counter">
       <span class="text-md text-gray-900 font-medium">900</span><br />
-      <span class="text-sm text-gray-500">Reportes</span>
+      <span class="text-sm text-gray-500">Resaltados</span>
     </div>
-    <div class="text-center rounded-2xl w-full bg-white p-5">
+    <div class="text-center rounded-2xl bg-white p-5 counter">
       <span class="text-md text-gray-900 font-medium">900</span><br />
-      <span class="text-sm text-gray-500">Reportes</span>
+      <span class="text-sm text-gray-500">Resaltes</span>
     </div>
   </div>
 </div>
+
+<app-profile-options></app-profile-options>
+
 }

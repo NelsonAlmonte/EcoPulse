@@ -17,4 +17,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/signup/signup.page').then((m) => m.SignupPage),
   },
+  {
+    path: 'edit-profile',
+    loadComponent: () => import('./features/profile/pages/edit-profile/edit-profile.page').then( m => m.EditProfilePage)
+  },
+  {
+    path: 'user-issues',
+    loadComponent: () => import('./features/profile/pages/user-issues/user-issues.page').then( m => m.UserIssuesPage)
+  },
 ];

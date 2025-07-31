@@ -53,4 +53,21 @@ export class ApiService {
       })
     );
   }
+
+  doPut<T = unknown, U = unknown>(
+    url: string,
+    body: U
+  ): Observable<ApiResult<T>> {
+    return this.http.put<T>(url, body).pipe(
+      map((data) => ({ status: 'SUCCESS' as const, data: data, error: null })),
+      catchError((err) => {
+        console.log(err);
+        return of({
+          status: 'ERROR' as const,
+          data: null,
+          error: err.error,
+        });
+      })
+    );
+  }
 }

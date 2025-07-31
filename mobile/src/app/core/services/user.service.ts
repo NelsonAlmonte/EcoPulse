@@ -4,6 +4,8 @@ import { ApiResult } from '@core/interfaces/api.interface';
 import { Issue } from '@shared/models/issue.model';
 import { environment } from 'src/environments/environment';
 import { User } from '@shared/models/user.model';
+import { UpdateUserDto } from '@shared/dto/user.dto';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,11 +24,11 @@ export class UserService {
   });
   URL = `${environment.apiUrl}user`;
 
-  getUserIssues(userId: string): void {
+  getUserIssues(id: string): void {
     this.issues.set({ status: 'LOADING', data: null, error: null });
 
     this.apiService
-      .doFetch<Issue[]>(`${this.URL}/${userId}/issues`)
+      .doFetch<Issue[]>(`${this.URL}/${id}/issues`)
       .subscribe((result) => {
         if (result.data) {
           const updatedData = result.data.map((issue) => ({
@@ -51,5 +53,15 @@ export class UserService {
         console.log(result.error);
       }
     });
+  }
+
+  updateUser(
+    id: string,
+    updateUserDto: UpdateUserDto
+  ): Observable<ApiResult<User>> {
+    return this.apiService.doPut<User, UpdateUserDto>(
+      `${this.URL}/${id}`,
+      updateUserDto
+    );
   }
 }

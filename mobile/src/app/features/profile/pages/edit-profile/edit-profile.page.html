@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Editar perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form
+    class="max-w-sm mx-auto mt-5"
+    [formGroup]="userForm"
+    (ngSubmit)="updateUser()"
+  >
+    <div class="mb-5">
+      <ion-input
+        label="Nombre"
+        label-placement="floating"
+        fill="outline"
+        placeholder="Ingresa tu nombre"
+        type="text"
+        formControlName="name"
+      ></ion-input>
+    </div>
+    <div class="mb-5">
+      <ion-input
+        label="Apellido"
+        label-placement="floating"
+        fill="outline"
+        placeholder="Ingresa tu apellido"
+        type="text"
+        formControlName="last"
+      ></ion-input>
+    </div>
+    <button
+      type="submit"
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+    >
+      Actualizar datos
+    </button>
+  </form>
+</ion-content>
