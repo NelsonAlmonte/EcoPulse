@@ -27,3 +27,8 @@ export interface AuthResponseDto {
 export interface RefreshUserSessionDto {
   refresh_token: string;
 }
+
+export interface ChangePasswordDto {
+  current_password: string;
+  new_password: string;
+}

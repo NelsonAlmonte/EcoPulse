@@ -25,4 +25,12 @@ export const routes: Routes = [
     path: 'user-issues',
     loadComponent: () => import('./features/profile/pages/user-issues/user-issues.page').then( m => m.UserIssuesPage)
   },
+  {
+    path: 'highlights-given',
+    loadComponent: () => import('./features/profile/pages/highlights-given/highlights-given.page').then( m => m.HighlightsGivenPage)
+  },
+  {
+    path: 'change-password',
+    loadComponent: () => import('./features/profile/pages/change-password/change-password.page').then( m => m.ChangePasswordPage)
+  },
 ];

@@ -5,11 +5,14 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshCounters($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Perfil</ion-title>
     </ion-toolbar>
   </ion-header>
-  <!-- <button (click)="logout()">Cerrar sesión</button> -->
   <app-profile-detail [user]="this.userService.user()"></app-profile-detail>
 </ion-content>

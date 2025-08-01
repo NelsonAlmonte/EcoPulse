@@ -58,7 +58,7 @@ export class EditProfilePage implements OnInit {
       name: formValue.name,
       last: formValue.last,
     };
-    console.log('object');
+
     this.userService
       .updateUser(loggedUserData.id, updateUserDto)
       .subscribe((result) => {

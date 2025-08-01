@@ -8,7 +8,10 @@ import { GetIssueDto } from 'src/issue/issue.dto';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async getIssues(userId: string): Promise<GetIssueDto[] | null> {
+  async getIssues(
+    userId: string,
+    amount?: number,
+  ): Promise<GetIssueDto[] | null> {
     const issues = await this.prisma.issue.findMany({
       where: {
         userId,
@@ -36,7 +39,7 @@ export class UserService {
           },
         },
       },
-      take: 3,
+      take: amount,
       orderBy: {
         createdAt: 'desc',
       },
@@ -52,6 +55,60 @@ export class UserService {
       delete transformedIssue._count;
 
       return transformedIssue;
+    });
+  }
+
+  async getHighlightsGiven(userId: string): Promise<GetIssueDto[] | null> {
+    const highlights = await this.prisma.highlight.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        issue: {
+          include: {
+            category: true,
+            user: {
+              omit: {
+                password: true,
+                role: true,
+              },
+            },
+            highlights: {
+              where: {
+                userId,
+              },
+              select: {
+                createdAt: true,
+              },
+              take: 1,
+            },
+            _count: {
+              select: {
+                highlights: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return highlights.map((highlight) => {
+      const transformedHighlight = {
+        ...highlight.issue,
+        highlights: highlight.issue._count.highlights
+          ? highlight.issue._count.highlights
+          : 0,
+        hasCurrentUserHighlight: highlight.issue.highlights.length
+          ? true
+          : false,
+      };
+
+      delete transformedHighlight._count;
+
+      return transformedHighlight;
     });
   }
 
@@ -82,6 +139,32 @@ export class UserService {
       omit: {
         password: true,
         role: true,
+      },
+    });
+  }
+
+  countUserIssues(userId: string): Promise<number> {
+    return this.prisma.issue.count({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  countHighlightsGiven(userId: string): Promise<number> {
+    return this.prisma.highlight.count({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  countHighlightsReceived(userId: string): Promise<number> {
+    return this.prisma.highlight.count({
+      where: {
+        issue: {
+          userId,
+        },
       },
     });
   }

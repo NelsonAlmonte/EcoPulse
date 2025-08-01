@@ -4,28 +4,32 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 import { GetIssueDto } from 'src/issue/issue.dto';
 import { GetUserDto, UpdateUserDto } from './user.dto';
-import { AuthService } from 'src/auth/auth.service';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private userService: UserService,
-    private authService: AuthService,
-  ) {}
+  constructor(private userService: UserService) {}
 
   @UseGuards(SupabaseAuthGuard)
   @Get(':user/issues')
-  async issueByUser(
+  async issuesByUser(
     @Param('user') userId: string,
+    @Query('amount') amount?: number,
   ): Promise<GetIssueDto[] | null> {
-    return await this.userService.getIssues(userId);
+    const amountToTake =
+      typeof amount === 'string' && amount === 'undefined'
+        ? undefined
+        : Number(amount);
+
+    return await this.userService.getIssues(userId, amountToTake);
   }
 
   @UseGuards(SupabaseAuthGuard)
@@ -47,5 +51,33 @@ export class UserController {
     }
 
     return updatedUser;
+  }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Get(':user/issues/count')
+  async countUserIssues(@Param('user') userId: string): Promise<number> {
+    return await this.userService.countUserIssues(userId);
+  }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Get(':user/highlights/given')
+  async highlightsGiven(
+    @Param('user') userId: string,
+  ): Promise<GetIssueDto[] | null> {
+    return await this.userService.getHighlightsGiven(userId);
+  }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Get(':user/highlights/given/count')
+  async countHighlightsGiven(@Param('user') userId: string): Promise<number> {
+    return await this.userService.countHighlightsGiven(userId);
+  }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Get(':user/highlights/received/count')
+  async countHighlightsReceived(
+    @Param('user') userId: string,
+  ): Promise<number> {
+    return await this.userService.countHighlightsReceived(userId);
   }
 }

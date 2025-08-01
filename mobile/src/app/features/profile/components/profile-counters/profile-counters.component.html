@@ -1,0 +1,23 @@
+<div class="grid grid-cols-3 gap-2 mt-6">
+  <div class="text-center rounded-2xl bg-white p-5 counter">
+    <span class="text-md text-gray-900 font-medium">{{
+      userService.counters().issues
+    }}</span
+    ><br />
+    <span class="text-sm text-gray-500">Reportes</span>
+  </div>
+  <div class="text-center rounded-2xl bg-white p-5 counter">
+    <span class="text-md text-gray-900 font-medium">{{
+      userService.counters().highlightsGiven
+    }}</span
+    ><br />
+    <span class="text-sm text-gray-500">Resaltados</span>
+  </div>
+  <div class="text-center rounded-2xl bg-white p-5 counter">
+    <span class="text-md text-gray-900 font-medium">{{
+      userService.counters().highlightsReceived
+    }}</span
+    ><br />
+    <span class="text-sm text-gray-500">Resaltes</span>
+  </div>
+</div>

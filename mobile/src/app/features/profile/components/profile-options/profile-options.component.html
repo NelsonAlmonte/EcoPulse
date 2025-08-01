@@ -33,7 +33,10 @@
     </div>
   </div>
 
-  <div class="flex items-center justify-start m-2 mb-6">
+  <div
+    class="flex items-center justify-start m-2 mb-6"
+    (click)="navigate('/highlights-given')"
+  >
     <div class="me-4">
       <lucide-angular
         [img]="highlightedIcon"
@@ -47,7 +50,10 @@
     </div>
   </div>
 
-  <div class="flex items-center justify-start m-2 mb-6">
+  <div
+    class="flex items-center justify-start m-2 mb-6"
+    (click)="navigate('/change-password')"
+  >
     <div class="me-4">
       <lucide-angular
         [img]="changePasswordIcon"

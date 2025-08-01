@@ -11,14 +11,14 @@ import {
 } from '@ionic/angular/standalone';
 import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs';
 import { UserService } from '@core/services/user.service';
 import { AuthService } from '@core/services/auth.service';
+import { filter } from 'rxjs';
 
 @Component({
-  selector: 'app-user-issues',
-  templateUrl: './user-issues.page.html',
-  styleUrls: ['./user-issues.page.css'],
+  selector: 'app-highlights-given',
+  templateUrl: './highlights-given.page.html',
+  styleUrls: ['./highlights-given.page.css'],
   standalone: true,
   imports: [
     IonContent,
@@ -32,7 +32,7 @@ import { AuthService } from '@core/services/auth.service';
     IssueListComponent,
   ],
 })
-export class UserIssuesPage implements OnInit {
+export class HighlightsGivenPage implements OnInit {
   router = inject(Router);
   userService = inject(UserService);
   authService = inject(AuthService);
@@ -41,8 +41,10 @@ export class UserIssuesPage implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        if (event.urlAfterRedirects.includes('/user-issues')) {
-          this.userService.getUserIssues(this.authService.loggedUserData().id);
+        if (event.urlAfterRedirects.includes('/highlights-given')) {
+          this.userService.getHighlightsGiven(
+            this.authService.loggedUserData().id
+          );
         }
       });
   }

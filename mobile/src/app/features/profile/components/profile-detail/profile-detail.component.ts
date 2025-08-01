@@ -1,4 +1,4 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ApiResult } from '@core/interfaces/api.interface';
 import { User } from '@shared/models/user.model';
 import {
@@ -11,14 +11,19 @@ import {
   UserCogIcon,
 } from 'lucide-angular';
 import { ProfileOptionsComponent } from '@features/profile/components/profile-options/profile-options.component';
+import { ProfileCountersComponent } from '@features/profile/components/profile-counters/profile-counters.component';
 
 @Component({
   selector: 'app-profile-detail',
   templateUrl: './profile-detail.component.html',
   styleUrls: ['./profile-detail.component.css'],
-  imports: [LucideAngularModule, ProfileOptionsComponent],
+  imports: [
+    LucideAngularModule,
+    ProfileOptionsComponent,
+    ProfileCountersComponent,
+  ],
 })
-export class ProfileDetailComponent implements OnInit {
+export class ProfileDetailComponent {
   user = input.required<ApiResult<User>>();
   userIcon = CircleUserIcon;
   editProfileIcon = UserCogIcon;
@@ -26,8 +31,6 @@ export class ProfileDetailComponent implements OnInit {
   highlightedIcon = StarIcon;
   changePasswordIcon = KeyRoundIcon;
   logoutIcon = LogOutIcon;
-
-  ngOnInit(): void {}
 
   get userData() {
     return this.user().data!;

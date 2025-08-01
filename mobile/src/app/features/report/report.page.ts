@@ -6,9 +6,12 @@ import { Camera, CameraResultType } from '@capacitor/camera';
 import {
   IonContent,
   IonHeader,
+  IonRefresher,
+  IonRefresherContent,
   IonTitle,
   IonToolbar,
   ModalController,
+  RefresherCustomEvent,
 } from '@ionic/angular/standalone';
 import { ReportModalComponent } from '@features/report/components/report-modal/report-modal.component';
 import { LocationPreviewComponent } from '@features/report/components/location-preview/location-preview.component';
@@ -28,6 +31,8 @@ import { filter } from 'rxjs';
     IonHeader,
     IonTitle,
     IonToolbar,
+    IonRefresher,
+    IonRefresherContent,
     CommonModule,
     FormsModule,
     LocationPreviewComponent,
@@ -41,13 +46,17 @@ export class ReportPage implements OnInit {
   modalController = inject(ModalController);
   router = inject(Router);
   cameraIcon = CameraIcon;
+  AMOUNT_OF_ISSUES = 3;
 
   ngOnInit(): void {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         if (event.urlAfterRedirects.includes('/report')) {
-          this.userService.getUserIssues(this.authService.loggedUserData().id);
+          this.userService.getUserIssues(
+            this.authService.loggedUserData().id,
+            this.AMOUNT_OF_ISSUES
+          );
         }
       });
     // const image = `https://ionicframework.com/docs/img/demos/card-media.png`;
@@ -79,5 +88,16 @@ export class ReportPage implements OnInit {
     if (role === 'confirm') {
       console.log(data);
     }
+  }
+
+  refreshLatestIssues(event: RefresherCustomEvent): void {
+    this.userService.getUserIssues(
+      this.authService.loggedUserData().id,
+      this.AMOUNT_OF_ISSUES
+    );
+
+    setTimeout(() => {
+      event.target.complete();
+    }, 1500);
   }
 }

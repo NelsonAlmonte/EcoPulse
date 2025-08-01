@@ -5,3 +5,9 @@ export interface User {
   email: string;
   createdAt: string;
 }
+
+export interface Counters {
+  issues?: number;
+  highlightsGiven?: number;
+  highlightsReceived?: number;
+}
