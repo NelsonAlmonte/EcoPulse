@@ -1,7 +1,7 @@
 @if (!issueData) {
 <p>CARGANDO...</p>
 } @if (issueData) {
-<div class="bg-white border border-gray-200 rounded-2xl mb-4 issue-detail-card">
+<div class="md-surface-container-high rounded-2xl mb-4 issue-detail-card">
   <img
     class="rounded-t-2xl rounded-b-2xl w-full h-50 object-cover"
     src="{{ issueData.photo }}"
@@ -32,17 +32,14 @@
         {{ issueData.status.toLocaleLowerCase() }}
       </span>
       }
-      <span class="text-xs text-gray-500">
-        {{ issueData.createdAt | relativeTime : "es-ES" }}
-      </span>
     </div>
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h5 class="my-2! text-2xl! font-bold text-gray-900">
+        <h5 class="my-2! text-xl! font-bold md-on-surface">
           {{ issueData.category.name }}
         </h5>
         @if (issueData.comment) {
-        <p class="font-normal text-gray-600">
+        <p class="font-normal md-on-surface-variant">
           {{ issueData.comment }}
         </p>
         }
@@ -51,13 +48,18 @@
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-start">
         <lucide-angular
-          class="me-1 text-gray-500"
+          class="me-1 md-on-surface-variant"
           [img]="userIcon"
-          size="22"
+          size="36"
         ></lucide-angular>
-        <span class="text-gray-700 text-sm">
-          {{ issueData.user.name + " " + issueData.user.last }}
-        </span>
+        <div class="flex flex-col">
+          <span class="md-on-surface text-sm">
+            {{ issueData.user.name + " " + issueData.user.last }}
+          </span>
+          <span class="text-xs md-on-surface-variant">
+            {{ issueData.createdAt | relativeTime : "es-ES" }}
+          </span>
+        </div>
       </div>
       <app-highlight-button [issue]="issueData"></app-highlight-button>
     </div>

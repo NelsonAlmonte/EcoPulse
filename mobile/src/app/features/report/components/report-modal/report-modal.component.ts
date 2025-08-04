@@ -24,10 +24,13 @@ import { CreateIssueDto } from '@shared/dto/issue.dto';
 import { DEFAULT_STATUS } from '@shared/constants/system.constant';
 import { v4 as uuidv4 } from 'uuid';
 import {
+  AlertTriangleIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
   BanIcon,
+  ImageIcon,
   LucideAngularModule,
+  MapPinIcon,
   SendIcon,
 } from 'lucide-angular';
 import { UserService } from '@core/services/user.service';
@@ -69,6 +72,9 @@ export class ReportModalComponent {
   prevIcon = ArrowLeftIcon;
   sendIcon = SendIcon;
   cancelIcon = BanIcon;
+  photoIcon = ImageIcon;
+  placeIcon = MapPinIcon;
+  issueIcon = AlertTriangleIcon;
 
   cancel(): Promise<boolean> {
     return this.modalController.dismiss(null, 'cancel');

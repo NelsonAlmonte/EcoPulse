@@ -1,15 +1,17 @@
 @if (!userData) {
 <h1>Cargando...</h1>
 } @if (userData) {
-<div class="flex flex-col items-center bg-gray-100 rounded-2xl p-2 mb-4">
+<div
+  class="flex flex-col items-center md-surface-container-high rounded-2xl p-2 mb-4"
+>
   <div>
     <lucide-angular
-      class="text-gray-600"
+      class="md-on-surface-variant"
       [img]="userIcon"
       size="60"
     ></lucide-angular>
   </div>
-  <span class="text-gray-900 text-lg"
+  <span class="md-on-surface text-lg"
     >{{ userData.name }} {{ userData.last }}</span
   >
   <app-profile-counters class="w-full"></app-profile-counters>

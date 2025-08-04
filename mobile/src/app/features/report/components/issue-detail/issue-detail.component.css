@@ -3,7 +3,7 @@ ion-avatar {
   height: 50px;
 }
 
-::ng-deep lucide-angular.highlighted svg {
-  stroke: var(--color-amber-500);
-  fill: var(--color-amber-500);
+::ng-deep .highlighted lucide-angular svg {
+  stroke: var(--md-sys-color-on-primary);
+  fill: var(--md-sys-color-on-primary);
 }

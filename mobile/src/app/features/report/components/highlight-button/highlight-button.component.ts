@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -16,7 +17,7 @@ import { LucideAngularModule, StarIcon } from 'lucide-angular';
   selector: 'app-highlight-button',
   templateUrl: './highlight-button.component.html',
   styleUrls: ['./highlight-button.component.css'],
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, CommonModule],
 })
 export class HighlightButtonComponent {
   issue = input.required<Issue>();
@@ -27,8 +28,8 @@ export class HighlightButtonComponent {
   highlightIcon = StarIcon;
 
   manageHighlight(event: MouseEvent): void {
-    const element = event.currentTarget as HTMLDivElement;
-    const isHighlighted = element.classList.contains('highlighted');
+    const button = event.currentTarget as HTMLButtonElement;
+    const isHighlighted = button.classList.contains('highlighted');
     const delta = isHighlighted ? -1 : 1;
     const highlightDto: HighlightDto = {
       issueId: this.issue().id,
@@ -36,52 +37,42 @@ export class HighlightButtonComponent {
     };
 
     isHighlighted
-      ? this.removeHighlight(element, highlightDto)
-      : this.addHighlight(element, highlightDto);
+      ? this.removeHighlight(button, highlightDto)
+      : this.addHighlight(button, highlightDto);
 
-    this.updateHighlightCounter(delta);
+    // this.updateHighlightCounter(delta);
   }
 
-  private addHighlight(element: HTMLElement, dto: HighlightDto): void {
-    this.renderer.addClass(element, 'highlighted');
-    this.renderer.setProperty(element, 'disabled', true);
+  private addHighlight(button: HTMLElement, dto: HighlightDto): void {
+    this.renderer.setProperty(button, 'disabled', true);
 
     this.highlightService.createHighlight(dto).subscribe((result) => {
       if (result.error) {
-        this.renderer.removeClass(element, 'highlighted');
-        this.updateHighlightCounter(-1);
         this.handleError(result.error);
+      } else {
+        this.issue().hasCurrentUserHighlight = true;
       }
 
-      this.renderer.setProperty(element, 'disabled', false);
+      this.renderer.setProperty(button, 'disabled', false);
     });
   }
 
-  private removeHighlight(element: HTMLElement, dto: HighlightDto): void {
-    this.renderer.removeClass(element, 'highlighted');
-    this.renderer.setProperty(element, 'disabled', true);
+  private removeHighlight(button: HTMLElement, dto: HighlightDto): void {
+    this.renderer.setProperty(button, 'disabled', true);
 
     this.highlightService.deleteHighlight(dto).subscribe((result) => {
       if (result.error) {
-        this.renderer.addClass(element, 'highlighted');
-        this.updateHighlightCounter(1);
         this.handleError(result.error);
+      } else {
+        this.issue().hasCurrentUserHighlight = false;
       }
 
-      this.renderer.setProperty(element, 'disabled', false);
+      this.renderer.setProperty(button, 'disabled', false);
     });
   }
 
   private handleError(error: any): void {
     // TODO: Proper error handling
     console.error('Highlight error:', error);
-  }
-
-  private updateHighlightCounter(value: number): void {
-    const el = this.highlightsCount.nativeElement;
-    const current = Number(el.innerText) || 0;
-    const updated = current + value;
-
-    this.renderer.setProperty(el, 'innerText', updated.toString());
   }
 }

@@ -1,3 +1,19 @@
 ion-textarea {
   --border-radius: 16px !important;
 }
+
+
+ion-segment { 
+  background: var(--md-sys-color-surface);
+  
+}
+
+ion-segment-button {
+  --color: var(--md-sys-color-on-surface-variant);
+  --color-checked: var(--md-sys-color-primary);
+}
+
+ion-segment-content {
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-background);
+}

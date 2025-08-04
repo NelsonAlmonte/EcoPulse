@@ -1,0 +1,11 @@
+.highlight-button {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  stroke: var(--md-sys-color-on-secondary-container);
+}
+
+.highlight-button.highlighted {
+  background-color: var(--md-sys-color-primary) !important;
+  stroke: var(--md-sys-color-on-primary) !important;
+  color: var(--md-sys-color-on-primary) !important;
+}

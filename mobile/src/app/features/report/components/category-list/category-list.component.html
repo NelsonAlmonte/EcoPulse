@@ -6,10 +6,9 @@
 <div class="grid grid-cols-2 gap-2 ion-margin-bottom ion-margin-top">
   @for (category of categoryService.categories().data; track $index) {
   <div
-    class="flex justify-between items-center px-3 py-4 rounded-xl category-item"
+    class="flex justify-start items-center px-3 py-4 rounded-full category-item"
     (click)="selectCategory(category.id, $event)"
   >
-    <span class="text-sm">{{ category.name }}</span>
     <div class="me-2">
       <lucide-angular
         [img]="showIcon(category.icon)"
@@ -17,6 +16,7 @@
         class="category-icon"
       ></lucide-angular>
     </div>
+    <span class="text-sm">{{ category.name }}</span>
   </div>
   }
 </div>

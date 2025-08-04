@@ -1,16 +1,18 @@
 .category-item {
-  background-color: var(--ion-color-light);
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
 
   svg.category-icon {
-    stroke: var(--ion-color-primary);
+    stroke: var(--md-sys-color-on-secondary-container);
   }
 
   &.selected {
-    background-color: var(--ion-color-primary);
-    color: white;
+    background-color: var(--md-sys-color-secondary);
+    color: var(--md-sys-color-on-secondary);
+    border-radius: 16px;
     
     svg.category-icon {
-      stroke: white;
+      stroke: var(--md-sys-color-on-secondary);
     }
   }
 }
