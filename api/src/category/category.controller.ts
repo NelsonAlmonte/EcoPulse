@@ -17,7 +17,7 @@ import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Get()
   async categories(): Promise<Category[]> {
     return await this.categoryService.getCategories();

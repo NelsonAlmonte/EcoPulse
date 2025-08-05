@@ -10,12 +10,18 @@ import {
   LucideAngularModule,
 } from 'lucide-angular';
 import { HighlightButtonComponent } from '@features/report/components/highlight-button/highlight-button.component';
+import { IssueDetailLoadingComponent } from '@shared/components/issue-detail-loading/issue-detail-loading.component';
 
 @Component({
   selector: 'app-issue-detail',
   templateUrl: './issue-detail.component.html',
   styleUrls: ['./issue-detail.component.css'],
-  imports: [LucideAngularModule, HighlightButtonComponent, RelativeTimePipe],
+  imports: [
+    LucideAngularModule,
+    HighlightButtonComponent,
+    IssueDetailLoadingComponent,
+    RelativeTimePipe,
+  ],
 })
 export class IssueDetailComponent {
   issueService = inject(IssueService);

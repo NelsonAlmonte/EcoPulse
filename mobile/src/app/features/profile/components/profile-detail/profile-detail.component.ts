@@ -12,6 +12,7 @@ import {
 } from 'lucide-angular';
 import { ProfileOptionsComponent } from '@features/profile/components/profile-options/profile-options.component';
 import { ProfileCountersComponent } from '@features/profile/components/profile-counters/profile-counters.component';
+import { ProfileDetailLoadingComponent } from '@shared/components/profile-detail-loading/profile-detail-loading.component';
 
 @Component({
   selector: 'app-profile-detail',
@@ -21,6 +22,7 @@ import { ProfileCountersComponent } from '@features/profile/components/profile-c
     LucideAngularModule,
     ProfileOptionsComponent,
     ProfileCountersComponent,
+    ProfileDetailLoadingComponent,
   ],
 })
 export class ProfileDetailComponent {

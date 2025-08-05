@@ -1,12 +1,16 @@
 <div class="flex content-center items-center">
   <button
-    class="inline-flex rounded-full p-2 highlight-button"
+    class="inline-flex items-center rounded-full p-2 highlight-button"
     (click)="manageHighlight($event)"
     [class.highlighted]="issue().hasCurrentUserHighlight"
   >
-    <lucide-angular [img]="highlightIcon" size="20"></lucide-angular>
+    <lucide-angular
+      class="me-0.5"
+      [img]="highlightIcon"
+      size="20"
+    ></lucide-angular>
+    <span class="text-xs font-bold" #highlightsCount>{{
+      issue().highlights
+    }}</span>
   </button>
-  <!-- <span class="text-xs font-bold" #highlightsCount>{{
-    issue().highlights
-  }}</span> -->
 </div>

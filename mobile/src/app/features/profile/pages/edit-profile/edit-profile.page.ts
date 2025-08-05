@@ -14,6 +14,7 @@ import {
   IonInput,
   IonTitle,
   IonToolbar,
+  ToastController,
 } from '@ionic/angular/standalone';
 import { UpdateUserDto } from '@shared/dto/user.dto';
 import { AuthService } from '@core/services/auth.service';
@@ -42,6 +43,7 @@ export class EditProfilePage implements OnInit {
   router = inject(Router);
   authService = inject(AuthService);
   userService = inject(UserService);
+  toastController = inject(ToastController);
   userForm!: FormGroup;
 
   ngOnInit(): void {
@@ -51,24 +53,37 @@ export class EditProfilePage implements OnInit {
     });
   }
 
-  updateUser(): void {
+  async updateUser(): Promise<void> {
     const loggedUserData = this.authService.loggedUserData();
     const formValue = this.userForm.getRawValue();
     const updateUserDto: UpdateUserDto = {
       name: formValue.name,
       last: formValue.last,
     };
+    let toast = await this.toastController.create({
+      message: 'Tu perfil se actualizo correctamente.',
+      duration: 4000,
+      position: 'bottom',
+      animated: true,
+    });
 
     this.userService
       .updateUser(loggedUserData.id, updateUserDto)
-      .subscribe((result) => {
+      .subscribe(async (result) => {
         if (result.error) {
-          //TODO: Handle error
           console.log(result.error);
+          toast = await this.toastController.create({
+            message: 'Ocurrió un error al actualizar tu perfil.',
+            duration: 4000,
+            position: 'bottom',
+            animated: true,
+          });
+
+          return;
         }
 
         this.userService.user.set(result);
-        //TODO: Success toast
+        toast.present();
         this.router.navigate(['/tabs/profile']);
       });
   }

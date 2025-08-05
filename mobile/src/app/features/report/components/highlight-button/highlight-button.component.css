@@ -1,11 +1,26 @@
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.highlight-button.animate-pop {
+  animation: pop 100ms ease-in-out;
+}
+
+
 .highlight-button {
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-  stroke: var(--md-sys-color-on-secondary-container);
+  color: var(--md-sys-color-on-surface);
+  stroke: var(--md-sys-color-on-surface);
 }
 
 .highlight-button.highlighted {
-  background-color: var(--md-sys-color-primary) !important;
-  stroke: var(--md-sys-color-on-primary) !important;
-  color: var(--md-sys-color-on-primary) !important;
+  color: var(--md-sys-color-on-surface) !important;
+  stroke: var(--md-sys-color-on-surface) !important;
 }

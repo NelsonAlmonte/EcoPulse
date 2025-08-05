@@ -10,6 +10,7 @@ import {
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ApiResult } from '@core/interfaces/api.interface';
+import { ToastController } from '@ionic/angular/standalone';
 
 @Injectable({
   providedIn: 'root',
@@ -17,17 +18,29 @@ import { ApiResult } from '@core/interfaces/api.interface';
 export class AuthService {
   private apiService = inject(ApiService);
   private router = inject(Router);
+  private toastController = inject(ToastController);
   private URL = `${environment.apiUrl}auth`;
 
   login(loginUserDto: LoginUserDto): void {
     this.apiService
       .doPost<AuthResponseDto, LoginUserDto>(`${this.URL}/login`, loginUserDto)
-      .subscribe((result) => {
-        console.log(result.error);
-        if (result.data) {
-          localStorage.setItem('auth', JSON.stringify(result.data));
-          this.router.navigate(['/']);
+      .subscribe(async (result) => {
+        if (result.error) {
+          console.log(result.error);
+          const toast = await this.toastController.create({
+            message: 'Credenciales invalidas.',
+            duration: 4000,
+            position: 'bottom',
+            animated: true,
+          });
+
+          toast.present();
+
+          return;
         }
+
+        localStorage.setItem('auth', JSON.stringify(result.data));
+        this.router.navigate(['/']);
       });
   }
 
@@ -37,13 +50,23 @@ export class AuthService {
         `${this.URL}/signup`,
         signupUserDto
       )
-      .subscribe((result) => {
-        console.log(result.error);
-        if (result.data) {
-          console.log(result.data);
-          localStorage.setItem('auth', JSON.stringify(result.data));
-          this.router.navigate(['/']);
+      .subscribe(async (result) => {
+        if (result.error) {
+          console.log(result.error);
+          const toast = await this.toastController.create({
+            message: 'Ocurrión un error al registrar tu usuario.',
+            duration: 4000,
+            position: 'bottom',
+            animated: true,
+          });
+
+          toast.present();
+
+          return;
         }
+
+        localStorage.setItem('auth', JSON.stringify(result.data));
+        this.router.navigate(['/']);
       });
   }
 

@@ -49,16 +49,20 @@ export class ReportPage implements OnInit {
   AMOUNT_OF_ISSUES = 3;
 
   ngOnInit(): void {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        if (event.urlAfterRedirects.includes('/report')) {
-          this.userService.getUserIssues(
-            this.authService.loggedUserData().id,
-            this.AMOUNT_OF_ISSUES
-          );
-        }
-      });
+    this.userService.getUserIssues(
+      this.authService.loggedUserData().id,
+      this.AMOUNT_OF_ISSUES
+    );
+    // this.router.events
+    //   .pipe(filter((event) => event instanceof NavigationEnd))
+    //   .subscribe((event: NavigationEnd) => {
+    //     if (event.urlAfterRedirects.includes('/report')) {
+    //       this.userService.getUserIssues(
+    //         this.authService.loggedUserData().id,
+    //         this.AMOUNT_OF_ISSUES
+    //       );
+    //     }
+    //   });
     // const image = `https://ionicframework.com/docs/img/demos/card-media.png`;
     // this.openReportModal(image);
   }

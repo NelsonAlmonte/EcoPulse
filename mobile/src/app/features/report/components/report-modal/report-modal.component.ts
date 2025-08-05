@@ -13,8 +13,9 @@ import {
   IonToolbar,
   ModalController,
   SegmentChangeEventDetail,
+  ToastController,
 } from '@ionic/angular/standalone';
-import { switchMap } from 'rxjs';
+import { from, Observable, switchMap, throwError } from 'rxjs';
 import { Geolocation } from '@capacitor/geolocation';
 import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
@@ -63,6 +64,7 @@ export class ReportModalComponent {
   authService = inject(AuthService);
   userService = inject(UserService);
   modalController = inject(ModalController);
+  toastController = inject(ToastController);
   photo = input.required<string>();
   comment: string = '';
   selectedCategory: string = '';
@@ -75,6 +77,23 @@ export class ReportModalComponent {
   photoIcon = ImageIcon;
   placeIcon = MapPinIcon;
   issueIcon = AlertTriangleIcon;
+  buttonOptions = {
+    default: {
+      text: 'Enviar',
+      isDisabled: false,
+    },
+    loading: {
+      text: 'Enviando...',
+      isDisabled: true,
+    },
+  };
+  currentStatus: string = 'default';
+
+  get buttonStatus() {
+    return this.buttonOptions[
+      this.currentStatus as keyof typeof this.buttonOptions
+    ];
+  }
 
   cancel(): Promise<boolean> {
     return this.modalController.dismiss(null, 'cancel');
@@ -101,6 +120,8 @@ export class ReportModalComponent {
   }
 
   async sendReport(): Promise<void> {
+    this.currentStatus = 'loading';
+
     const coordinates = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
     });
@@ -118,6 +139,12 @@ export class ReportModalComponent {
       user: this.authService.loggedUserData().id,
     };
     const formData = new FormData();
+    const toast = await this.toastController.create({
+      message: 'Tu reporte se ha enviado correctamente.',
+      duration: 4000,
+      position: 'bottom',
+      animated: true,
+    });
 
     formData.append(
       'photo',
@@ -128,10 +155,7 @@ export class ReportModalComponent {
       .uploadPhoto(formData)
       .pipe(
         switchMap((result) => {
-          if (result.error) {
-            //TODO: Handle error
-            console.log(result.error);
-          }
+          if (result.error) return this.handleError(result.error);
 
           issue.photo = `${result.data!.fullPath}`;
           return this.issueService.createIssue(issue);
@@ -139,8 +163,10 @@ export class ReportModalComponent {
       )
       .subscribe((result) => {
         if (result.error) {
-          //TODO: Handle error
-          console.log('ERROR', result.error);
+          from(this.handleError(result.error))
+            .pipe(switchMap(() => throwError(() => result.error)))
+            .subscribe();
+          return;
         }
 
         this.modalController.dismiss(result.data, 'confirm');
@@ -153,6 +179,9 @@ export class ReportModalComponent {
           ...current,
           data: [...(current.data ?? []), result.data!],
         }));
+
+        this.currentStatus = 'default';
+        toast.present();
       });
   }
 
@@ -215,5 +244,28 @@ export class ReportModalComponent {
 
   changeCurrentSegment(event: CustomEvent<SegmentChangeEventDetail>): void {
     this.currentSegment = event.detail.value as string;
+  }
+
+  private handleError(error: any): Observable<never> {
+    return from(
+      this.toastController
+        .create({
+          message: 'Ocurrió un error al enviar tu reporte.',
+          duration: 4000,
+          position: 'bottom',
+          animated: true,
+          buttons: [
+            {
+              text: 'Reintentar',
+              side: 'end',
+              handler: () => {
+                this.sendReport();
+                return false;
+              },
+            },
+          ],
+        })
+        .then((toast) => toast.present())
+    ).pipe(switchMap(() => throwError(() => error)));
   }
 }

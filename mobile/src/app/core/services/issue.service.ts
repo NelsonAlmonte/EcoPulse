@@ -5,12 +5,14 @@ import { ApiResult } from '@core/interfaces/api.interface';
 import { CreateIssueDto } from '@shared/dto/issue.dto';
 import { Issue, SupaBaseUploadFileResponse } from '@shared/models/issue.model';
 import { environment } from 'src/environments/environment';
+import { ToastController } from '@ionic/angular/standalone';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IssueService {
   apiService = inject(ApiService);
+  toastController = inject(ToastController);
   issues = signal<ApiResult<Issue[]>>({
     status: 'LOADING',
     data: [],
@@ -59,9 +61,22 @@ export class IssueService {
 
     this.apiService
       .doFetch<Issue>(`${this.URL}/${issueId}/${userId}`)
-      .subscribe((result) => {
-        console.log(result.data);
-        if (result.data) this.issue.set(result);
+      .subscribe(async (result) => {
+        if (result.error) {
+          console.log(result.error);
+          const toast = await this.toastController.create({
+            message: 'Ocurrió un error al obtener este reporte.',
+            duration: 4000,
+            position: 'bottom',
+            animated: true,
+          });
+
+          toast.present();
+
+          return;
+        }
+
+        this.issue.set(result);
       });
   }
 }
