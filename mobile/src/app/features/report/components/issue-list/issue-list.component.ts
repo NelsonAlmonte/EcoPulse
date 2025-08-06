@@ -8,6 +8,7 @@ import {
   CheckCircleIcon,
   CircleUserIcon,
   ClockIcon,
+  FolderOpenIcon,
   LucideAngularModule,
   MegaphoneIcon,
 } from 'lucide-angular';
@@ -30,8 +31,9 @@ export class IssueListComponent implements OnInit {
   clockIcon = ClockIcon;
   headsUpIcon = MegaphoneIcon;
   userIcon = CircleUserIcon;
+  emptyIcon = FolderOpenIcon;
 
   ngOnInit() {
-    // this.userService.getUserIssues(this.authService.loggedUserData().id);
+    // this.userService.getUserIssues(this.authService.loggedUserData()!.id);
   }
 }

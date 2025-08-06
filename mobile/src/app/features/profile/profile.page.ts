@@ -38,14 +38,17 @@ export class ProfilePage implements OnInit {
   userService = inject(UserService);
 
   ngOnInit(): void {
-    this.userService.getUser(this.authService.loggedUserData().id);
+    this.userService.getUser(this.authService.loggedUserData()!.id);
   }
 
-  refreshCounters(event: RefresherCustomEvent): void {
-    this.userService.countUserIssues(this.authService.loggedUserData().id);
-    this.userService.counthighlightsGiven(this.authService.loggedUserData().id);
+  refreshUserData(event: RefresherCustomEvent): void {
+    this.userService.getUser(this.authService.loggedUserData()!.id);
+    this.userService.countUserIssues(this.authService.loggedUserData()!.id);
+    this.userService.counthighlightsGiven(
+      this.authService.loggedUserData()!.id
+    );
     this.userService.counthighlightsReceived(
-      this.authService.loggedUserData().id
+      this.authService.loggedUserData()!.id
     );
 
     setTimeout(() => {

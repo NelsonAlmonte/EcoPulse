@@ -76,16 +76,15 @@ export class UserService {
     this.apiService
       .doFetch<string>(`${this.URL}/${id}/issues/count`)
       .subscribe((result) => {
-        if (result.data) {
-          this.counters.set({
-            ...this.counters(),
-            issues: Number(result.data),
-          });
-        }
-
         if (result.error) {
           console.log(result.error);
+          return;
         }
+
+        this.counters.set({
+          ...this.counters(),
+          issues: Number(result.data),
+        });
       });
   }
 
@@ -95,16 +94,15 @@ export class UserService {
     this.apiService
       .doFetch<string>(`${this.URL}/${id}/highlights/given/count`)
       .subscribe((result) => {
-        if (result.data) {
-          this.counters.set({
-            ...this.counters(),
-            highlightsGiven: Number(result.data),
-          });
-        }
-
         if (result.error) {
           console.log(result.error);
+          return;
         }
+
+        this.counters.set({
+          ...this.counters(),
+          highlightsGiven: Number(result.data),
+        });
       });
   }
 
@@ -114,16 +112,15 @@ export class UserService {
     this.apiService
       .doFetch<string>(`${this.URL}/${id}/highlights/received/count`)
       .subscribe((result) => {
-        if (result.data) {
-          this.counters.set({
-            ...this.counters(),
-            highlightsReceived: Number(result.data),
-          });
-        }
-
         if (result.error) {
           console.log(result.error);
+          return;
         }
+
+        this.counters.set({
+          ...this.counters(),
+          highlightsReceived: Number(result.data),
+        });
       });
   }
 

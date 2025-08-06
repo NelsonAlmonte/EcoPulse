@@ -6,7 +6,19 @@
 </div>
 } @if (userService.issues().status === 'ERROR') {
 <p>Handle error</p>
-} @if (userService.issues().status === 'SUCCESS') { @for (issue of
-userService.issues().data; track $index) {
+} @if (userService.issues().status === 'SUCCESS') { @if
+(userService.issues().data?.length) { @for (issue of userService.issues().data;
+track $index) {
 <app-issue-detail [issue]="issue"></app-issue-detail>
+} } @else {
+<div
+  class="md-surface-container-high md-on-surface-variant flex flex-col items-center justify-center space-y-3 rounded-2xl p-6 text-center"
+>
+  <lucide-angular [img]="emptyIcon" size="50"></lucide-angular>
+  <span class="text-xl">Sin reportes aún</span>
+  <span class="text-md"
+    >Cuando encuentres un problema o situación que debamos atender, repórtalo
+    desde la página de reportes.</span
+  >
+</div>
 } }

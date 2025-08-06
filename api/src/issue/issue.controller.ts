@@ -26,7 +26,7 @@ import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 export class IssueController {
   constructor(private issueService: IssueService) {}
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Get()
   async issues(): Promise<Issue[] | null> {
     const issues = await this.issueService.getIssues();
@@ -39,7 +39,7 @@ export class IssueController {
     }));
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Get(':issueId/:userId')
   async issue(
     @Param('issueId') issueId: string,
@@ -53,7 +53,7 @@ export class IssueController {
     };
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Post()
   async create(
     @Body() createIssueDto: CreateIssueDto,
@@ -80,7 +80,7 @@ export class IssueController {
     };
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Put(':id')
   async update(
     @Body() updateIssueDto: UpdateIssueDto,
@@ -108,7 +108,7 @@ export class IssueController {
     };
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Issue | BadRequestException> {
     const issue = await this.issueService.deleteIssue(id);
@@ -123,16 +123,7 @@ export class IssueController {
     };
   }
 
-  @UseGuards(SupabaseAuthGuard)
-  @Get(':latitude/:longitude')
-  async issueByCoords(
-    @Param('latitude') latitude: string,
-    @Param('longitude') longitude: string,
-  ): Promise<Issue | null> {
-    return await this.issueService.getIssueByCoords(latitude, longitude);
-  }
-
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Post('upload')
   @UseInterceptors(FileInterceptor('photo'))
   async uploadPhoto(

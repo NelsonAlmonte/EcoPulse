@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
   AuthResponseDto,
@@ -54,7 +59,14 @@ export class AuthService {
 
     if (error) {
       console.log(error);
-      return null;
+      throw new HttpException(
+        {
+          status: 422,
+          message:
+            'Ya existe un usuario registrado con este correo electrónico.',
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
 
     const userToBeCreated: CreateUserDto = {
@@ -67,7 +79,15 @@ export class AuthService {
     };
     const createdUser = await this.userService.createUser(userToBeCreated);
 
-    if (!createdUser) return null;
+    if (!createdUser) {
+      throw new HttpException(
+        {
+          status: 400,
+          message: 'Error al crear el usuario. Intentalo nuevamente.',
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
 
     const response: AuthResponseDto = {
       id: data.user.id,

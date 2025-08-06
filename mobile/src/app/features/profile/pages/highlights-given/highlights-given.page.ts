@@ -43,7 +43,7 @@ export class HighlightsGivenPage implements OnInit {
       .subscribe((event: NavigationEnd) => {
         if (event.urlAfterRedirects.includes('/highlights-given')) {
           this.userService.getHighlightsGiven(
-            this.authService.loggedUserData().id
+            this.authService.loggedUserData()!.id
           );
         }
       });

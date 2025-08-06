@@ -20,6 +20,11 @@ import { UpdateUserDto } from '@shared/dto/user.dto';
 import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
 import { Router } from '@angular/router';
+import {
+  CheckCircleIcon,
+  LucideAngularModule,
+  UserCogIcon,
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-edit-profile',
@@ -36,6 +41,7 @@ import { Router } from '@angular/router';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    LucideAngularModule,
   ],
 })
 export class EditProfilePage implements OnInit {
@@ -45,6 +51,8 @@ export class EditProfilePage implements OnInit {
   userService = inject(UserService);
   toastController = inject(ToastController);
   userForm!: FormGroup;
+  editProfileIcon = UserCogIcon;
+  completeEditProfileIcon = CheckCircleIcon;
 
   ngOnInit(): void {
     this.userForm = this.fb.group<UpdateUserDto>({
@@ -54,7 +62,7 @@ export class EditProfilePage implements OnInit {
   }
 
   async updateUser(): Promise<void> {
-    const loggedUserData = this.authService.loggedUserData();
+    const loggedUserData = this.authService.loggedUserData()!;
     const formValue = this.userForm.getRawValue();
     const updateUserDto: UpdateUserDto = {
       name: formValue.name,

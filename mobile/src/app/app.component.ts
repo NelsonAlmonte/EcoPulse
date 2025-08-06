@@ -7,5 +7,24 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor() {}
+  constructor() {
+    const head = document.head;
+    const originalInsertBefore = head.insertBefore;
+
+    head.insertBefore = function <T extends Node>(
+      newElement: T,
+      referenceElement: Node | null
+    ): T {
+      if (
+        newElement instanceof Element &&
+        newElement.hasAttribute('href') &&
+        newElement.getAttribute('href')?.includes('fonts.googleapis')
+      ) {
+        console.info('Prevented Roboto from loading!');
+        return newElement;
+      }
+
+      return originalInsertBefore.call(this, newElement, referenceElement) as T;
+    };
+  }
 }

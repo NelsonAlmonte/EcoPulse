@@ -1,7 +1,8 @@
 
 ion-tab-bar {
   --background: var(--md-sys-color-surface-container);
-  --color-selected: var(--md-sys-color-on-primary-container);
+  --color-selected: var(--md-sys-color-secondary);
+  --color: var(--md-sys-color-on-surface-variant);
 }
 
 ion-tab-button {

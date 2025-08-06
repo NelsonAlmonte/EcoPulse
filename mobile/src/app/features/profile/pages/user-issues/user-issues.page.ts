@@ -42,7 +42,7 @@ export class UserIssuesPage implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         if (event.urlAfterRedirects.includes('/user-issues')) {
-          this.userService.getUserIssues(this.authService.loggedUserData().id);
+          this.userService.getUserIssues(this.authService.loggedUserData()!.id);
         }
       });
   }

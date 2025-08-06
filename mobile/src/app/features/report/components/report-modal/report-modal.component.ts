@@ -136,7 +136,7 @@ export class ReportModalComponent {
       // longitude: coordinates.coords.longitude.toString(),
       comment: this.comment,
       category: this.selectedCategory,
-      user: this.authService.loggedUserData().id,
+      user: this.authService.loggedUserData()!.id,
     };
     const formData = new FormData();
     const toast = await this.toastController.create({

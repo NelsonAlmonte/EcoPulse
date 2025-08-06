@@ -3,35 +3,30 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Editar perfil</ion-title>
+    <ion-title>Registrate</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true">
   <div class="flex flex-col justify-between items-center h-full">
-    <div class="flex flex-col justify-center items-center text-center mt-18">
-      <lucide-angular
-        class="md-on-primary-container"
-        [img]="editProfileIcon"
-        size="60"
-      ></lucide-angular>
+    <div class="w-48 text-center mt-18">
+      <img
+        class="w-full mb-4 rounded-full"
+        src="assets/img/logo.png"
+        alt="logo"
+      />
       <div>
         <span
           class="md-on-primary-container pointer-events-none absolute start-0 end-0 mt-2 text-center text-3xl font-bold tracking-widest capitalize opacity-20 select-none"
         >
-          Editar perfil
+          Registrate
         </span>
         <span class="md-on-surface text-3xl relative text-center capitalize"
-          >Editar perfil</span
+          >Registrate</span
         >
       </div>
     </div>
     <div class="rounded-t-4xl px-10 py-10 md-surface-container w-full">
-      <form
-        class="max-w-sm mx-auto mt-5"
-        [formGroup]="userForm"
-        (ngSubmit)="updateUser()"
-      >
+      <form [formGroup]="signupForm" (ngSubmit)="signup()">
         <div class="mb-5">
           <ion-input
             label="Nombre"
@@ -39,6 +34,7 @@
             fill="outline"
             placeholder="Ingresa tu nombre"
             type="text"
+            name="name"
             formControlName="name"
           ></ion-input>
         </div>
@@ -49,7 +45,30 @@
             fill="outline"
             placeholder="Ingresa tu apellido"
             type="text"
+            name="last"
             formControlName="last"
+          ></ion-input>
+        </div>
+        <div class="mb-5">
+          <ion-input
+            label="Correo electrónico"
+            label-placement="floating"
+            fill="outline"
+            placeholder="Ingresa tu correo electrónico"
+            type="email"
+            name="email"
+            formControlName="email"
+          ></ion-input>
+        </div>
+        <div class="mb-5">
+          <ion-input
+            label="Contraseña"
+            label-placement="floating"
+            fill="outline"
+            placeholder="Ingresa tu contraseña"
+            type="password"
+            name="password"
+            formControlName="password"
           ></ion-input>
         </div>
         <button
@@ -58,44 +77,12 @@
         >
           <lucide-angular
             class="me-1"
-            [img]="completeEditProfileIcon"
+            [img]="completeSignupIcon"
             size="18"
           ></lucide-angular>
-          Actualizar datos
+          Completar registro
         </button>
       </form>
     </div>
   </div>
-  <!-- <form
-    class="max-w-sm mx-auto mt-5"
-    [formGroup]="userForm"
-    (ngSubmit)="updateUser()"
-  >
-    <div class="mb-5">
-      <ion-input
-        label="Nombre"
-        label-placement="floating"
-        fill="outline"
-        placeholder="Ingresa tu nombre"
-        type="text"
-        formControlName="name"
-      ></ion-input>
-    </div>
-    <div class="mb-5">
-      <ion-input
-        label="Apellido"
-        label-placement="floating"
-        fill="outline"
-        placeholder="Ingresa tu apellido"
-        type="text"
-        formControlName="last"
-      ></ion-input>
-    </div>
-    <button
-      type="submit"
-      class="md-primary md-on-primary focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-    >
-      Actualizar datos
-    </button>
-  </form> -->
 </ion-content>

@@ -1,0 +1,66 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Iniciar sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="flex flex-col justify-between items-center h-full">
+    <div class="w-48 text-center mt-18">
+      <img
+        class="w-full mb-4 rounded-full"
+        src="assets/img/logo.png"
+        alt="logo"
+      />
+      <div>
+        <span
+          class="md-on-primary-container pointer-events-none absolute start-0 end-0 mt-2 text-center text-3xl font-bold tracking-widest capitalize opacity-20 select-none"
+        >
+          Iniciar sesión
+        </span>
+        <span class="md-on-surface text-3xl relative text-center capitalize"
+          >Iniciar sesión</span
+        >
+      </div>
+    </div>
+    <div class="rounded-t-4xl px-10 py-10 md-surface-container w-full">
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div class="mb-5">
+          <ion-input
+            label="Correo electrónico"
+            label-placement="floating"
+            fill="outline"
+            placeholder="Ingresa tu correo electrónico"
+            type="email"
+            name="email"
+            formControlName="email"
+          ></ion-input>
+        </div>
+        <div class="mb-5">
+          <ion-input
+            label="Contraseña"
+            label-placement="floating"
+            fill="outline"
+            placeholder="Ingresa tu contraseña"
+            type="password"
+            name="password"
+            formControlName="password"
+          ></ion-input>
+        </div>
+        <button
+          type="submit"
+          class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full"
+        >
+          <lucide-angular
+            class="me-1"
+            [img]="loginIcon"
+            size="18"
+          ></lucide-angular>
+          Iniciar sesión
+        </button>
+      </form>
+    </div>
+  </div>
+</ion-content>

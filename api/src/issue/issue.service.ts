@@ -110,24 +110,6 @@ export class IssueService {
     });
   }
 
-  getIssueByCoords(latitude: string, longitude: string): Promise<Issue | null> {
-    return this.prisma.issue.findFirst({
-      where: {
-        latitude,
-        longitude,
-      },
-      include: {
-        category: true,
-        user: {
-          omit: {
-            password: true,
-            role: true,
-          },
-        },
-      },
-    });
-  }
-
   async uploadPhoto(
     file: Express.Multer.File,
   ): Promise<SupaBaseUploadFileResponse | null> {

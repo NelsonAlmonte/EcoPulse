@@ -50,7 +50,7 @@ export class ReportPage implements OnInit {
 
   ngOnInit(): void {
     this.userService.getUserIssues(
-      this.authService.loggedUserData().id,
+      this.authService.loggedUserData()!.id,
       this.AMOUNT_OF_ISSUES
     );
     // this.router.events
@@ -96,7 +96,7 @@ export class ReportPage implements OnInit {
 
   refreshLatestIssues(event: RefresherCustomEvent): void {
     this.userService.getUserIssues(
-      this.authService.loggedUserData().id,
+      this.authService.loggedUserData()!.id,
       this.AMOUNT_OF_ISSUES
     );
 

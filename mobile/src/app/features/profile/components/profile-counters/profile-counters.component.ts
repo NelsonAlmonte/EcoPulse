@@ -12,10 +12,12 @@ export class ProfileCountersComponent implements OnInit {
   authService = inject(AuthService);
 
   ngOnInit() {
-    this.userService.countUserIssues(this.authService.loggedUserData().id);
-    this.userService.counthighlightsGiven(this.authService.loggedUserData().id);
+    this.userService.countUserIssues(this.authService.loggedUserData()!.id);
+    this.userService.counthighlightsGiven(
+      this.authService.loggedUserData()!.id
+    );
     this.userService.counthighlightsReceived(
-      this.authService.loggedUserData().id
+      this.authService.loggedUserData()!.id
     );
   }
 }

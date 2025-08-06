@@ -28,13 +28,15 @@ export class AuthService {
         if (result.error) {
           console.log(result.error);
           const toast = await this.toastController.create({
-            message: 'Credenciales invalidas.',
-            duration: 4000,
+            message: result.error.message,
+            duration: 6000,
             position: 'bottom',
             animated: true,
           });
 
           toast.present();
+
+          this.router.navigate(['/login']);
 
           return;
         }
@@ -54,13 +56,15 @@ export class AuthService {
         if (result.error) {
           console.log(result.error);
           const toast = await this.toastController.create({
-            message: 'Ocurrión un error al registrar tu usuario.',
-            duration: 4000,
+            message: result.error.message,
+            duration: 6000,
             position: 'bottom',
             animated: true,
           });
 
           toast.present();
+
+          this.router.navigate(['/signup']);
 
           return;
         }
@@ -81,12 +85,31 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('auth');
-    this.router.navigate(['/login']);
+    this.router.navigate(['/welcome']);
   }
 
-  loggedUserData(): AuthResponseDto {
+  loggedUserData(): AuthResponseDto | null {
     const authData = localStorage.getItem('auth');
-    const parsedData: AuthResponseDto = JSON.parse(authData!);
-    return parsedData;
+
+    if (!authData) return null;
+
+    try {
+      const parsedData: AuthResponseDto = JSON.parse(authData);
+
+      if (
+        !parsedData.access_token ||
+        typeof parsedData.access_token !== 'string'
+      ) {
+        this.logout();
+        return null;
+      }
+
+      return parsedData;
+    } catch (error) {
+      console.warn('Error parsing auth data:', error);
+
+      this.logout();
+      return null;
+    }
   }
 }

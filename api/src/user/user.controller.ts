@@ -18,7 +18,7 @@ import { GetUserDto, UpdateUserDto } from './user.dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Get(':user/issues')
   async issuesByUser(
     @Param('user') userId: string,
@@ -32,13 +32,13 @@ export class UserController {
     return await this.userService.getIssues(userId, amountToTake);
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Get(':id')
   async user(@Param('id') id: string): Promise<GetUserDto | null> {
     return await this.userService.getUser(id);
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Put(':id')
   async update(
     @Body() updateUserDto: UpdateUserDto,
@@ -53,13 +53,13 @@ export class UserController {
     return updatedUser;
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Get(':user/issues/count')
   async countUserIssues(@Param('user') userId: string): Promise<number> {
     return await this.userService.countUserIssues(userId);
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Get(':user/highlights/given')
   async highlightsGiven(
     @Param('user') userId: string,
@@ -67,13 +67,13 @@ export class UserController {
     return await this.userService.getHighlightsGiven(userId);
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Get(':user/highlights/given/count')
   async countHighlightsGiven(@Param('user') userId: string): Promise<number> {
     return await this.userService.countHighlightsGiven(userId);
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Get(':user/highlights/received/count')
   async countHighlightsReceived(
     @Param('user') userId: string,
