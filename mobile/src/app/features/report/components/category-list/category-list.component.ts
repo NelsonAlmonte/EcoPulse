@@ -6,21 +6,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { CategoryService } from '@core/services/category.service';
+import { iconMap } from '@shared/constants/system.constant';
 import {
   LucideAngularModule,
-  TreePineIcon,
-  SkullIcon,
-  SprayCanIcon,
-  Volume2Icon,
-  BrickWallIcon,
-  LightbulbIcon,
-  FlameIcon,
-  CarIcon,
-  DropletIcon,
-  TrashIcon,
-  DropletsIcon,
   LucideIconData,
-  FrownIcon,
+  TreePineIcon,
 } from 'lucide-angular';
 
 @Component({
@@ -33,20 +23,6 @@ import {
 export class CategoryListComponent implements OnInit {
   categoryService = inject(CategoryService);
   selectedCategory = output<string>();
-  iconMap: Record<string, LucideIconData> = {
-    SkullIcon,
-    SprayCanIcon,
-    Volume2Icon,
-    BrickWallIcon,
-    LightbulbIcon,
-    FlameIcon,
-    CarIcon,
-    DropletIcon,
-    TrashIcon,
-    TreePineIcon,
-    DropletsIcon,
-    FrownIcon,
-  };
   selectedElement: HTMLDivElement | null = null;
 
   ngOnInit(): void {
@@ -65,6 +41,6 @@ export class CategoryListComponent implements OnInit {
   }
 
   showIcon(iconName: string): LucideIconData {
-    return this.iconMap[iconName] || TreePineIcon;
+    return iconMap[iconName] || TreePineIcon;
   }
 }

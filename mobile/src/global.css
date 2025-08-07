@@ -272,24 +272,41 @@
 }
 
 .issue-detail-modal {
-  --width: 90%;
-  --max-width: 400px;
-  --height: auto;
-  --border-radius: 16px;
-  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  .issue-detail-card {
+    height: 100%;
+
+    .photo-container {
+      height: 250px;
+    }
+  }
 }
 
-.issue-detail-modal .issue-detail-card {
-  margin-bottom: 0px !important;
+.issue-detail-modal::part(handle) {
+  top: 16px;
+  width: 50px;
+}
+
+.issue-photo-modal {
+  --width: 100%;
+  --height: auto;
+}
+
+ion-modal.issue-photo-modal::part(backdrop) {
+  --backdrop-opacity: 0.6;
+  background: var(--md-sys-color-primary);
+}
+
+ion-modal {
+  --border-radius: 24px;
+  --background: var(--md-sys-color-surface-container-high);
 }
 
 ion-toolbar {
   --background: var(--md-sys-color-surface-container);
-  --color: var(--md-sys-color-on-surface)
+  --color: var(--md-sys-color-on-surface);
 }
 
-.no-ripple{
+.no-ripple {
   --ripple-color: transparent;
 }
 

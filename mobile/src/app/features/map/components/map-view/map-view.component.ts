@@ -39,7 +39,7 @@ export class MapViewComponent implements AfterViewInit {
   @ViewChild('map') mapRef!: ElementRef<HTMLElement>;
   map!: GoogleMap;
   markerIds: string[] = [];
-  markerData = new Map<string, string>();
+  markerData = new Map<string, Issue>();
 
   constructor() {}
 
@@ -76,19 +76,23 @@ export class MapViewComponent implements AfterViewInit {
 
   async viewIssueDetail() {
     await this.map.setOnMarkerClickListener(async (marker) => {
-      const issueId = this.markerData.get(marker.markerId);
+      const issue = this.markerData.get(marker.markerId)!;
       const userId = this.authService.loggedUserData()!.id;
       const modal = await this.modalController.create({
         component: IssueDetailComponent,
         cssClass: 'issue-detail-modal',
+        initialBreakpoint: 0.38,
+        // breakpoints: [0, 0.47],
         componentProps: {
           issue: {},
         },
       });
 
+      if (issue.comment) modal.initialBreakpoint = 0.45;
+
       modal.present();
 
-      this.issueService.getIssue(issueId!, userId);
+      this.issueService.getIssue(issue.id, userId);
     });
   }
 
@@ -113,7 +117,7 @@ export class MapViewComponent implements AfterViewInit {
         this.markerIds = await this.map.addMarkers(markers);
 
         this.markerIds.forEach((id, index) => {
-          this.markerData.set(id, issues[index].id);
+          this.markerData.set(id, issues[index]!);
         });
 
         await this.map.enableClustering();
