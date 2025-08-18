@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+@plugin 'flowbite/plugin';
+@source "../node_modules/flowbite-svelte/dist";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  /* disable chrome cancel button */
+  input[type="search"]::-webkit-search-cancel-button {
+    display: none;
+  }
+}
