@@ -13,6 +13,6 @@
 
 <Sidebar />
 
-<div class="h-96 overflow-auto p-4 md:ms-64">
+<div class="p-4 md:ms-64">
 	{@render children?.()}
 </div>
