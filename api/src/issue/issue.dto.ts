@@ -1,4 +1,4 @@
-import { Category, Status, User } from '@prisma/client';
+import { Category, Status } from '@prisma/client';
 import { GetUserDto } from 'src/user/user.dto';
 
 export interface CreateIssueDto {

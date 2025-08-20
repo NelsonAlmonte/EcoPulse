@@ -22,6 +22,29 @@ export class IssueService {
     });
   }
 
+  getIssuesList(skip: number, take: number): Promise<Issue[] | null> {
+    return this.prisma.issue.findMany({
+      skip,
+      take,
+      include: {
+        category: true,
+        user: {
+          omit: {
+            password: true,
+            role: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  countIssues(): Promise<number> {
+    return this.prisma.highlight.count();
+  }
+
   async getIssue(issueId: string, userId: string): Promise<GetIssueDto | null> {
     const issue = await this.prisma.issue.findUnique({
       where: {

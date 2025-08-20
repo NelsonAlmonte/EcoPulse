@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -21,9 +22,13 @@ import {
 } from 'src/issue/issue.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
+import { List } from 'src/response.dto';
 
 @Controller('issue')
 export class IssueController {
+  DEFAULT_PAGE = '1';
+  DEFAULT_AMOUNT = '5';
+
   constructor(private issueService: IssueService) {}
 
   // @UseGuards(SupabaseAuthGuard)
@@ -37,6 +42,32 @@ export class IssueController {
       ...issue,
       photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
     }));
+  }
+
+  @Get('list')
+  async issuesList(
+    @Query('page') page: string = this.DEFAULT_PAGE,
+    @Query('amount') amount: string = this.DEFAULT_AMOUNT,
+  ): Promise<List<Issue[]> | null> {
+    const skip = page !== '1' ? (Number(page) - 1) * Number(amount) : 0;
+    const take = Number(amount);
+    const issues = await this.issueService.getIssuesList(skip, take);
+
+    if (!issues) return null;
+
+    const issueList: List<Issue[]> = {
+      data: issues.map((issue) => ({
+        ...issue,
+        photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+      })),
+      pagination: {
+        page: Number(page),
+        amount: Number(amount),
+        total: await this.issueService.countIssues(),
+      },
+    };
+
+    return issueList;
   }
 
   // @UseGuards(SupabaseAuthGuard)

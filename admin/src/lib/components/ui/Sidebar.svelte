@@ -5,8 +5,7 @@
 		SidebarItem,
 		SidebarDropdownWrapper,
 		SidebarButton,
-		uiHelpers,
-		SidebarBrand
+		uiHelpers
 	} from 'flowbite-svelte';
 	import { ChartArea, FileSearch, House, Settings, Users } from '@lucide/svelte';
 	import { page } from '$app/state';
@@ -32,15 +31,9 @@
 		params={{ x: -50, duration: 50 }}
 		position="absolute"
 		classes={{ nonactive: 'p-2', active: 'p-2' }}
-		class="z-50 h-full"
+		class="z-50 mt-[89px] h-full"
 	>
 		<SidebarGroup>
-			<SidebarBrand>
-				<img src="/img/logo.png" alt="Flowbite Svelte" class="h-6 w-6 rounded-full" />
-				<span class="ml-2 self-center whitespace-nowrap text-xl font-semibold dark:text-white"
-					>EcoPulse</span
-				>
-			</SidebarBrand>
 			<SidebarItem label="Inicio">
 				{#snippet icon()}
 					<House
