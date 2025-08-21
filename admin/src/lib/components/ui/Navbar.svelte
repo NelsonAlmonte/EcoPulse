@@ -34,5 +34,5 @@
 		</DropdownGroup>
 		<DropdownHeader>Sign out</DropdownHeader>
 	</Dropdown>
-	<div class="h-17"></div>
+	<div class="h-12"></div>
 </Navbar>

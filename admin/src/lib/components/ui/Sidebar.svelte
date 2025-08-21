@@ -31,7 +31,7 @@
 		params={{ x: -50, duration: 50 }}
 		position="absolute"
 		classes={{ nonactive: 'p-2', active: 'p-2' }}
-		class="z-50 mt-[89px] h-full"
+		class="z-50 mt-[70px] h-full"
 	>
 		<SidebarGroup>
 			<SidebarItem label="Inicio">
