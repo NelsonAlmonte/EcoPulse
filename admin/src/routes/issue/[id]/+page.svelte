@@ -1,32 +1,69 @@
 <script lang="ts">
-	import { icons } from '$lib/constants/icons';
+	import type { PageHeader } from '$lib/types/ui.type.js';
+	import { pageHeaderState } from '$lib/store/ui.svelte.js';
+	import { Tabs, TabItem } from 'flowbite-svelte';
+	import Map from '$lib/components/issue/Map.svelte';
+	import { Info, MapIcon } from '@lucide/svelte';
 
 	let { data } = $props();
+	const pageHeaderProps: PageHeader = {
+		title: 'Detalles de la incidencia',
+		breadcrumbs: [
+			{
+				title: 'Inicio',
+				url: '/'
+			},
+			{
+				title: 'Incidencias',
+				url: '/issue'
+			},
+			{
+				title: 'Listado',
+				url: '/issue'
+			},
+			{
+				title: 'Detalle',
+				url: '/'
+			}
+		]
+	};
 
-	console.log(data);
+	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
-<div class="flex space-x-4">
-	<img class="w-150 rounded-2xl" src={data.issue.photo} alt="Foto" />
-	<div class="flex-1">
-		<h1 class="text-4xl text-gray-900">{data.issue.category.name}</h1>
-		<div class="mt-4 grid grid-cols-3 gap-4">
-			{#each data.issueInfoItems as item}
-				<div
-					class="flex items-center justify-start gap-3 rounded-2xl bg-gray-100 p-4 capitalize text-gray-700 dark:bg-gray-600 dark:text-gray-500"
-				>
-					<div class="ms-3">
-						{#if item.icon}
-							{@const Icon = icons[item.icon]}
-							<Icon size="20" />
+<div class="mb-4 flex space-x-12">
+	<img class="w-150 rounded-xl" src={data.issue.photo} alt="Foto" />
+	<div class="flex-1 rounded-xl bg-gray-50 p-4 shadow">
+		<Tabs tabStyle="underline">
+			<TabItem open>
+				{#snippet titleSlot()}
+					<div class="flex items-center gap-2">
+						<Info size="20" />
+						Detalle
+					</div>
+				{/snippet}
+				<dl>
+					{#each data.issueInfoItems as item}
+						{#if item.value !== ''}
+							<div class="mb-4">
+								<dt class="text-lg font-medium text-gray-900">{item.label}</dt>
+								<dd class="font-medium capitalize text-gray-500">{item.value}</dd>
+							</div>
 						{/if}
+					{/each}
+				</dl>
+			</TabItem>
+			<TabItem>
+				{#snippet titleSlot()}
+					<div class="flex items-center gap-2">
+						<MapIcon size="20" />
+						Mapa
 					</div>
-					<div class="flex flex-col">
-						<span class="font-bold">{item.label}</span>
-						<span class="text-sm">{item.value}</span>
-					</div>
+				{/snippet}
+				<div>
+					<Map latitude={Number(data.issue.latitude)} longitude={Number(data.issue.longitude)} />
 				</div>
-			{/each}
-		</div>
+			</TabItem>
+		</Tabs>
 	</div>
 </div>

@@ -4,6 +4,7 @@
 	import Sidebar from '$lib/components/ui/Sidebar.svelte';
 	import PageLoad from '$lib/components/ui/PageLoad.svelte';
 	import Navbar from '$lib/components/ui/Navbar.svelte';
+	import Header from '$lib/components/ui/Header.svelte';
 
 	let { children } = $props();
 </script>
@@ -18,5 +19,6 @@
 <Sidebar />
 
 <div class="p-4 md:ms-64">
+	<Header />
 	{@render children?.()}
 </div>

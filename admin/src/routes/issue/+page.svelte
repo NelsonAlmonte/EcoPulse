@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { Button, PaginationNav } from 'flowbite-svelte';
 	import type { PageProps } from './$types';
+	import type { PageHeader } from '$lib/types/ui.type';
+	import { Button, PaginationNav } from 'flowbite-svelte';
 	import { afterNavigate, goto } from '$app/navigation';
+	import { pageHeaderState } from '$lib/store/ui.svelte';
 
 	let { data }: PageProps = $props();
 	let isLoading = $state(false);
@@ -22,6 +24,26 @@
 		goto(newUrl);
 	}
 	afterNavigate(() => (isLoading = false));
+
+	const pageHeaderProps: PageHeader = {
+		title: 'Listado de incidencias',
+		breadcrumbs: [
+			{
+				title: 'Inicio',
+				url: '/'
+			},
+			{
+				title: 'Incidencias',
+				url: '/issue'
+			},
+			{
+				title: 'Listado',
+				url: '/issue'
+			}
+		]
+	};
+
+	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">

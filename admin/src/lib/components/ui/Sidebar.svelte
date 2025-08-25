@@ -34,7 +34,7 @@
 		class="z-50 mt-[70px] h-full"
 	>
 		<SidebarGroup>
-			<SidebarItem label="Inicio">
+			<SidebarItem label="Inicio" href="/">
 				{#snippet icon()}
 					<House
 						class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"

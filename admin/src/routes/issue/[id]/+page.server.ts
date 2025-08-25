@@ -14,12 +14,17 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 function generateIssueInfoItems(issue: Issue): InfoItem[] {
 	return [
 		{
-			label: 'Estado',
-			value: issue.status,
+			label: 'Tipo de incidencia',
+			value: issue.category.name,
 			icon: 'CircleDot'
 		},
 		{
-			label: 'Usuario',
+			label: 'Estado',
+			value: issue.status.toLocaleLowerCase(),
+			icon: 'CircleDot'
+		},
+		{
+			label: 'Reportado por',
 			value: `${issue.user.name} ${issue.user.last}`,
 			icon: 'User'
 		},
@@ -38,14 +43,9 @@ function generateIssueInfoItems(issue: Issue): InfoItem[] {
 			icon: 'Star'
 		},
 		{
-			label: 'Latitud',
-			value: issue.latitude,
-			icon: 'Globe'
-		},
-		{
-			label: 'Longitud',
-			value: issue.longitude,
-			icon: 'MapPin'
+			label: 'Comentario',
+			value: issue.comment,
+			icon: 'Star'
 		}
 	];
 }

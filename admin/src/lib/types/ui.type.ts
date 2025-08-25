@@ -26,3 +26,13 @@ export type NavTabProps = {
 };
 
 export type IconKey = keyof typeof icons;
+
+export type PageHeader = {
+	title: string;
+	breadcrumbs?: Breadcrumb[];
+};
+
+type Breadcrumb = {
+	title: string;
+	url: string;
+};
