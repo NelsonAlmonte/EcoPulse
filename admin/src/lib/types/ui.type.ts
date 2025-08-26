@@ -36,3 +36,9 @@ type Breadcrumb = {
 	title: string;
 	url: string;
 };
+
+export type ToastProps = {
+	content: string;
+	color: string;
+	icon: IconKey;
+};

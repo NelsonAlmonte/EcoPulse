@@ -1,12 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Issue, Prisma } from '@prisma/client';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { GetIssueDto, SupaBaseUploadFileResponse } from 'src/issue/issue.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class IssueService {
-  constructor(private prisma: PrismaService) {}
+  supabase: SupabaseClient;
+
+  constructor(private prisma: PrismaService) {
+    this.supabase = createClient(
+      process.env.PUBLIC_SUPABASE_URL,
+      process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
+      {
+        auth: {
+          autoRefreshToken: false,
+        },
+      },
+    );
+  }
 
   getIssues(): Promise<Issue[] | null> {
     return this.prisma.issue.findMany({
@@ -116,8 +128,8 @@ export class IssueService {
     });
   }
 
-  deleteIssue(id: string): Promise<Issue> {
-    return this.prisma.issue.delete({
+  async deleteIssue(id: string): Promise<Issue> {
+    const issue = await this.prisma.issue.delete({
       where: {
         id: id,
       },
@@ -131,16 +143,26 @@ export class IssueService {
         },
       },
     });
+
+    if (!issue) {
+      throw new BadRequestException('Error al eliminar esta incidencia');
+    }
+
+    const { error } = await this.supabase.storage
+      .from('issues')
+      .remove([issue.photo.split('/')[1]]);
+
+    if (error) {
+      throw new BadRequestException('Error al eliminar la foto');
+    }
+
+    return issue;
   }
 
   async uploadPhoto(
     file: Express.Multer.File,
   ): Promise<SupaBaseUploadFileResponse | null> {
-    const supabase = createClient(
-      process.env.PUBLIC_SUPABASE_URL,
-      process.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
-    );
-    const { data, error } = await supabase.storage
+    const { data, error } = await this.supabase.storage
       .from('issues')
       .upload(file.originalname, file.buffer, {
         contentType: 'image/jpeg',

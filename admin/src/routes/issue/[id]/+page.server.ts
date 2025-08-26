@@ -1,10 +1,10 @@
-import { API_URL } from '$env/static/private';
+import { PUBLIC_API_URL } from '$env/static/public';
 import type { Issue } from '$lib/models/issue.model';
 import type { InfoItem } from '$lib/types/information.type';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
-	const response = await fetch(`${API_URL}issue/${params.id}/1`);
+	const response = await fetch(`${PUBLIC_API_URL}issue/${params.id}/1`);
 	const issue = (await response.json()) as Issue;
 	const issueInfoItems = generateIssueInfoItems(issue);
 

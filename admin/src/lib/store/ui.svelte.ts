@@ -1,4 +1,4 @@
-import type { PageHeader } from '$lib/types/ui.type';
+import type { PageHeader, ToastProps } from '$lib/types/ui.type';
 
 export const modalState = $state({
 	search: {
@@ -17,4 +17,10 @@ export const themeState = $state({
 export const pageHeaderState = $state<PageHeader>({
 	title: '',
 	breadcrumbs: []
+});
+
+export const toastState = $state<ToastProps>({
+	content: 'Example toast',
+	color: 'green',
+	icon: 'Calendar'
 });

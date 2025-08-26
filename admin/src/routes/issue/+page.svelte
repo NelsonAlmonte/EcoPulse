@@ -4,13 +4,19 @@
 	import { Button, PaginationNav } from 'flowbite-svelte';
 	import { afterNavigate, goto } from '$app/navigation';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
+	import { IssueList } from '$lib/store/issue.svelte';
+	import DeleteButton from '$lib/components/issue/DeleteButton.svelte';
 
 	let { data }: PageProps = $props();
+	const issueList = new IssueList();
 	let isLoading = $state(false);
-	let currentPage = $derived(Number(data.currentPage));
+	let currentPage = $derived(Number(data.pagination.page));
+	let currentAmount = $derived(Number(data.pagination.amount));
 	let totalPages = $derived(
 		Math.ceil(data.issues.pagination.total / data.issues.pagination.amount)
 	);
+
+	issueList.list = data.issues;
 
 	function handlePageChange(page: number) {
 		currentPage = page;
@@ -23,7 +29,11 @@
 
 		goto(newUrl);
 	}
-	afterNavigate(() => (isLoading = false));
+
+	afterNavigate(() => {
+		isLoading = false;
+		issueList.list = data.issues;
+	});
 
 	const pageHeaderProps: PageHeader = {
 		title: 'Listado de incidencias',
@@ -61,7 +71,7 @@
 		</thead>
 		<tbody>
 			{#if !isLoading}
-				{#each data.issues.data as issue (issue.id)}
+				{#each issueList.list.data as issue (issue.id)}
 					<tr class="border-b border-gray-200 dark:border-gray-700">
 						<th
 							scope="row"
@@ -88,10 +98,12 @@
 							})}
 						</td>
 						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800">
-							<a href="issue/{issue.id}">
-								<Button color="alternative" pill>Ver</Button>
-							</a>
-							<Button color="red" pill>Eliminar</Button>
+							<Button href="issue/{issue.id}" color="alternative" pill>Ver</Button>
+							<DeleteButton
+								id={issue.id}
+								onDeleted={() =>
+									issueList.refresh(currentPage.toString(), currentAmount.toString())}
+							></DeleteButton>
 						</td>
 					</tr>
 				{/each}

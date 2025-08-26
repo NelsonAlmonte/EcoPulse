@@ -58,9 +58,9 @@ model Category {
 }
 
 model Highlight {
-  issue   Issue  @relation(fields: [issueId], references: [id])
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
   issueId String
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
   createdAt DateTime @default(now())
 

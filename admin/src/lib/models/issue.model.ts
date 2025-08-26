@@ -16,9 +16,3 @@ export interface Issue {
 	highlights: number;
 	hasCurrentUserHighlight: boolean;
 }
-
-export interface SupaBaseUploadFileResponse {
-	id: string;
-	path: string;
-	fullPath: string;
-}
