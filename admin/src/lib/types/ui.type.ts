@@ -39,6 +39,27 @@ type Breadcrumb = {
 
 export type ToastProps = {
 	content: string;
-	color: string;
+	color: FlowbiteColor;
 	icon: IconKey;
 };
+
+export type FlowbiteColor =
+	| 'primary'
+	| 'gray'
+	| 'red'
+	| 'orange'
+	| 'amber'
+	| 'yellow'
+	| 'lime'
+	| 'green'
+	| 'emerald'
+	| 'teal'
+	| 'cyan'
+	| 'sky'
+	| 'blue'
+	| 'indigo'
+	| 'violet'
+	| 'purple'
+	| 'fuchsia'
+	| 'pink'
+	| 'rose';

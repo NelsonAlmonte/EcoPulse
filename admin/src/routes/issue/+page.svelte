@@ -4,11 +4,10 @@
 	import { Button, PaginationNav } from 'flowbite-svelte';
 	import { afterNavigate, goto } from '$app/navigation';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
-	import { IssueList } from '$lib/store/issue.svelte';
+	import { issueList } from '$lib/store/issue.svelte';
 	import DeleteButton from '$lib/components/issue/DeleteButton.svelte';
 
 	let { data }: PageProps = $props();
-	const issueList = new IssueList();
 	let isLoading = $state(false);
 	let currentPage = $derived(Number(data.pagination.page));
 	let currentAmount = $derived(Number(data.pagination.amount));
@@ -62,7 +61,7 @@
 			<tr>
 				<th scope="col" class="bg-gray-50 px-6 py-3 dark:bg-gray-800"> Id </th>
 				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Categoria </th>
-				<th scope="col" class="bg-gray-50 px-6 py-3"> Reportante </th>
+				<th scope="col" class="bg-gray-50 px-6 py-3"> Reportado por </th>
 				<th scope="col" class=" px-6 py-3 dark:bg-gray-800"> Estado </th>
 				<th scope="col" class="bg-gray-50 px-6 py-3"> Comentario </th>
 				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Fecha </th>

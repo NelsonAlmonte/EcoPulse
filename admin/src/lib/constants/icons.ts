@@ -1,4 +1,13 @@
-import { Calendar, CircleDot, Globe, MapPin, Star, User } from '@lucide/svelte';
+import {
+	Calendar,
+	CircleCheck,
+	CircleDot,
+	CircleX,
+	Globe,
+	MapPin,
+	Star,
+	User
+} from '@lucide/svelte';
 
 export const icons = {
 	CircleDot,
@@ -6,5 +15,7 @@ export const icons = {
 	Calendar,
 	Globe,
 	MapPin,
-	Star
+	Star,
+	CircleCheck,
+	CircleX
 };

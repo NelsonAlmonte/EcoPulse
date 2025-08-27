@@ -3,7 +3,7 @@ import type { Issue } from '$lib/models/issue.model';
 import type { List } from '$lib/models/response.model';
 import { SvelteURL } from 'svelte/reactivity';
 
-export class IssueList {
+class IssueList {
 	#issueList = $state<List<Issue[]>>({
 		data: [],
 		pagination: {
@@ -18,8 +18,7 @@ export class IssueList {
 	}
 
 	set list(value: List<Issue[]>) {
-		this.#issueList.data = value.data;
-		this.#issueList.pagination = value.pagination;
+		this.#issueList = value;
 	}
 
 	async refresh(currentPage: string, amount?: string) {
@@ -34,3 +33,5 @@ export class IssueList {
 		this.#issueList = issues;
 	}
 }
+
+export const issueList = new IssueList();
