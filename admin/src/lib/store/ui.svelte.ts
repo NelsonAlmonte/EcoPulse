@@ -6,8 +6,8 @@ export const modalState = $state({
 	}
 });
 
-export const navbarState = $state({
-	isHidden: true
+export const sidebarState = $state({
+	canShow: false
 });
 
 export const themeState = $state({

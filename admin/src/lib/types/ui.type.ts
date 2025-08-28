@@ -63,3 +63,9 @@ export type FlowbiteColor =
 	| 'fuchsia'
 	| 'pink'
 	| 'rose';
+
+export type StatusOption = {
+	label: string;
+	color: FlowbiteColor;
+	icon: IconKey;
+};

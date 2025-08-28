@@ -32,4 +32,4 @@
 	});
 </script>
 
-<div bind:this={mapElement} class="h-[400px] w-full rounded-xl"></div>
+<div bind:this={mapElement} class="w-140 h-auto rounded-xl"></div>
