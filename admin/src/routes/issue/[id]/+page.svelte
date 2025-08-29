@@ -1,15 +1,19 @@
 <script lang="ts">
 	import type { PageHeader } from '$lib/types/ui.type.js';
+	import { goto, invalidateAll } from '$app/navigation';
+	import { Button, Dropdown, DropdownItem, Heading, Modal, Spinner } from 'flowbite-svelte';
 	import { pageHeaderState } from '$lib/store/ui.svelte.js';
-	import { Button, Dropdown, DropdownItem, Heading, Modal } from 'flowbite-svelte';
 	import Map from '$lib/components/issue/Map.svelte';
 	import Status from '$lib/components/ui/Status.svelte';
+	import DeleteButton from '$lib/components/issue/DeleteButton.svelte';
+	import ChangeStatus from '$lib/components/issue/ChangeStatus.svelte';
 	import { relativeTime } from '$lib/utils/relativeTime.js';
 	import { ChevronRight, EllipsisVertical, Maximize } from '@lucide/svelte';
 
 	let { data } = $props();
 	const pageHeaderProps: PageHeader = {
 		title: 'Detalles de la incidencia',
+		back_url: '/issue',
 		breadcrumbs: [
 			{
 				title: 'Inicio',
@@ -33,6 +37,22 @@
 
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
+
+{#snippet dropdownItem(isLoading: boolean = false, status: string)}
+	<DropdownItem
+		class={isLoading
+			? 'flex cursor-not-allowed items-center rounded-lg text-base text-gray-400'
+			: 'flex cursor-pointer items-center rounded-lg text-base'}
+		disabled={isLoading}
+	>
+		{#if isLoading}
+			<Spinner class="me-2" size="4" color="red" />
+			<span> Cargando... </span>
+		{:else}
+			<span class="capitalize"> {status.toLocaleLowerCase()} </span>
+		{/if}
+	</DropdownItem>
+{/snippet}
 
 <div class="mb-4">
 	<div class="flex items-center justify-between">
@@ -59,13 +79,30 @@
 					<ChevronRight size="20" class="ms-2 text-gray-900  dark:text-white" />
 				</DropdownItem>
 				<Dropdown simple placement="right-start" class="px-2">
-					<DropdownItem class="rounded-lg text-base">Pendiente</DropdownItem>
-					<DropdownItem class="rounded-lg text-base">Resuelto</DropdownItem>
-					<DropdownItem class="rounded-lg text-base">Descartado</DropdownItem>
+					<ChangeStatus
+						id={data.issue.id}
+						status={'DESCARTADO'}
+						children={dropdownItem}
+						onChanged={() => invalidateAll()}
+					/>
+					<ChangeStatus
+						id={data.issue.id}
+						status={'RESUELTO'}
+						children={dropdownItem}
+						onChanged={() => invalidateAll()}
+					/>
+					<ChangeStatus
+						id={data.issue.id}
+						status={'PENDIENTE'}
+						children={dropdownItem}
+						onChanged={() => invalidateAll()}
+					/>
 				</Dropdown>
-				<DropdownItem class="rounded-lg text-base hover:bg-red-100 hover:text-red-700"
-					>Eliminar</DropdownItem
-				>
+				<DeleteButton id={data.issue.id} onDeleted={() => goto('/issue')}>
+					<DropdownItem class="rounded-lg text-base hover:bg-red-100 hover:text-red-700"
+						>Eliminar</DropdownItem
+					>
+				</DeleteButton>
 			</Dropdown>
 		</div>
 	</div>
@@ -73,8 +110,13 @@
 <div class="flex space-x-8">
 	<div class="relative">
 		<img class="w-100 h-150 rounded-xl object-cover" src={data.issue.photo} alt="Foto" />
-		<Button class="p-2! absolute end-0 top-0 m-4 cursor-pointer" size="lg" color="light">
-			<Maximize size="20" onclick={() => (isModalOpen = true)} />
+		<Button
+			class="p-2! absolute end-0 top-0 m-4 cursor-pointer"
+			size="lg"
+			color="light"
+			onclick={() => (isModalOpen = true)}
+		>
+			<Maximize size="20" />
 		</Button>
 	</div>
 	<div class="flex-1">
@@ -96,6 +138,6 @@
 	</div>
 </div>
 
-<Modal title="Foto de la incidencia" form bind:open={isModalOpen}>
+<Modal title="Foto completa de la incidencia" form bind:open={isModalOpen}>
 	<img class="h-full w-full rounded-xl" src={data.issue.photo} alt="Foto" />
 </Modal>

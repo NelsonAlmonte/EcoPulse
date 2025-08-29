@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { StatusOption } from '$lib/types/ui.type';
-	import { icons } from '$lib/constants/icons';
+	import { icons } from '$lib/constants/icons.constant';
 	import { Badge } from 'flowbite-svelte';
 
 	let { status }: { status: string } = $props();
@@ -21,7 +21,11 @@
 			icon: 'CircleX'
 		}
 	];
-	const currentStatus = statusOptions.find((option) => option.label === status)!;
+	let currentStatus = $state<StatusOption>(statusOptions[0]);
+
+	$effect(() => {
+		currentStatus = statusOptions.find((option) => option.label === status)!;
+	});
 </script>
 
 <Badge class="rounded-full px-3 py-2 text-sm capitalize" color={currentStatus.color}>

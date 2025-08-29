@@ -11,13 +11,13 @@ export interface CreateIssueDto {
 }
 
 export interface UpdateIssueDto {
-  photo: string;
-  status: Status;
-  latitude: string;
-  longitude: string;
+  photo?: string;
+  status?: Status;
+  latitude?: string;
+  longitude?: string;
   comment?: string;
-  category: string;
-  user: string;
+  category?: string;
+  user?: string;
 }
 
 export interface SupaBaseUploadFileResponse {

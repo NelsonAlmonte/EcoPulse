@@ -1,4 +1,4 @@
-import type { icons } from '$lib/constants/icons';
+import type { icons } from '$lib/constants/icons.constant';
 
 export type AlertTypes = {
 	error: AlertProps;
@@ -29,6 +29,7 @@ export type IconKey = keyof typeof icons;
 
 export type PageHeader = {
 	title: string;
+	back_url?: string;
 	breadcrumbs?: Breadcrumb[];
 };
 

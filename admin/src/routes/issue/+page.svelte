@@ -36,6 +36,7 @@
 
 	const pageHeaderProps: PageHeader = {
 		title: 'Listado de incidencias',
+		back_url: '/',
 		breadcrumbs: [
 			{
 				title: 'Inicio',
@@ -102,7 +103,9 @@
 								id={issue.id}
 								onDeleted={() =>
 									issueList.refresh(currentPage.toString(), currentAmount.toString())}
-							></DeleteButton>
+							>
+								<Button color="red" pill>Eliminar</Button>
+							</DeleteButton>
 						</td>
 					</tr>
 				{/each}

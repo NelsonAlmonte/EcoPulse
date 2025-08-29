@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { icons } from '$lib/constants/icons';
+	import { icons } from '$lib/constants/icons.constant';
 	import { Toast } from 'flowbite-svelte';
 	import { toastState } from '$lib/store/ui.svelte';
 </script>

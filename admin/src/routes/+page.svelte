@@ -3,13 +3,7 @@
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 
 	const pageHeaderProps: PageHeader = {
-		title: 'Inicio',
-		breadcrumbs: [
-			{
-				title: 'Inicio',
-				url: '/'
-			}
-		]
+		title: 'Inicio'
 	};
 
 	Object.assign(pageHeaderState, pageHeaderProps);

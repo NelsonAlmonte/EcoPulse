@@ -3,15 +3,17 @@
 	import { toastState } from '$lib/store/ui.svelte';
 	import { CircleAlert } from '@lucide/svelte';
 	import { Button, Modal, Spinner } from 'flowbite-svelte';
+	import type { Snippet } from 'svelte';
 
-	let data: { onDeleted(): void; id: string } = $props();
-	let showModal = $state(false);
+	let { id, onDeleted, children }: { id: string; onDeleted(): void; children: Snippet<[]> } =
+		$props();
+	let isConfirmationModalOpen = $state(false);
 	let isLoading = $state(false);
 
 	async function deleteItem() {
 		isLoading = true;
 
-		const apiUrl = new URL(`issue/${data.id}`, PUBLIC_API_URL);
+		const apiUrl = new URL(`issue/${id}`, PUBLIC_API_URL);
 		const response = await fetch(apiUrl, { method: 'DELETE' });
 
 		if (!response.ok) {
@@ -23,7 +25,7 @@
 			return;
 		}
 
-		data.onDeleted();
+		onDeleted();
 
 		toastState.trigger({
 			content: 'Incidencia eliminada',
@@ -32,13 +34,15 @@
 		});
 
 		isLoading = false;
-		showModal = false;
+		isConfirmationModalOpen = false;
 	}
 </script>
 
-<Button color="red" pill onclick={() => (showModal = true)}>Eliminar</Button>
+<button class="cursor-pointer" onclick={() => (isConfirmationModalOpen = true)}>
+	{@render children()}
+</button>
 
-<Modal bind:open={showModal} size="xs" permanent>
+<Modal bind:open={isConfirmationModalOpen} size="xs" permanent>
 	<div class="text-center">
 		<CircleAlert class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
 		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
@@ -53,7 +57,9 @@
 					Si, eliminar
 				{/if}
 			</Button>
-			<Button color="alternative" onclick={() => (showModal = false)}>No, cancelar</Button>
+			<Button color="alternative" onclick={() => (isConfirmationModalOpen = false)}
+				>No, cancelar</Button
+			>
 		</div>
 	</div>
 </Modal>

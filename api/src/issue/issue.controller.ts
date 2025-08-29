@@ -117,16 +117,17 @@ export class IssueController {
     @Body() updateIssueDto: UpdateIssueDto,
     @Param('id') id: string,
   ): Promise<Issue | BadRequestException> {
-    const issue: Prisma.IssueUpdateInput = {
-      photo: updateIssueDto.photo,
-      status: updateIssueDto.status,
-      latitude: updateIssueDto.latitude,
-      longitude: updateIssueDto.longitude,
-      category: {
-        connect: { id: updateIssueDto.category },
-      },
-      user: { connect: { id: updateIssueDto.user } },
-    };
+    const issue: Prisma.IssueUpdateInput = {};
+
+    for (const [key, value] of Object.entries(updateIssueDto)) {
+      if (['category', 'user'].includes(key)) {
+        if (!value) continue;
+        issue[key] = { connect: { id: value } };
+      } else {
+        issue[key] = value;
+      }
+    }
+
     const updatedIssue = await this.issueService.updateIssue(issue, id);
 
     if (!updatedIssue) {
@@ -135,7 +136,7 @@ export class IssueController {
 
     return {
       ...updatedIssue,
-      photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+      photo: `${process.env.PUBLIC_BUCKET_URL}/${updatedIssue.photo}`,
     };
   }
 
