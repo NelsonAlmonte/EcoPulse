@@ -71,6 +71,29 @@ export class IssueController {
   }
 
   // @UseGuards(SupabaseAuthGuard)
+  @Get('in-bound')
+  async issuesInBounds(
+    @Query('north') north: number,
+    @Query('south') south: number,
+    @Query('east') east: number,
+    @Query('west') west: number,
+  ): Promise<Issue[] | null> {
+    const issues = await this.issueService.getIssuesInBounds(
+      Number(north),
+      Number(south),
+      Number(east),
+      Number(west),
+    );
+
+    if (!issues) return null;
+
+    return issues.map((issue) => ({
+      ...issue,
+      photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+    }));
+  }
+
+  // @UseGuards(SupabaseAuthGuard)
   @Get(':issueId/:userId')
   async issue(
     @Param('issueId') issueId: string,

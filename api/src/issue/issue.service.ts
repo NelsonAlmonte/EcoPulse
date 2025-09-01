@@ -53,6 +53,39 @@ export class IssueService {
     });
   }
 
+  getIssuesInBounds(
+    north: number,
+    south: number,
+    east: number,
+    west: number,
+  ): Promise<Issue[] | null> {
+    return this.prisma.issue.findMany({
+      include: {
+        category: true,
+        user: {
+          omit: {
+            password: true,
+            role: true,
+          },
+        },
+      },
+      where: {
+        AND: [
+          {
+            latitude: {
+              gte: south,
+              lte: north,
+            },
+            longitude: {
+              gte: west,
+              lte: east,
+            },
+          },
+        ],
+      },
+    });
+  }
+
   countIssues(): Promise<number> {
     return this.prisma.highlight.count();
   }

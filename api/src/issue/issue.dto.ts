@@ -3,8 +3,8 @@ import { GetUserDto } from 'src/user/user.dto';
 
 export interface CreateIssueDto {
   photo: string;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
   comment?: string;
   category: string;
   user: string;
@@ -13,8 +13,8 @@ export interface CreateIssueDto {
 export interface UpdateIssueDto {
   photo?: string;
   status?: Status;
-  latitude?: string;
-  longitude?: string;
+  latitude?: number;
+  longitude?: number;
   comment?: string;
   category?: string;
   user?: string;
@@ -30,8 +30,8 @@ export interface GetIssueDto {
   id: string;
   photo: string;
   status: string;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
   comment?: string;
   categoryId: string;
   userId: string;

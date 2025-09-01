@@ -5,8 +5,8 @@ export interface Issue {
 	id: string;
 	photo: string;
 	status: string;
-	latitude: string;
-	longitude: string;
+	latitude: number;
+	longitude: number;
 	comment?: string;
 	categoryId: string;
 	userId: string;

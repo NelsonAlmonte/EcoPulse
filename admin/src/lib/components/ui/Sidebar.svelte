@@ -54,6 +54,7 @@
 						/>
 					{/snippet}
 					<SidebarItem label="Listado" href="/issue" />
+					<SidebarItem label="Mapa" href="/issue/map" />
 				</SidebarDropdownWrapper>
 				<SidebarDropdownWrapper label="Usuarios" classes={{ btn: 'p-2' }}>
 					{#snippet icon()}

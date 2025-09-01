@@ -38,8 +38,8 @@ model Issue {
   id         String      @id @default(cuid())
   photo      String
   status     Status      @default(PENDIENTE)
-  latitude   String
-  longitude  String
+  latitude   Float
+  longitude  Float
   comment    String?
   category   Category    @relation(fields: [categoryId], references: [id])
   categoryId String
