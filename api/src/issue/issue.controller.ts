@@ -28,6 +28,12 @@ import { List } from 'src/response.dto';
 export class IssueController {
   DEFAULT_PAGE = '1';
   DEFAULT_AMOUNT = '5';
+  DEFAULT_BOUNDS = {
+    north: 18.8009047,
+    south: 18.6009047,
+    east: -70.0654584,
+    west: -70.2654584,
+  };
 
   constructor(private issueService: IssueService) {}
 
@@ -73,24 +79,53 @@ export class IssueController {
   // @UseGuards(SupabaseAuthGuard)
   @Get('in-bound')
   async issuesInBounds(
-    @Query('north') north: number,
-    @Query('south') south: number,
-    @Query('east') east: number,
-    @Query('west') west: number,
-  ): Promise<Issue[] | null> {
+    @Query('north') north: number = this.DEFAULT_BOUNDS.north,
+    @Query('south') south: number = this.DEFAULT_BOUNDS.south,
+    @Query('east') east: number = this.DEFAULT_BOUNDS.east,
+    @Query('west') west: number = this.DEFAULT_BOUNDS.west,
+    @Query('page') page: string = this.DEFAULT_PAGE,
+    @Query('amount') amount: string = '6',
+  ): Promise<List<Issue[]> | null> {
+    const skip = page !== '1' ? (Number(page) - 1) * Number(amount) : 0;
+    const take = Number(amount);
     const issues = await this.issueService.getIssuesInBounds(
       Number(north),
       Number(south),
       Number(east),
       Number(west),
+      skip,
+      take,
     );
+    const where: Prisma.IssueWhereInput = {
+      AND: [
+        {
+          latitude: {
+            gte: Number(south),
+            lte: Number(north),
+          },
+          longitude: {
+            gte: Number(west),
+            lte: Number(east),
+          },
+        },
+      ],
+    };
 
     if (!issues) return null;
 
-    return issues.map((issue) => ({
-      ...issue,
-      photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
-    }));
+    const issueList: List<Issue[]> = {
+      data: issues.map((issue) => ({
+        ...issue,
+        photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+      })),
+      pagination: {
+        page: Number(page),
+        amount: Number(amount),
+        total: await this.issueService.countIssues(where),
+      },
+    };
+
+    return issueList;
   }
 
   // @UseGuards(SupabaseAuthGuard)

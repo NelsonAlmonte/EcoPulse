@@ -3,7 +3,7 @@
 	import { goto, invalidateAll } from '$app/navigation';
 	import { Button, Dropdown, DropdownItem, Heading, Modal, Spinner } from 'flowbite-svelte';
 	import { pageHeaderState } from '$lib/store/ui.svelte.js';
-	import Map from '$lib/components/issue/Map.svelte';
+	import IssueMap from '$lib/components/issue/IssueMap.svelte';
 	import Status from '$lib/components/ui/Status.svelte';
 	import DeleteButton from '$lib/components/issue/DeleteButton.svelte';
 	import ChangeStatus from '$lib/components/issue/ChangeStatus.svelte';
@@ -121,7 +121,7 @@
 	</div>
 	<div class="flex-1">
 		<div class="flex justify-between space-x-8">
-			<Map latitude={Number(data.issue.latitude)} longitude={Number(data.issue.longitude)} />
+			<IssueMap latitude={Number(data.issue.latitude)} longitude={Number(data.issue.longitude)} />
 			<div class="flex-1">
 				<dl>
 					{#each data.issueInfoItems as item}

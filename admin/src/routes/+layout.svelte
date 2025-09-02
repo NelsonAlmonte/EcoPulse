@@ -20,7 +20,7 @@
 <Sidebar />
 <Toast />
 
-<div class="container mx-auto max-w-screen-xl p-4">
+<div class="container mx-auto p-4">
 	<Header />
 	{@render children?.()}
 </div>

@@ -58,8 +58,12 @@ export class IssueService {
     south: number,
     east: number,
     west: number,
+    skip: number,
+    take: number,
   ): Promise<Issue[] | null> {
     return this.prisma.issue.findMany({
+      skip,
+      take,
       include: {
         category: true,
         user: {
@@ -86,8 +90,8 @@ export class IssueService {
     });
   }
 
-  countIssues(): Promise<number> {
-    return this.prisma.highlight.count();
+  async countIssues(where?: Prisma.IssueWhereInput): Promise<number> {
+    return this.prisma.issue.count({ where: where ?? undefined });
   }
 
   async getIssue(issueId: string, userId: string): Promise<GetIssueDto | null> {
