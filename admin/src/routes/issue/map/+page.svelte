@@ -33,11 +33,22 @@
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
-<div class="grid min-h-screen grid-cols-2 gap-8">
-	<div>
+<div class="grid h-[calc(100vh-300px)] grid-cols-2 gap-8">
+	<div class="no-scrollbar overflow-y-scroll pb-10">
 		<IssueList />
 	</div>
-	<div class="sticky top-0 max-h-dvh py-10">
+	<div>
 		<ExploreMap />
 	</div>
 </div>
+
+<style>
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+
+	.no-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+</style>

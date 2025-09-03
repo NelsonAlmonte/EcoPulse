@@ -1,7 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Issue, Prisma } from '@prisma/client';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { GetIssueDto, SupaBaseUploadFileResponse } from 'src/issue/issue.dto';
+import {
+  GetIssueDto,
+  GetIssueListDto,
+  SupaBaseUploadFileResponse,
+} from 'src/issue/issue.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -53,15 +57,15 @@ export class IssueService {
     });
   }
 
-  getIssuesInBounds(
+  async getIssuesInBounds(
     north: number,
     south: number,
     east: number,
     west: number,
     skip: number,
     take: number,
-  ): Promise<Issue[] | null> {
-    return this.prisma.issue.findMany({
+  ): Promise<GetIssueListDto[] | null> {
+    const issues = await this.prisma.issue.findMany({
       skip,
       take,
       include: {
@@ -70,6 +74,11 @@ export class IssueService {
           omit: {
             password: true,
             role: true,
+          },
+        },
+        _count: {
+          select: {
+            highlights: true,
           },
         },
       },
@@ -88,6 +97,18 @@ export class IssueService {
         ],
       },
     });
+    const transformedIssues = issues.map((issue) => {
+      const highlightCount = issue._count.highlights;
+
+      delete issue._count;
+
+      return {
+        ...issue,
+        highlights: highlightCount ? highlightCount : 0,
+      };
+    });
+
+    return transformedIssues;
   }
 
   async countIssues(where?: Prisma.IssueWhereInput): Promise<number> {

@@ -7,7 +7,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	const apiUrl = new URL('issue/in-bound', PUBLIC_API_URL);
 	const pagination = {
 		page: url.searchParams.get('page') ?? '1',
-		amount: url.searchParams.get('amount') ?? '5'
+		amount: url.searchParams.get('amount') ?? '6'
 	};
 
 	apiUrl.searchParams.set('page', pagination.page);

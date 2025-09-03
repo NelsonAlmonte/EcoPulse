@@ -1,11 +1,8 @@
 <script lang="ts">
-	import type { Issue } from '$lib/models/issue.model';
 	import { toastState } from '$lib/store/ui.svelte';
 	import { onMount } from 'svelte';
-	import { PUBLIC_API_URL } from '$env/static/public';
 	import { issueList } from '$lib/store/issue.svelte';
-	import type { List } from '$lib/models/response.model';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 
 	type Bounds = {
 		north: number;
@@ -15,9 +12,15 @@
 	};
 	let mapElement: HTMLDivElement;
 	let map: google.maps.Map;
+	let markers: google.maps.marker.AdvancedMarkerElement[] = [];
 
 	onMount(async () => {
 		await initMap();
+	});
+
+	afterNavigate(async () => {
+		removeMarkers();
+		await addMarkers();
 	});
 
 	async function initMap(): Promise<void> {
@@ -34,14 +37,13 @@
 
 		map = new Map(mapElement, {
 			center: { lat: 18.7009047, lng: -70.1654584 },
-			zoom: 11,
+			zoom: 8,
 			mapId: 'issues-map',
 			streetViewControl: false
 		});
 
 		map.addListener('idle', () => {
 			getIssues();
-			addMarkers();
 		});
 	}
 
@@ -68,13 +70,12 @@
 		};
 	}
 
-	async function getIssues(): Promise<List<Issue[]> | undefined> {
+	function getIssues(): void {
 		const bounds = getBounds();
 
 		if (!bounds) return;
 
 		const { north, south, east, west } = bounds;
-		// const apiUrl = new URL(`issue/in-bound`, PUBLIC_API_URL);
 		const newUrl = new URL(window.location.href.split('?')[0]);
 
 		newUrl.searchParams.set('north', north.toString());
@@ -83,27 +84,12 @@
 		newUrl.searchParams.set('west', west.toString());
 
 		goto(newUrl, { noScroll: true });
-		// const response = await fetch(apiUrl);
-
-		// if (!response.ok) {
-		// 	toastState.trigger({
-		// 		content: 'Error al obtener incidencias. Recargue la página.',
-		// 		color: 'red',
-		// 		icon: 'CircleX'
-		// 	});
-		// 	return;
-		// }
-
-		// return response.json();
 	}
 
 	async function addMarkers(): Promise<void> {
-		// const issues = await getIssues();
 		const { AdvancedMarkerElement } = (await google.maps.importLibrary(
 			'marker'
 		)) as google.maps.MarkerLibrary;
-
-		// if (!issues) return;
 
 		for (const issue of issueList.list.data) {
 			const AdvancedMarkerElement = new google.maps.marker.AdvancedMarkerElement({
@@ -113,14 +99,20 @@
 					lng: issue.longitude
 				}
 			});
+
+			markers.push(AdvancedMarkerElement);
+
 			AdvancedMarkerElement.addListener('click', () => {
 				console.log(issue);
-				AdvancedMarkerElement.map = null;
-				AdvancedMarkerElement;
 			});
 		}
-		// issueList.list = issues;
-		// console.log(issueList.list.data);
+	}
+
+	function removeMarkers(): void {
+		for (const marker of markers) {
+			marker.map = null;
+		}
+		markers = [];
 	}
 </script>
 

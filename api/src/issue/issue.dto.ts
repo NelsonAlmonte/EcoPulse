@@ -1,4 +1,4 @@
-import { Category, Status } from '@prisma/client';
+import { Category, Issue, Status, User } from '@prisma/client';
 import { GetUserDto } from 'src/user/user.dto';
 
 export interface CreateIssueDto {
@@ -26,18 +26,27 @@ export interface SupaBaseUploadFileResponse {
   fullPath: string;
 }
 
-export interface GetIssueDto {
-  id: string;
-  photo: string;
-  status: string;
-  latitude: number;
-  longitude: number;
-  comment?: string;
-  categoryId: string;
-  userId: string;
-  category: Category;
-  createdAt: Date;
-  user: GetUserDto;
+// export interface GetIssueDto {
+//   id: string;
+//   photo: string;
+//   status: string;
+//   latitude: number;
+//   longitude: number;
+//   comment?: string;
+//   categoryId: string;
+//   userId: string;
+//   category: Category;
+//   createdAt: Date;
+//   user: GetUserDto;
+// }
+
+export interface GetIssueDto extends Issue {
   highlights: number;
   hasCurrentUserHighlight: boolean;
+  user: GetUserDto;
+}
+
+export interface GetIssueListDto extends Issue {
+  highlights: number;
+  user: GetUserDto;
 }

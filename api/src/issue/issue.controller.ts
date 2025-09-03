@@ -17,6 +17,7 @@ import { Issue, Prisma } from '@prisma/client';
 import {
   CreateIssueDto,
   GetIssueDto,
+  GetIssueListDto,
   SupaBaseUploadFileResponse,
   UpdateIssueDto,
 } from 'src/issue/issue.dto';
@@ -83,11 +84,17 @@ export class IssueController {
     @Query('south') south: number = this.DEFAULT_BOUNDS.south,
     @Query('east') east: number = this.DEFAULT_BOUNDS.east,
     @Query('west') west: number = this.DEFAULT_BOUNDS.west,
-    @Query('page') page: string = this.DEFAULT_PAGE,
-    @Query('amount') amount: string = '6',
-  ): Promise<List<Issue[]> | null> {
-    const skip = page !== '1' ? (Number(page) - 1) * Number(amount) : 0;
-    const take = Number(amount);
+    @Query('page') page?: string,
+    @Query('amount') amount?: string,
+  ): Promise<List<GetIssueListDto[]> | null> {
+    let skip = undefined;
+    let take = undefined;
+
+    if (page || amount) {
+      skip = page !== '1' ? (Number(page) - 1) * Number(amount) : 0;
+      take = Number(amount);
+    }
+
     const issues = await this.issueService.getIssuesInBounds(
       Number(north),
       Number(south),
@@ -113,7 +120,7 @@ export class IssueController {
 
     if (!issues) return null;
 
-    const issueList: List<Issue[]> = {
+    const issueList: List<GetIssueListDto[]> = {
       data: issues.map((issue) => ({
         ...issue,
         photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
