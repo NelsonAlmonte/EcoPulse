@@ -6,6 +6,7 @@
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 	import { issueList } from '$lib/store/issue.svelte';
 	import DeleteButton from '$lib/components/issue/DeleteButton.svelte';
+	import Status from '$lib/components/ui/Status.svelte';
 
 	let { data }: PageProps = $props();
 	let isLoading = $state(false);
@@ -84,7 +85,7 @@
 							{issue.user.name}
 							{issue.user.last}
 						</td>
-						<td class="px-6 py-4"> {issue.status} </td>
+						<td class="px-6 py-4"> <Status status={issue.status.toLocaleLowerCase()} /> </td>
 						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800">
 							{#if issue.comment}
 								{issue.comment.substring(0, 20)}...

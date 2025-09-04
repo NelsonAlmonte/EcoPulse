@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { mount, onMount } from 'svelte';
+	import Marker from '$lib/components/issue/Marker.svelte';
+	import type { Issue } from '$lib/models/issue.model';
 
-	let { latitude, longitude }: { latitude: number; longitude: number } = $props();
+	let { issue }: { issue: Issue } = $props();
 	let mapElement: HTMLDivElement;
 
 	onMount(async () => {
@@ -18,16 +20,26 @@
 		const { AdvancedMarkerElement } = (await google.maps.importLibrary(
 			'marker'
 		)) as google.maps.MarkerLibrary;
+
 		const map = new Map(mapElement, {
-			center: { lat: latitude, lng: longitude },
+			center: { lat: issue.latitude, lng: issue.longitude },
 			zoom: 14,
 			mapId: 'issue-map',
 			streetViewControl: false
 		});
+		const container = document.createElement('div');
+
+		mount(Marker, {
+			target: container,
+			props: {
+				issue: issue
+			}
+		});
 
 		new AdvancedMarkerElement({
 			map,
-			position: { lat: latitude, lng: longitude }
+			position: { lat: issue.latitude, lng: issue.longitude },
+			content: container
 		});
 	});
 </script>

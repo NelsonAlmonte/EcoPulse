@@ -121,7 +121,7 @@
 	</div>
 	<div class="flex-1">
 		<div class="flex justify-between space-x-8">
-			<IssueMap latitude={Number(data.issue.latitude)} longitude={Number(data.issue.longitude)} />
+			<IssueMap issue={data.issue} />
 			<div class="flex-1">
 				<dl>
 					{#each data.issueInfoItems as item}

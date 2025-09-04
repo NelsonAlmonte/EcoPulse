@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { toastState } from '$lib/store/ui.svelte';
-	import { onMount } from 'svelte';
+	import { mount, onMount } from 'svelte';
 	import { issueList } from '$lib/store/issue.svelte';
 	import { afterNavigate, goto } from '$app/navigation';
+	import Marker from '$lib/components/issue/Marker.svelte';
 
 	type Bounds = {
 		north: number;
@@ -13,6 +14,7 @@
 	let mapElement: HTMLDivElement;
 	let map: google.maps.Map;
 	let markers: google.maps.marker.AdvancedMarkerElement[] = [];
+	let isMapLoaded = $state(false);
 
 	onMount(async () => {
 		await initMap();
@@ -20,7 +22,8 @@
 
 	afterNavigate(async () => {
 		removeMarkers();
-		await addMarkers();
+
+		if (isMapLoaded) await addMarkers();
 	});
 
 	async function initMap(): Promise<void> {
@@ -45,6 +48,8 @@
 		map.addListener('idle', () => {
 			getIssues();
 		});
+
+		isMapLoaded = true;
 	}
 
 	function getBounds(): Bounds | undefined {
@@ -92,19 +97,25 @@
 		)) as google.maps.MarkerLibrary;
 
 		for (const issue of issueList.list.data) {
+			const container = document.createElement('div');
+
+			mount(Marker, {
+				target: container,
+				props: {
+					issue: issue
+				}
+			});
+
 			const AdvancedMarkerElement = new google.maps.marker.AdvancedMarkerElement({
 				map,
 				position: {
 					lat: issue.latitude,
 					lng: issue.longitude
-				}
+				},
+				content: container
 			});
 
 			markers.push(AdvancedMarkerElement);
-
-			AdvancedMarkerElement.addListener('click', () => {
-				console.log(issue);
-			});
 		}
 	}
 
