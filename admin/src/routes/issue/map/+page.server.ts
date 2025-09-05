@@ -12,10 +12,10 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
 	apiUrl.searchParams.set('page', pagination.page);
 	apiUrl.searchParams.set('amount', pagination.amount);
-	apiUrl.searchParams.set('north', url.searchParams.get('north')!);
-	apiUrl.searchParams.set('south', url.searchParams.get('south')!);
-	apiUrl.searchParams.set('east', url.searchParams.get('east')!);
-	apiUrl.searchParams.set('west', url.searchParams.get('west')!);
+	apiUrl.searchParams.set('north', url.searchParams.get('north') ?? '0');
+	apiUrl.searchParams.set('south', url.searchParams.get('south') ?? '0');
+	apiUrl.searchParams.set('east', url.searchParams.get('east') ?? '0');
+	apiUrl.searchParams.set('west', url.searchParams.get('west') ?? '0');
 
 	const response = await fetch(apiUrl);
 	const issues = (await response.json()) as List<Issue[]>;

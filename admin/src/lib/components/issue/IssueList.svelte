@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { issueList } from '$lib/store/issue.svelte';
-	import { Heading, PaginationNav } from 'flowbite-svelte';
 	import IssueItem from './IssueItem.svelte';
+	import Filter from '$lib/components/ui/Filter.svelte';
+	import { Heading, PaginationNav } from 'flowbite-svelte';
 
 	let currentPage = $derived(issueList.list.pagination.page);
 	let currentAmount = $derived(issueList.list.pagination.amount);
@@ -22,7 +23,10 @@
 	}
 </script>
 
-<Heading class="mb-4" tag="h6">{issueList.list.pagination.total} incidencias</Heading>
+<div class="mb-4 flex items-center justify-between">
+	<Heading tag="h6">{issueList.list.pagination.total} incidencias</Heading>
+	<Filter />
+</div>
 <div class="grid grid-cols-2 gap-4">
 	{#each issueList.list.data as issue (issue.id)}
 		<IssueItem {issue} />

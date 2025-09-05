@@ -29,12 +29,6 @@ import { List } from 'src/response.dto';
 export class IssueController {
   DEFAULT_PAGE = '1';
   DEFAULT_AMOUNT = '5';
-  DEFAULT_BOUNDS = {
-    north: 18.8009047,
-    south: 18.6009047,
-    east: -70.0654584,
-    west: -70.2654584,
-  };
 
   constructor(private issueService: IssueService) {}
 
@@ -80,10 +74,10 @@ export class IssueController {
   // @UseGuards(SupabaseAuthGuard)
   @Get('in-bound')
   async issuesInBounds(
-    @Query('north') north: number = this.DEFAULT_BOUNDS.north,
-    @Query('south') south: number = this.DEFAULT_BOUNDS.south,
-    @Query('east') east: number = this.DEFAULT_BOUNDS.east,
-    @Query('west') west: number = this.DEFAULT_BOUNDS.west,
+    @Query('north') north: string,
+    @Query('south') south: string,
+    @Query('east') east: string,
+    @Query('west') west: string,
     @Query('page') page?: string,
     @Query('amount') amount?: string,
   ): Promise<List<GetIssueListDto[]> | null> {
