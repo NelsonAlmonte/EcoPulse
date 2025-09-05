@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { issueList } from '$lib/store/issue.svelte';
 	import IssueItem from './IssueItem.svelte';
-	import Filter from '$lib/components/ui/Filter.svelte';
+	import Filter from '$lib/components/issue/Filter.svelte';
 	import { Heading, PaginationNav } from 'flowbite-svelte';
 
 	let currentPage = $derived(issueList.list.pagination.page);
