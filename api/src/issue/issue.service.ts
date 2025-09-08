@@ -7,6 +7,7 @@ import {
   SupaBaseUploadFileResponse,
 } from 'src/issue/issue.dto';
 import { PrismaService } from 'src/prisma.service';
+import { PaginationParams } from './issue.params';
 
 @Injectable()
 export class IssueService {
@@ -38,10 +39,10 @@ export class IssueService {
     });
   }
 
-  getIssuesList(skip: number, take: number): Promise<Issue[] | null> {
+  getIssuesList(pagination: PaginationParams): Promise<Issue[] | null> {
     return this.prisma.issue.findMany({
-      skip,
-      take,
+      skip: pagination.skip,
+      take: pagination.take,
       include: {
         category: true,
         user: {
@@ -58,16 +59,12 @@ export class IssueService {
   }
 
   async getIssuesInBounds(
-    north: number,
-    south: number,
-    east: number,
-    west: number,
-    skip: number,
-    take: number,
+    pagination: PaginationParams,
+    where: Prisma.IssueWhereInput,
   ): Promise<GetIssueListDto[] | null> {
     const issues = await this.prisma.issue.findMany({
-      skip,
-      take,
+      skip: pagination.skip,
+      take: pagination.take,
       include: {
         category: true,
         user: {
@@ -82,20 +79,7 @@ export class IssueService {
           },
         },
       },
-      where: {
-        AND: [
-          {
-            latitude: {
-              gte: south,
-              lte: north,
-            },
-            longitude: {
-              gte: west,
-              lte: east,
-            },
-          },
-        ],
-      },
+      where,
     });
     const transformedIssues = issues.map((issue) => {
       const highlightCount = issue._count.highlights;

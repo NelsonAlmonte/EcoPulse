@@ -13,7 +13,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { IssueService } from './issue.service';
-import { Issue, Prisma } from '@prisma/client';
+import { Issue, Prisma, Status } from '@prisma/client';
 import {
   CreateIssueDto,
   GetIssueDto,
@@ -24,6 +24,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 import { List } from 'src/response.dto';
+import { Bounds, IssueFilterParams, PaginationParams } from './issue.params';
 
 @Controller('issue')
 export class IssueController {
@@ -50,9 +51,9 @@ export class IssueController {
     @Query('page') page: string = this.DEFAULT_PAGE,
     @Query('amount') amount: string = this.DEFAULT_AMOUNT,
   ): Promise<List<Issue[]> | null> {
-    const skip = page !== '1' ? (Number(page) - 1) * Number(amount) : 0;
-    const take = Number(amount);
-    const issues = await this.issueService.getIssuesList(skip, take);
+    const issues = await this.issueService.getIssuesList(
+      this.buildPaginationParams(page, amount),
+    );
 
     if (!issues) return null;
 
@@ -71,6 +72,29 @@ export class IssueController {
     return issueList;
   }
 
+  buildPaginationParams(page: string, amount: string): PaginationParams {
+    return {
+      skip: page !== '1' ? (Number(page) - 1) * Number(amount) : 0,
+      take: Number(amount),
+    };
+  }
+
+  buildFilterParams(
+    status?: string,
+    start_date?: string,
+    end_date?: string,
+    categories?: string,
+    order?: string,
+  ): IssueFilterParams {
+    return {
+      status: status ? (status.split(',') as Status[]) : undefined,
+      start_date: start_date ? new Date(start_date) : undefined,
+      end_date: end_date ? new Date(end_date) : undefined,
+      categories: categories ? categories.split(',') : undefined,
+      order: order ?? undefined,
+    };
+  }
+
   // @UseGuards(SupabaseAuthGuard)
   @Get('in-bound')
   async issuesInBounds(
@@ -80,37 +104,54 @@ export class IssueController {
     @Query('west') west: string,
     @Query('page') page?: string,
     @Query('amount') amount?: string,
+    @Query('status') status?: string,
+    @Query('start_date') start_date?: string,
+    @Query('end_date') end_date?: string,
+    @Query('categories') categories?: string,
+    @Query('order') order?: string,
   ): Promise<List<GetIssueListDto[]> | null> {
-    let skip = undefined;
-    let take = undefined;
-
-    if (page || amount) {
-      skip = page !== '1' ? (Number(page) - 1) * Number(amount) : 0;
-      take = Number(amount);
-    }
-
-    const issues = await this.issueService.getIssuesInBounds(
-      Number(north),
-      Number(south),
-      Number(east),
-      Number(west),
-      skip,
-      take,
-    );
-    const where: Prisma.IssueWhereInput = {
-      AND: [
-        {
-          latitude: {
-            gte: Number(south),
-            lte: Number(north),
-          },
-          longitude: {
-            gte: Number(west),
-            lte: Number(east),
-          },
-        },
-      ],
+    const bounds: Bounds = {
+      north: Number(north),
+      south: Number(south),
+      east: Number(east),
+      west: Number(west),
     };
+    const filter = this.buildFilterParams(
+      status,
+      start_date,
+      end_date,
+      categories,
+      order,
+    );
+    let paginationParams: PaginationParams | undefined = undefined;
+
+    if (page || amount)
+      paginationParams = this.buildPaginationParams(page, amount);
+
+    const where: Prisma.IssueWhereInput = {
+      latitude: {
+        gte: bounds.south,
+        lte: bounds.north,
+      },
+      longitude: {
+        gte: bounds.west,
+        lte: bounds.east,
+      },
+      status: {
+        in: filter.status,
+      },
+      createdAt: {
+        gte: filter.start_date,
+        lte: filter.end_date,
+      },
+      categoryId: {
+        in: filter.categories,
+      },
+    };
+    const issues = await this.issueService.getIssuesInBounds(
+      paginationParams,
+      where,
+    );
 
     if (!issues) return null;
 
