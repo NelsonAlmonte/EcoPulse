@@ -81,7 +81,7 @@
 		if (!bounds) return;
 
 		const { north, south, east, west } = bounds;
-		const newUrl = new URL(window.location.href.split('?')[0]);
+		const newUrl = new URL(window.location.href);
 
 		newUrl.searchParams.set('north', north.toString());
 		newUrl.searchParams.set('south', south.toString());

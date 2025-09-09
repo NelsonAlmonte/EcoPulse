@@ -39,7 +39,11 @@ export class IssueService {
     });
   }
 
-  getIssuesList(pagination: PaginationParams): Promise<Issue[] | null> {
+  getIssuesList(
+    pagination: PaginationParams,
+    where: Prisma.IssueWhereInput,
+    order: Prisma.IssueOrderByWithRelationInput,
+  ): Promise<Issue[] | null> {
     return this.prisma.issue.findMany({
       skip: pagination.skip,
       take: pagination.take,
@@ -52,15 +56,15 @@ export class IssueService {
           },
         },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      where,
+      orderBy: order,
     });
   }
 
   async getIssuesInBounds(
     pagination: PaginationParams,
     where: Prisma.IssueWhereInput,
+    order: Prisma.IssueOrderByWithRelationInput,
   ): Promise<GetIssueListDto[] | null> {
     const issues = await this.prisma.issue.findMany({
       skip: pagination.skip,
@@ -80,6 +84,7 @@ export class IssueService {
         },
       },
       where,
+      orderBy: order,
     });
     const transformedIssues = issues.map((issue) => {
       const highlightCount = issue._count.highlights;

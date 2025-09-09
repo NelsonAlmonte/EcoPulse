@@ -1,4 +1,4 @@
-import { Status } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 
 export interface Bounds {
   north: number;
@@ -17,5 +17,5 @@ export interface IssueFilterParams {
   start_date?: Date;
   end_date?: Date;
   categories?: string[];
-  order?: string;
+  order?: Prisma.IssueOrderByWithRelationInput;
 }

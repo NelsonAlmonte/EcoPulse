@@ -11,7 +11,7 @@
 	let status: string[] = $state([]);
 	let startDate = $state('');
 	let endDate = $state('');
-	let selectedOrder = $state('createdAt:DESC');
+	let selectedOrder = $state('createdAt:desc');
 	const statusChoices: CheckboxItem[] = [
 		{ value: 'PENDIENTE', label: 'Pendiente' },
 		{ value: 'RESUELTO', label: 'Resuelto' },
@@ -115,10 +115,10 @@
 		</div>
 		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Ordenar por</p>
 		<div class="space-y-3">
-			<Radio value="createdAt:DESC" bind:group={selectedOrder}>Más recientes primero</Radio>
-			<Radio value="createdAt:ASC" bind:group={selectedOrder}>Más antiguos</Radio>
-			<Radio value="1" bind:group={selectedOrder}>Más destacados</Radio>
-			<Radio value="2" bind:group={selectedOrder}>Menos destacados</Radio>
+			<Radio value="createdAt:desc" bind:group={selectedOrder}>Más recientes primero</Radio>
+			<Radio value="createdAt:asc" bind:group={selectedOrder}>Más antiguos</Radio>
+			<Radio value="highlights:desc" bind:group={selectedOrder}>Más destacados</Radio>
+			<Radio value="highlights:asc" bind:group={selectedOrder}>Menos destacados</Radio>
 		</div>
 		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
 			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>

@@ -50,9 +50,35 @@ export class IssueController {
   async issuesList(
     @Query('page') page: string = this.DEFAULT_PAGE,
     @Query('amount') amount: string = this.DEFAULT_AMOUNT,
+    @Query('status') status?: string,
+    @Query('start_date') start_date?: string,
+    @Query('end_date') end_date?: string,
+    @Query('categories') categories?: string,
+    @Query('order') order?: string,
   ): Promise<List<Issue[]> | null> {
+    const filter = this.buildFilterParams(
+      status,
+      start_date,
+      end_date,
+      categories,
+      order,
+    );
+    const where: Prisma.IssueWhereInput = {
+      status: {
+        in: filter.status,
+      },
+      createdAt: {
+        gte: filter.start_date,
+        lte: filter.end_date,
+      },
+      categoryId: {
+        in: filter.categories,
+      },
+    };
     const issues = await this.issueService.getIssuesList(
       this.buildPaginationParams(page, amount),
+      where,
+      filter.order,
     );
 
     if (!issues) return null;
@@ -65,7 +91,7 @@ export class IssueController {
       pagination: {
         page: Number(page),
         amount: Number(amount),
-        total: await this.issueService.countIssues(),
+        total: await this.issueService.countIssues(where),
       },
     };
 
@@ -91,8 +117,33 @@ export class IssueController {
       start_date: start_date ? new Date(start_date) : undefined,
       end_date: end_date ? new Date(end_date) : undefined,
       categories: categories ? categories.split(',') : undefined,
-      order: order ?? undefined,
+      order: this.buildOrderParam(order),
     };
+  }
+
+  buildOrderParam(
+    order?: string,
+  ): Prisma.IssueOrderByWithRelationInput | undefined {
+    let orderBy: Prisma.IssueOrderByWithRelationInput | undefined = undefined;
+
+    if (order) {
+      const column = order.split(':')[0];
+      const value = order.split(':')[1] as Prisma.SortOrder;
+
+      if (column === 'highlights') {
+        orderBy = {
+          highlights: {
+            _count: value,
+          },
+        };
+      } else {
+        orderBy = {
+          [order.split(':')[0]]: order.split(':')[1],
+        };
+      }
+    }
+
+    return orderBy;
   }
 
   // @UseGuards(SupabaseAuthGuard)
@@ -151,6 +202,7 @@ export class IssueController {
     const issues = await this.issueService.getIssuesInBounds(
       paginationParams,
       where,
+      filter.order,
     );
 
     if (!issues) return null;

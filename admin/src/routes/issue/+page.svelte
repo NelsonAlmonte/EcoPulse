@@ -1,12 +1,13 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import type { PageHeader } from '$lib/types/ui.type';
-	import { Button, PaginationNav } from 'flowbite-svelte';
+	import { Button, Heading, PaginationNav } from 'flowbite-svelte';
 	import { afterNavigate, goto } from '$app/navigation';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 	import { issueList } from '$lib/store/issue.svelte';
 	import DeleteButton from '$lib/components/issue/DeleteButton.svelte';
 	import Status from '$lib/components/ui/Status.svelte';
+	import Filter from '$lib/components/issue/Filter.svelte';
 
 	let { data }: PageProps = $props();
 	let isLoading = $state(false);
@@ -22,7 +23,7 @@
 		currentPage = page;
 		isLoading = true;
 
-		const newUrl = new URL(window.location.href.split('?')[0]);
+		const newUrl = new URL(window.location.href);
 
 		newUrl.searchParams.set('page', currentPage.toString());
 		newUrl.searchParams.set('amount', data.issues.pagination.amount.toString() ?? '5');
@@ -57,6 +58,10 @@
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
+<div class="mb-4 flex items-center justify-between">
+	<Heading tag="h6">{issueList.list.pagination.total} incidencias</Heading>
+	<Filter />
+</div>
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 	<table class="w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400">
 		<thead class="text-xs uppercase text-gray-700 dark:text-gray-400">

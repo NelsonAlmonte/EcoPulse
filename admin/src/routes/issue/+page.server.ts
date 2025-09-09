@@ -12,6 +12,11 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
 	apiUrl.searchParams.set('page', pagination.page);
 	apiUrl.searchParams.set('amount', pagination.amount);
+	apiUrl.searchParams.set('status', url.searchParams.get('status') ?? '');
+	apiUrl.searchParams.set('start_date', url.searchParams.get('start_date') ?? '');
+	apiUrl.searchParams.set('end_date', url.searchParams.get('end_date') ?? '');
+	apiUrl.searchParams.set('categories', url.searchParams.get('categories') ?? '');
+	apiUrl.searchParams.set('order', url.searchParams.get('order') ?? '');
 
 	const response = await fetch(apiUrl);
 	const issues = (await response.json()) as List<Issue[]>;
