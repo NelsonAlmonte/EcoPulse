@@ -62,15 +62,17 @@
 							class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					{/snippet}
-					<SidebarItem label="Analítica" href="/" />
+					<SidebarItem label="Listado" href="/user" />
 				</SidebarDropdownWrapper>
-				<SidebarItem label="Analítica" {spanClass} href="/components/sidebar">
+				<SidebarDropdownWrapper label="Estadísticas" classes={{ btn: 'p-2' }}>
 					{#snippet icon()}
 						<ChartArea
 							class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					{/snippet}
-				</SidebarItem>
+					<SidebarItem label="Mapa de calor" href="/statistic/heatmap" />
+					<SidebarItem label="Reportes" href="/statistic" />
+				</SidebarDropdownWrapper>
 			</SidebarGroup>
 			<SidebarGroup border>
 				<SidebarDropdownWrapper label="Setting" classes={{ btn: 'p-2' }}>
