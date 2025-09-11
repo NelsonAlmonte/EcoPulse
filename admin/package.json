@@ -38,10 +38,10 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
-		"@deck.gl/aggregation-layers": "^8.9.22",
-		"@deck.gl/core": "^8.9.22",
-		"@deck.gl/google-maps": "^8.9.22",
-		"@deck.gl/layers": "^8.9.22",
+		"@deck.gl/aggregation-layers": "^9.1.14",
+		"@deck.gl/core": "^9.1.14",
+		"@deck.gl/google-maps": "^9.1.14",
+		"@deck.gl/layers": "^9.1.14",
 		"@googlemaps/js-api-loader": "^1.16.10",
 		"@lucide/svelte": "^0.540.0"
 	}
