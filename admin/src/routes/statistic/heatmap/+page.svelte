@@ -1,11 +1,15 @@
 <script lang="ts">
+	import type { PageProps } from './$types';
 	import type { PageHeader } from '$lib/types/ui.type';
+	import type { Issue } from '$lib/models/issue.model';
+	import { onMount } from 'svelte';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 	import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 	import { GoogleMapsOverlay } from '@deck.gl/google-maps';
-	import { onMount } from 'svelte';
-	let mapElement: HTMLDivElement;
+	import { DOMINICAN_REPUBLIC_COORDINATES } from '$lib/constants/system.constant';
 
+	let { data }: PageProps = $props();
+	let mapElement: HTMLDivElement;
 	const pageHeaderProps: PageHeader = {
 		title: 'Mapa de calor',
 		back_url: '/',
@@ -28,25 +32,26 @@
 	Object.assign(pageHeaderState, pageHeaderProps);
 
 	onMount(async () => {
+		await initMap();
+	});
+
+	async function initMap() {
 		const { Loader } = await import('@googlemaps/js-api-loader');
 		const loader = new Loader({ apiKey: 'AIzaSyCNsKl8JuAYqzyMkcWy2Nspr9IPvg_jSNA' });
-		const DATA_URL =
-			'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf-bike-parking.json';
-		const data: any[] = await fetch(DATA_URL).then((r) => r.json());
 
 		loader.importLibrary('maps').then((googlemaps) => {
+			const { lat, lng } = DOMINICAN_REPUBLIC_COORDINATES;
 			const map = new googlemaps.Map(mapElement, {
-				center: { lat: 37.77325660358167, lng: -122.41712341793448 },
-				zoom: 13,
+				center: { lat, lng },
+				zoom: 8,
 				mapId: 'heatmap'
 			});
 			const overlay = new GoogleMapsOverlay({
 				layers: [
-					new HeatmapLayer({
+					new HeatmapLayer<Issue>({
 						id: 'HeatmapLayer',
-						data,
-						getPosition: (d: any) => d.COORDINATES,
-						getWeight: (d: any) => d.SPACES ?? 1,
+						data: data.issues,
+						getPosition: (d: Issue) => [d.longitude, d.latitude],
 						pickable: true
 					})
 				]
@@ -54,7 +59,7 @@
 
 			overlay.setMap(map);
 		});
-	});
+	}
 </script>
 
 <div bind:this={mapElement} class="h-180 w-full rounded-xl"></div>

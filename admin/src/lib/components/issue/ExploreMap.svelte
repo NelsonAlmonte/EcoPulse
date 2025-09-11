@@ -4,6 +4,7 @@
 	import { issueList } from '$lib/store/issue.svelte';
 	import { afterNavigate, goto } from '$app/navigation';
 	import Marker from '$lib/components/issue/Marker.svelte';
+	import { DOMINICAN_REPUBLIC_COORDINATES } from '$lib/constants/system.constant';
 
 	type Bounds = {
 		north: number;
@@ -37,9 +38,10 @@
 		await loader.load();
 
 		const { Map } = (await google.maps.importLibrary('maps')) as google.maps.MapsLibrary;
+		const { lat, lng } = DOMINICAN_REPUBLIC_COORDINATES;
 
 		map = new Map(mapElement, {
-			center: { lat: 18.7009047, lng: -70.1654584 },
+			center: { lat, lng },
 			zoom: 8,
 			mapId: 'issues-map',
 			streetViewControl: false

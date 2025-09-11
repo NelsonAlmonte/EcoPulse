@@ -1,0 +1,4 @@
+export const DOMINICAN_REPUBLIC_COORDINATES = {
+	lat: 18.7009047,
+	lng: -70.1654584
+};
