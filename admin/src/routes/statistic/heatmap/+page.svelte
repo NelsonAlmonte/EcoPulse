@@ -111,10 +111,10 @@
 			// normaliza el peso entre 0 y 1
 			getWeight: (d: any) => (d.SPACES ?? 1) / maxWeight,
 			// aumenta radius para que no quede puntilloso; escala con DPR
-			radiusPixels: Math.round(40 * dpr),
-			intensity: 2, // ajusta para mayor o menor "difuminado"
-			threshold: 0.03, // controla el corte; bajalo si quieres más relleno
-			opacity: 0.8,
+			// radiusPixels: Math.round(40 * dpr),
+			// intensity: 2, // ajusta para mayor o menor "difuminado"
+			// threshold: 0.03, // controla el corte; bajalo si quieres más relleno
+			// opacity: 0.8,
 			pickable: true
 		});
 
@@ -125,41 +125,7 @@
 
 		// Asignar overlay al mapa — esto coloca el canvas de deck.gl en el pane correcto
 		overlay.setMap(map);
-
-		debugHeatmap(overlay, data);
 	});
-
-	function debugHeatmap(overlay: any, data: any[]) {
-		console.log('=== DEBUG HEATMAP ===');
-		// 1. Canvas sizing
-		const canv = document.querySelector('canvas');
-		if (canv) {
-			console.log('Canvas client:', canv.clientWidth, canv.clientHeight);
-			console.log('Canvas backing store:', canv.width, canv.height);
-			console.log('DevicePixelRatio:', window.devicePixelRatio);
-			if (canv.width !== canv.clientWidth * window.devicePixelRatio) {
-				console.warn('⚠️ DPR mismatch: heatmap puede verse pixelado');
-			}
-		} else {
-			console.warn('No se encontró canvas de deck.gl');
-		}
-
-		// 2. Datos y pesos
-		const sample = data.slice(0, 5).map((d) => ({
-			coords: d.COORDINATES,
-			spaces: d.SPACES
-		}));
-		console.log('Sample de datos:', sample);
-
-		const weights = data.map((d) => d.SPACES ?? 1);
-		const maxW = Math.max(...weights);
-		const minW = Math.min(...weights);
-		console.log('Weight range:', { min: minW, max: maxW });
-
-		if (maxW / Math.max(minW, 1) > 100) {
-			console.warn('⚠️ Rango de pesos muy amplio, posible saturación (colores planos)');
-		}
-	}
 </script>
 
 <div bind:this={mapElement} class="h-180 w-full rounded-xl"></div>
