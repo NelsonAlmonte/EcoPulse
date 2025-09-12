@@ -3,13 +3,14 @@
 	import type { PageHeader } from '$lib/types/ui.type';
 	import type { Issue } from '$lib/models/issue.model';
 	import { onMount } from 'svelte';
-	import { afterNavigate } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 	import Filter from '$lib/components/issue/Filter.svelte';
 	import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 	import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 	import { DOMINICAN_REPUBLIC_COORDINATES } from '$lib/constants/system.constant';
 	import { Heading } from 'flowbite-svelte';
+	import { getBounds } from '$lib/utils/map';
 
 	let { data }: PageProps = $props();
 	let map: google.maps.Map;
@@ -59,6 +60,24 @@
 			});
 
 			loadHeatLayer();
+
+			map.addListener('click', (event: google.maps.MapMouseEvent) => {
+				const bounds = getBounds(map);
+
+				if (!bounds) return;
+
+				const { north, south, east, west } = bounds;
+				const newUrl = new URL('/issue/map', window.location.origin);
+
+				newUrl.searchParams.set('north', north.toString());
+				newUrl.searchParams.set('south', south.toString());
+				newUrl.searchParams.set('east', east.toString());
+				newUrl.searchParams.set('west', west.toString());
+				newUrl.searchParams.set('page', '1');
+				newUrl.searchParams.set('amount', '6');
+
+				goto(newUrl.pathname + newUrl.search, { noScroll: true });
+			});
 		});
 	}
 

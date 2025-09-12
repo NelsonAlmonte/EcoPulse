@@ -28,8 +28,8 @@ import { Bounds, IssueFilterParams, PaginationParams } from './issue.params';
 
 @Controller('issue')
 export class IssueController {
-  DEFAULT_PAGE = 1;
-  DEFAULT_AMOUNT = 5;
+  DEFAULT_PAGE = '1';
+  DEFAULT_AMOUNT = '5';
 
   constructor(private issueService: IssueService) {}
 
@@ -48,8 +48,8 @@ export class IssueController {
 
   @Get('list')
   async issuesList(
-    @Query('page') page: number = this.DEFAULT_PAGE,
-    @Query('amount') amount: number = this.DEFAULT_AMOUNT,
+    @Query('page') page: string = this.DEFAULT_PAGE,
+    @Query('amount') amount: string = this.DEFAULT_AMOUNT,
     @Query('status') status?: string,
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
@@ -89,8 +89,8 @@ export class IssueController {
         photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
       })),
       pagination: {
-        page: page,
-        amount: amount,
+        page: Number(page),
+        amount: Number(amount),
         total: await this.issueService.countIssues(where),
       },
     };
@@ -98,10 +98,10 @@ export class IssueController {
     return issueList;
   }
 
-  buildPaginationParams(page: number, amount: number): PaginationParams {
+  buildPaginationParams(page: string, amount: string): PaginationParams {
     return {
-      skip: page !== 1 ? (page - 1) * amount : 0,
-      take: amount,
+      skip: page !== '1' ? (Number(page) - 1) * Number(amount) : 0,
+      take: Number(amount),
     };
   }
 
@@ -153,8 +153,8 @@ export class IssueController {
     @Query('south') south: string,
     @Query('east') east: string,
     @Query('west') west: string,
-    @Query('page') page?: number,
-    @Query('amount') amount?: number,
+    @Query('page') page?: string,
+    @Query('amount') amount?: string,
     @Query('status') status?: string,
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
@@ -213,8 +213,8 @@ export class IssueController {
         photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
       })),
       pagination: {
-        page: page,
-        amount: amount,
+        page: Number(page),
+        amount: Number(amount),
         total: await this.issueService.countIssues(where),
       },
     };
@@ -254,8 +254,8 @@ export class IssueController {
     const issueList: List<Pick<Issue, 'latitude' | 'longitude'>[]> = {
       data: issues,
       pagination: {
-        page: this.DEFAULT_PAGE,
-        amount: this.DEFAULT_AMOUNT,
+        page: Number(this.DEFAULT_PAGE),
+        amount: Number(this.DEFAULT_AMOUNT),
         total: await this.issueService.countIssues(where),
       },
     };

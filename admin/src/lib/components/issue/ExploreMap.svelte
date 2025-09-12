@@ -5,13 +5,8 @@
 	import { afterNavigate, goto } from '$app/navigation';
 	import Marker from '$lib/components/issue/Marker.svelte';
 	import { DOMINICAN_REPUBLIC_COORDINATES } from '$lib/constants/system.constant';
+	import { getBounds } from '$lib/utils/map';
 
-	type Bounds = {
-		north: number;
-		south: number;
-		east: number;
-		west: number;
-	};
 	let mapElement: HTMLDivElement;
 	let map: google.maps.Map;
 	let markers: google.maps.marker.AdvancedMarkerElement[] = [];
@@ -54,31 +49,8 @@
 		isMapLoaded = true;
 	}
 
-	function getBounds(): Bounds | undefined {
-		const bounds = map.getBounds();
-
-		if (!bounds) {
-			toastState.trigger({
-				content: 'Error al obtener datos del mapa. Recargue la página.',
-				color: 'red',
-				icon: 'CircleX'
-			});
-			return;
-		}
-
-		const ne = bounds.getNorthEast();
-		const sw = bounds.getSouthWest();
-
-		return {
-			north: ne.lat(),
-			south: sw.lat(),
-			east: ne.lng(),
-			west: sw.lng()
-		};
-	}
-
 	function getIssues(): void {
-		const bounds = getBounds();
+		const bounds = getBounds(map);
 
 		if (!bounds) return;
 
