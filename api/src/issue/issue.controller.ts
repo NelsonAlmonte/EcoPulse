@@ -28,8 +28,8 @@ import { Bounds, IssueFilterParams, PaginationParams } from './issue.params';
 
 @Controller('issue')
 export class IssueController {
-  DEFAULT_PAGE = '1';
-  DEFAULT_AMOUNT = '5';
+  DEFAULT_PAGE = 1;
+  DEFAULT_AMOUNT = 5;
 
   constructor(private issueService: IssueService) {}
 
@@ -48,8 +48,8 @@ export class IssueController {
 
   @Get('list')
   async issuesList(
-    @Query('page') page: string = this.DEFAULT_PAGE,
-    @Query('amount') amount: string = this.DEFAULT_AMOUNT,
+    @Query('page') page: number = this.DEFAULT_PAGE,
+    @Query('amount') amount: number = this.DEFAULT_AMOUNT,
     @Query('status') status?: string,
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
@@ -89,8 +89,8 @@ export class IssueController {
         photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
       })),
       pagination: {
-        page: Number(page),
-        amount: Number(amount),
+        page: page,
+        amount: amount,
         total: await this.issueService.countIssues(where),
       },
     };
@@ -98,10 +98,10 @@ export class IssueController {
     return issueList;
   }
 
-  buildPaginationParams(page: string, amount: string): PaginationParams {
+  buildPaginationParams(page: number, amount: number): PaginationParams {
     return {
-      skip: page !== '1' ? (Number(page) - 1) * Number(amount) : 0,
-      take: Number(amount),
+      skip: page !== 1 ? (page - 1) * amount : 0,
+      take: amount,
     };
   }
 
@@ -153,8 +153,8 @@ export class IssueController {
     @Query('south') south: string,
     @Query('east') east: string,
     @Query('west') west: string,
-    @Query('page') page?: string,
-    @Query('amount') amount?: string,
+    @Query('page') page?: number,
+    @Query('amount') amount?: number,
     @Query('status') status?: string,
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
@@ -213,8 +213,49 @@ export class IssueController {
         photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
       })),
       pagination: {
-        page: Number(page),
-        amount: Number(amount),
+        page: page,
+        amount: amount,
+        total: await this.issueService.countIssues(where),
+      },
+    };
+
+    return issueList;
+  }
+
+  @Get('coords')
+  async issuesCoordinates(
+    @Query('status') status?: string,
+    @Query('start_date') start_date?: string,
+    @Query('end_date') end_date?: string,
+    @Query('categories') categories?: string,
+  ): Promise<List<Pick<Issue, 'latitude' | 'longitude'>[]> | null> {
+    const filter = this.buildFilterParams(
+      status,
+      start_date,
+      end_date,
+      categories,
+    );
+    const where: Prisma.IssueWhereInput = {
+      status: {
+        in: filter.status,
+      },
+      createdAt: {
+        gte: filter.start_date,
+        lte: filter.end_date,
+      },
+      categoryId: {
+        in: filter.categories,
+      },
+    };
+    const issues = await this.issueService.getIssuesCoordinates(where);
+
+    if (!issues) return null;
+
+    const issueList: List<Pick<Issue, 'latitude' | 'longitude'>[]> = {
+      data: issues,
+      pagination: {
+        page: this.DEFAULT_PAGE,
+        amount: this.DEFAULT_AMOUNT,
         total: await this.issueService.countIssues(where),
       },
     };

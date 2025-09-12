@@ -89,6 +89,8 @@
 		newUrl.searchParams.set('south', south.toString());
 		newUrl.searchParams.set('east', east.toString());
 		newUrl.searchParams.set('west', west.toString());
+		newUrl.searchParams.set('page', '1');
+		newUrl.searchParams.set('amount', '6');
 
 		goto(newUrl, { noScroll: true });
 	}

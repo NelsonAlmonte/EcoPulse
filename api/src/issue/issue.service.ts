@@ -100,6 +100,18 @@ export class IssueService {
     return transformedIssues;
   }
 
+  getIssuesCoordinates(
+    where: Prisma.IssueWhereInput,
+  ): Promise<Pick<Issue, 'latitude' | 'longitude'>[]> {
+    return this.prisma.issue.findMany({
+      select: {
+        latitude: true,
+        longitude: true,
+      },
+      where,
+    });
+  }
+
   async countIssues(where?: Prisma.IssueWhereInput): Promise<number> {
     return this.prisma.issue.count({ where: where ?? undefined });
   }
