@@ -13,6 +13,6 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
 	const response = await fetch(apiUrl);
 	const issues = (await response.json()) as List<Pick<Issue, 'latitude' | 'longitude'>[]>;
-	console.log(issues.data);
+
 	return { issues };
 };

@@ -22,8 +22,18 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	apiUrl.searchParams.set('categories', url.searchParams.get('categories') ?? '');
 	apiUrl.searchParams.set('order', url.searchParams.get('order') ?? '');
 
+	const mapParams = {
+		lat: url.searchParams.get('lat') ?? '',
+		lng: url.searchParams.get('lng') ?? '',
+		zoom: url.searchParams.get('zoom') ?? ''
+	};
+
+	apiUrl.searchParams.set('lat', mapParams.lat);
+	apiUrl.searchParams.set('lng', mapParams.lng);
+	apiUrl.searchParams.set('zoom', mapParams.zoom);
+
 	const response = await fetch(apiUrl);
 	const issues = (await response.json()) as List<Issue[]>;
 
-	return { issues, pagination };
+	return { issues, pagination, mapParams };
 };

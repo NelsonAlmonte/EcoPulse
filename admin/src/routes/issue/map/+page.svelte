@@ -38,7 +38,7 @@
 		<IssueList />
 	</div>
 	<div>
-		<ExploreMap />
+		<ExploreMap lat={data.mapParams.lat} lng={data.mapParams.lng} zoom={data.mapParams.zoom} />
 	</div>
 </div>
 

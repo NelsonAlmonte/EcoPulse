@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { toastState } from '$lib/store/ui.svelte';
 	import { mount, onMount } from 'svelte';
 	import { issueList } from '$lib/store/issue.svelte';
 	import { afterNavigate, goto } from '$app/navigation';
@@ -7,6 +6,7 @@
 	import { DOMINICAN_REPUBLIC_COORDINATES } from '$lib/constants/system.constant';
 	import { getBounds } from '$lib/utils/map';
 
+	let { lat, lng, zoom }: { lat: string; lng: string; zoom: string } = $props();
 	let mapElement: HTMLDivElement;
 	let map: google.maps.Map;
 	let markers: google.maps.marker.AdvancedMarkerElement[] = [];
@@ -33,11 +33,13 @@
 		await loader.load();
 
 		const { Map } = (await google.maps.importLibrary('maps')) as google.maps.MapsLibrary;
-		const { lat, lng } = DOMINICAN_REPUBLIC_COORDINATES;
 
 		map = new Map(mapElement, {
-			center: { lat, lng },
-			zoom: 8,
+			center: {
+				lat: lat !== '' ? Number(lat) : DOMINICAN_REPUBLIC_COORDINATES.lat,
+				lng: lng !== '' ? Number(lng) : DOMINICAN_REPUBLIC_COORDINATES.lng
+			},
+			zoom: zoom !== '' ? Number(zoom) : 8,
 			mapId: 'issues-map',
 			streetViewControl: false
 		});
