@@ -2,25 +2,22 @@
 	import type { ApexOptions } from 'apexcharts';
 	import { Chart } from '@flowbite-svelte-plugins/chart';
 	import { Card, A, Button, Dropdown, DropdownItem } from 'flowbite-svelte';
+	import type { CategoryStatistic } from '$lib/models/statistic.model';
+	import { FileSearch } from '@lucide/svelte';
 
-	const options: ApexOptions = {
+	let { category }: { category: CategoryStatistic[] } = $props();
+	// const initialValue = 0;
+	let totalIssues = category.reduce(
+		(accumulator, currentValue) => accumulator + currentValue.value,
+		0
+	);
+	let options: ApexOptions = {
 		colors: ['#1A56DB'],
 		series: [
 			{
 				name: 'Incidencias',
 				color: '#1A56DB',
-				data: [
-					{ x: 'Animal muerto', y: 231 },
-					{ x: 'Graffiti o vandalismo', y: 122 },
-					{ x: 'Ruido excesivo', y: 63 },
-					{ x: 'Mal olor persistente', y: 421 },
-					{ x: 'Basura acumulada', y: 122 },
-					{ x: 'Escombros', y: 323 },
-					{ x: 'Lampara averiada', y: 111 },
-					{ x: 'Auto abandonado', y: 111 },
-					{ x: 'Alcantarilla tapada', y: 111 },
-					{ x: 'Agua estancada', y: 111 }
-				]
+				data: category.map((val) => ({ x: val.category, y: val.value }))
 			}
 		],
 		chart: {
@@ -97,39 +94,33 @@
 			opacity: 1
 		}
 	};
+
+	function foo() {
+		options = {
+			...options,
+			series: [{ name: 'New users', data: [{ x: 'Animal muerto', y: 231 }], color: '#1A56DB' }]
+		};
+	}
 </script>
 
-<Card class="p-4 md:p-6">
-	<div class="mb-4 flex justify-between border-b border-gray-200 pb-4 dark:border-gray-700">
+<Card class="rounded-xl p-4 md:p-6">
+	<h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">
+		Reporte por categorias
+	</h5>
+	<div class="my-4">
 		<div class="flex items-center">
 			<div
 				class="me-3 flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700"
 			>
-				<!-- <UsersGroupOutline class="h-6 w-6 text-gray-500 dark:text-gray-400" /> -->
+				<FileSearch class="h-6 w-6 text-gray-500 dark:text-gray-400" />
 			</div>
 			<div>
-				<h5 class="pb-1 text-2xl font-bold leading-none text-gray-900 dark:text-white">3.4k</h5>
-				<p class="text-sm font-normal text-gray-500 dark:text-gray-400">Leads generated per week</p>
+				<h5 class="pb-1 text-2xl font-bold leading-none text-gray-900 dark:text-white">
+					{totalIssues}
+				</h5>
+				<p class="text-sm font-normal text-gray-500 dark:text-gray-400">Total de incidencias</p>
 			</div>
 		</div>
-		<div>
-			<span
-				class="inline-flex items-center rounded-md bg-green-100 px-2.5 py-1 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-300"
-			>
-				<!-- <ArrowUpOutline class="me-1.5 h-2.5 w-2.5" /> -->
-				42.5%
-			</span>
-		</div>
-	</div>
-	<div class="grid grid-cols-2">
-		<dl class="flex items-center">
-			<dt class="me-1 text-sm font-normal text-gray-500 dark:text-gray-400">Money spent:</dt>
-			<dd class="text-sm font-semibold text-gray-900 dark:text-white">$3,232</dd>
-		</dl>
-		<dl class="flex items-center justify-end">
-			<dt class="me-1 text-sm font-normal text-gray-500 dark:text-gray-400">Conversion rate:</dt>
-			<dd class="text-sm font-semibold text-gray-900 dark:text-white">1.2%</dd>
-		</dl>
 	</div>
 	<Chart {options} />
 	<div
@@ -149,13 +140,6 @@
 				<DropdownItem>Last 30 days</DropdownItem>
 				<DropdownItem>Last 90 days</DropdownItem>
 			</Dropdown>
-			<A
-				href="/"
-				class="hover:text-primary-700 dark:hover:text-primary-500 rounded-lg px-3 py-2 text-sm font-semibold uppercase hover:bg-gray-100 hover:no-underline dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-			>
-				Leads Report
-				<!-- <ChevronRightOutline class="ms-1.5 h-2.5 w-2.5" /> -->
-			</A>
 		</div>
 	</div>
 </Card>

@@ -4,10 +4,12 @@
 	import { Chart } from '@flowbite-svelte-plugins/chart';
 	import { Card, A, Button, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
+	import type { StatusStatistic } from '$lib/models/statistic.model';
 
+	let { status }: { status: StatusStatistic[] } = $props();
 	const options: ApexOptions = {
-		series: [35.1, 23.5, 2.4],
-		colors: ['#1C64F2', '#16BDCA', '#FDBA8C'],
+		series: status.map((val) => val.value),
+		colors: ['#059669', '#dc2626', '#fcd34d'],
 		chart: {
 			height: 320,
 			width: '100%',
@@ -35,7 +37,7 @@
 								const sum = w.globals.seriesTotals.reduce((a: number, b: number) => {
 									return a + b;
 								}, 0);
-								return `${sum}k`;
+								return `${sum}`;
 							}
 						},
 						value: {
@@ -43,7 +45,7 @@
 							fontFamily: 'Inter, sans-serif',
 							offsetY: -20,
 							formatter: function (value) {
-								return value + 'k';
+								return value;
 							}
 						}
 					},
@@ -56,33 +58,15 @@
 				top: -2
 			}
 		},
-		labels: ['Pendientes', 'Resueltos', 'Descartados'],
+		labels: status.map(
+			(val) => val.status.toLowerCase().charAt(0).toUpperCase() + val.status.toLowerCase().slice(1)
+		),
 		dataLabels: {
 			enabled: false
 		},
 		legend: {
 			position: 'bottom',
 			fontFamily: 'Inter, sans-serif'
-		},
-		yaxis: {
-			labels: {
-				formatter: function (value) {
-					return value + 'k';
-				}
-			}
-		},
-		xaxis: {
-			labels: {
-				formatter: function (value) {
-					return value + 'k';
-				}
-			},
-			axisTicks: {
-				show: false
-			},
-			axisBorder: {
-				show: false
-			}
 		}
 	};
 
@@ -108,14 +92,41 @@
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
-<Card class="p-4 md:p-6">
-	<div class="flex w-full items-start justify-between">
-		<div class="flex-col items-center">
-			<div class="mb-1 flex items-center">
-				<h5 class="me-1 text-xl font-bold leading-none text-gray-900 dark:text-white">
-					Estados de incidencias
-				</h5>
-			</div>
+<Card class="rounded-xl p-4 md:p-6">
+	<h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Reporte por estados</h5>
+
+	<div class="rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
+		<div class="mb-2 grid grid-cols-3 gap-3">
+			<dl
+				class="flex h-[78px] flex-col items-center justify-center rounded-lg bg-emerald-50 dark:bg-gray-600"
+			>
+				<dt
+					class="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-sm font-medium text-emerald-600 dark:bg-gray-500 dark:text-emerald-300"
+				>
+					{status.find((val) => val.status === 'RESUELTO')!.value}
+				</dt>
+				<dd class="text-sm font-medium text-emerald-600 dark:text-emerald-300">Resuelto</dd>
+			</dl>
+			<dl
+				class="flex h-[78px] flex-col items-center justify-center rounded-lg bg-red-50 dark:bg-gray-600"
+			>
+				<dt
+					class="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-sm font-medium text-red-600 dark:bg-gray-500 dark:text-red-300"
+				>
+					{status.find((val) => val.status === 'DESCARTADO')!.value}
+				</dt>
+				<dd class="text-sm font-medium text-red-600 dark:text-red-300">Descartado</dd>
+			</dl>
+			<dl
+				class="flex h-[78px] flex-col items-center justify-center rounded-lg bg-amber-50 dark:bg-gray-600"
+			>
+				<dt
+					class="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm font-medium text-amber-600 dark:bg-gray-500 dark:text-amber-300"
+				>
+					{status.find((val) => val.status === 'PENDIENTE')!.value}
+				</dt>
+				<dd class="text-sm font-medium text-amber-600 dark:text-amber-300">Pendiente</dd>
+			</dl>
 		</div>
 	</div>
 
@@ -138,13 +149,6 @@
 				<DropdownItem>Last 30 days</DropdownItem>
 				<DropdownItem>Last 90 days</DropdownItem>
 			</Dropdown>
-			<A
-				href="/"
-				class="hover:text-primary-700 dark:hover:text-primary-500 rounded-lg px-3 py-2 text-sm font-semibold uppercase hover:bg-gray-100 hover:no-underline dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-			>
-				Traffic analysis
-				<!-- <ChevronRightOutline class="ms-1.5 h-2.5 w-2.5" /> -->
-			</A>
 		</div>
 	</div>
 </Card>

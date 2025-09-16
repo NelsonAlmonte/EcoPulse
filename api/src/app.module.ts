@@ -7,9 +7,10 @@ import { IssueModule } from './issue/issue.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { HighlightModule } from './highlight/highlight.module';
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
-  imports: [CategoryModule, IssueModule, UserModule, AuthModule, HighlightModule],
+  imports: [CategoryModule, IssueModule, UserModule, AuthModule, HighlightModule, StatisticModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

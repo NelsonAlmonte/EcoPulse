@@ -3,7 +3,10 @@
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 	import StatusGraph from '$lib/components/statistic/StatusGraph.svelte';
 	import CategoryGraph from '$lib/components/statistic/CategoryGraph.svelte';
+	import type { Statistic } from '$lib/models/statistic.model.js';
 
+	let { data } = $props();
+	let statistics: Statistic = $derived(data.statistics);
 	const pageHeaderProps: PageHeader = {
 		title: 'Reportes',
 		back_url: '/',
@@ -27,6 +30,6 @@
 </script>
 
 <div class="flex gap-4">
-	<StatusGraph />
-	<CategoryGraph />
+	<StatusGraph status={statistics.status} />
+	<CategoryGraph category={statistics.category} />
 </div>
