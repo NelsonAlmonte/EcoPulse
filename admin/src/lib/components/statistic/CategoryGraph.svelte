@@ -1,17 +1,20 @@
 <script lang="ts">
 	import type { ApexOptions } from 'apexcharts';
 	import { Chart } from '@flowbite-svelte-plugins/chart';
-	import { Card, A, Button, Dropdown, DropdownItem } from 'flowbite-svelte';
+	import { Card, Button, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import type { CategoryStatistic } from '$lib/models/statistic.model';
-	import { FileSearch } from '@lucide/svelte';
+	import { ChevronDown, FileSearch } from '@lucide/svelte';
+	import { PUBLIC_API_URL } from '$env/static/public';
+	import { toastState } from '$lib/store/ui.svelte';
 
 	let { category }: { category: CategoryStatistic[] } = $props();
-	// const initialValue = 0;
-	let totalIssues = category.reduce(
-		(accumulator, currentValue) => accumulator + currentValue.value,
-		0
-	);
-	let options: ApexOptions = {
+	let currentFilter = $state('Últimos 7 días');
+	let isLoading = $state(false);
+	let totalIssues = $derived.by(() => {
+		return category.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0);
+	});
+
+	let options: ApexOptions = $state({
 		colors: ['#1A56DB'],
 		series: [
 			{
@@ -93,13 +96,49 @@
 		fill: {
 			opacity: 1
 		}
-	};
+	});
 
-	function foo() {
+	async function filterGraph(e: Event) {
+		isLoading = true;
+
+		const element = e.currentTarget as HTMLButtonElement;
+		const filterLabel = element.innerText;
+		const filterValue = element.dataset.filter!;
+
+		currentFilter = filterLabel;
+
+		const apiUrl = new URL(`statistic/category`, PUBLIC_API_URL);
+
+		apiUrl.searchParams.set('filter', filterValue);
+
+		const response = await fetch(apiUrl, { method: 'GET' });
+
+		if (!response.ok) {
+			toastState.trigger({
+				content: 'Error al aplicar este filtro',
+				color: 'red',
+				icon: 'CircleX'
+			});
+			return;
+		}
+
+		const data: CategoryStatistic[] = await response.json();
+
+		console.log(data);
 		options = {
 			...options,
-			series: [{ name: 'New users', data: [{ x: 'Animal muerto', y: 231 }], color: '#1A56DB' }]
+			series: [
+				{
+					name: 'Incidencias',
+					color: '#1A56DB',
+					data: data.map((val) => ({ x: val.category, y: val.value }))
+				}
+			]
 		};
+
+		category = data;
+
+		isLoading = false;
 	}
 </script>
 
@@ -122,23 +161,38 @@
 			</div>
 		</div>
 	</div>
-	<Chart {options} />
-	<div
-		class="grid grid-cols-1 items-center justify-between border-t border-gray-200 dark:border-gray-700"
-	>
+
+	{#if isLoading}
+		<div role="status" class="max-w-sm animate-pulse md:p-6">
+			<div class="mt-4 flex items-baseline">
+				<div class="h-72 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
+				<div class="ms-6 h-56 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
+				<div class="ms-6 h-72 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
+				<div class="ms-6 h-64 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
+				<div class="ms-6 h-80 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
+				<div class="ms-6 h-72 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
+				<div class="ms-6 h-80 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
+			</div>
+			<span class="sr-only">Loading...</span>
+		</div>
+	{:else}
+		<Chart {options} class="py-6" />
+	{/if}
+
+	<div class=" border-t border-gray-200 dark:border-gray-700">
 		<div class="flex items-center justify-between pt-5">
 			<Button
 				class="inline-flex items-center bg-transparent py-0 text-center text-sm font-medium text-gray-500 hover:bg-transparent hover:text-gray-900 focus:ring-transparent dark:bg-transparent dark:text-gray-400 dark:hover:bg-transparent dark:hover:text-white dark:focus:ring-transparent"
 			>
-				Last 7 days
-				<!-- <ChevronDownOutline class="m-2.5 ms-1.5 w-2.5" /> -->
+				{currentFilter}
+				<ChevronDown class="m-2.5 ms-1.5 w-2.5" />
 			</Button>
 			<Dropdown simple class="w-40" offset={-6}>
-				<DropdownItem>Yesterday</DropdownItem>
-				<DropdownItem>Today</DropdownItem>
-				<DropdownItem>Last 7 days</DropdownItem>
-				<DropdownItem>Last 30 days</DropdownItem>
-				<DropdownItem>Last 90 days</DropdownItem>
+				<DropdownItem data-filter="yesterday" onclick={filterGraph}>Ayer</DropdownItem>
+				<DropdownItem data-filter="today" onclick={filterGraph}>Hoy</DropdownItem>
+				<DropdownItem data-filter="7d" onclick={filterGraph}>Últimos 7 días</DropdownItem>
+				<DropdownItem data-filter="30d" onclick={filterGraph}>Últimos 30 días</DropdownItem>
+				<DropdownItem data-filter="90d" onclick={filterGraph}>Últimos 90 días</DropdownItem>
 			</Dropdown>
 		</div>
 	</div>

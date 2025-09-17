@@ -2,10 +2,8 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import type { Statistic } from '$lib/models/statistic.model';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch, url }) => {
+export const load: PageServerLoad = async ({ fetch }) => {
 	const statistics = await getStatistics(fetch);
-
-	// apiUrl.searchParams.set('status', url.searchParams.get('status') ?? '');
 
 	return { statistics };
 };

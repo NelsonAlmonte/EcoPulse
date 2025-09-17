@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { PrismaService } from 'src/prisma.service';
 
@@ -18,21 +19,23 @@ export class StatisticService {
     );
   }
 
-  getIssuesStatus() {
+  getIssuesStatus(where: Prisma.IssueWhereInput) {
     return this.prisma.issue.groupBy({
       by: ['status'],
       _count: {
         _all: true,
       },
+      where,
     });
   }
 
-  getIssuesCategories() {
+  getIssuesCategories(where: Prisma.IssueWhereInput) {
     return this.prisma.issue.groupBy({
       by: ['categoryId'],
       _count: {
         _all: true,
       },
+      where,
     });
   }
 }
