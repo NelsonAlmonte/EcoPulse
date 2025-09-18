@@ -14,8 +14,14 @@ export class StatisticController {
   @Get('status')
   async status(
     @Query('filter') filter: string = '7d',
+    @Query('start_date') start_date?: string,
+    @Query('end_date') end_date?: string,
   ): Promise<GetStatusStatistic[] | null> {
-    const statisticFilter = this.buildStatisticFilter(filter);
+    const statisticFilter = this.buildStatisticFilter(
+      filter,
+      start_date,
+      end_date,
+    );
     const statistics =
       await this.statisticService.getIssuesStatus(statisticFilter);
 
@@ -35,8 +41,14 @@ export class StatisticController {
   @Get('category')
   async category(
     @Query('filter') filter: string = '7d',
+    @Query('start_date') start_date?: string,
+    @Query('end_date') end_date?: string,
   ): Promise<GetCategoryStatistic[] | null> {
-    const statisticFilter = this.buildStatisticFilter(filter);
+    const statisticFilter = this.buildStatisticFilter(
+      filter,
+      start_date,
+      end_date,
+    );
     const statistics =
       await this.statisticService.getIssuesCategories(statisticFilter);
 
@@ -51,10 +63,14 @@ export class StatisticController {
     })) as GetCategoryStatistic[];
   }
 
-  buildStatisticFilter(filter: string): Prisma.IssueWhereInput {
+  buildStatisticFilter(
+    filter: string,
+    start_date?: string,
+    end_date?: string,
+  ): Prisma.IssueWhereInput {
     const now = new Date();
-    let start: Date;
-    let end: Date = now;
+    let start: Date = start_date ? new Date(start_date) : undefined;
+    let end: Date = end_date ? new Date(end_date) : now;
 
     switch (filter) {
       case 'hoy':

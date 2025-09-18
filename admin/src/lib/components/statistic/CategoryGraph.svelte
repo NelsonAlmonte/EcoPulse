@@ -1,19 +1,16 @@
 <script lang="ts">
 	import type { ApexOptions } from 'apexcharts';
-	import { Chart } from '@flowbite-svelte-plugins/chart';
-	import { Card, Button, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import type { CategoryStatistic } from '$lib/models/statistic.model';
-	import { ChevronDown, FileSearch } from '@lucide/svelte';
-	import { PUBLIC_API_URL } from '$env/static/public';
-	import { toastState } from '$lib/store/ui.svelte';
+	import { Card } from 'flowbite-svelte';
+	import { Chart } from '@flowbite-svelte-plugins/chart';
+	import { FileSearch } from '@lucide/svelte';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
 
 	let { category }: { category: CategoryStatistic[] } = $props();
-	let currentFilter = $state('Últimos 7 días');
-	let isLoading = $state(false);
 	let totalIssues = $derived.by(() => {
 		return category.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0);
 	});
-
+	let isLoading = $state(false);
 	let options: ApexOptions = $state({
 		colors: ['#1A56DB'],
 		series: [
@@ -98,48 +95,24 @@
 		}
 	});
 
-	async function filterGraph(e: Event) {
+	beforeNavigate(() => {
 		isLoading = true;
+	});
 
-		const element = e.currentTarget as HTMLButtonElement;
-		const filterLabel = element.innerText;
-		const filterValue = element.dataset.filter!;
-
-		currentFilter = filterLabel;
-
-		const apiUrl = new URL(`statistic/category`, PUBLIC_API_URL);
-
-		apiUrl.searchParams.set('filter', filterValue);
-
-		const response = await fetch(apiUrl, { method: 'GET' });
-
-		if (!response.ok) {
-			toastState.trigger({
-				content: 'Error al aplicar este filtro',
-				color: 'red',
-				icon: 'CircleX'
-			});
-			return;
-		}
-
-		const data: CategoryStatistic[] = await response.json();
-
-		console.log(data);
+	afterNavigate(() => {
 		options = {
 			...options,
 			series: [
 				{
 					name: 'Incidencias',
 					color: '#1A56DB',
-					data: data.map((val) => ({ x: val.category, y: val.value }))
+					data: category.map((val) => ({ x: val.category, y: val.value }))
 				}
 			]
 		};
 
-		category = data;
-
 		isLoading = false;
-	}
+	});
 </script>
 
 <Card class="rounded-xl p-4 md:p-6">
@@ -178,22 +151,4 @@
 	{:else}
 		<Chart {options} class="py-6" />
 	{/if}
-
-	<div class=" border-t border-gray-200 dark:border-gray-700">
-		<div class="flex items-center justify-between pt-5">
-			<Button
-				class="inline-flex items-center bg-transparent py-0 text-center text-sm font-medium text-gray-500 hover:bg-transparent hover:text-gray-900 focus:ring-transparent dark:bg-transparent dark:text-gray-400 dark:hover:bg-transparent dark:hover:text-white dark:focus:ring-transparent"
-			>
-				{currentFilter}
-				<ChevronDown class="m-2.5 ms-1.5 w-2.5" />
-			</Button>
-			<Dropdown simple class="w-40" offset={-6}>
-				<DropdownItem data-filter="yesterday" onclick={filterGraph}>Ayer</DropdownItem>
-				<DropdownItem data-filter="today" onclick={filterGraph}>Hoy</DropdownItem>
-				<DropdownItem data-filter="7d" onclick={filterGraph}>Últimos 7 días</DropdownItem>
-				<DropdownItem data-filter="30d" onclick={filterGraph}>Últimos 30 días</DropdownItem>
-				<DropdownItem data-filter="90d" onclick={filterGraph}>Últimos 90 días</DropdownItem>
-			</Dropdown>
-		</div>
-	</div>
 </Card>

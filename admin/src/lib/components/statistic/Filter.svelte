@@ -1,54 +1,79 @@
 <script lang="ts">
-	import { PUBLIC_API_URL } from '$env/static/public';
-	import { statisticGraph } from '$lib/store/statistic.svelte';
-	import { toastState } from '$lib/store/ui.svelte';
-	import { ChevronDown } from '@lucide/svelte';
-	import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
+	import { Button, Helper, Input, Label, Modal, Radio } from 'flowbite-svelte';
+	import { SlidersHorizontal } from '@lucide/svelte';
+	import { goto } from '$app/navigation';
 
-	let currentFilter = $state('Últimos 7 días');
+	let isModalOpen = $state(true);
+	let selectedFilter = $state('7d');
+	let startDate = $state('');
+	let endDate = $state('');
+	let showValidation = $state(false);
 
-	async function filterGraph(e: Event) {
-		const element = e.currentTarget as HTMLButtonElement;
-		const filterLabel = element.innerText;
-		const filterValue = element.dataset.filter!;
-
-		currentFilter = filterLabel;
-
-		const apiUrl = new URL(`statistic/status`, PUBLIC_API_URL);
-
-		apiUrl.searchParams.set('filter', filterValue);
-
-		const response = await fetch(apiUrl, { method: 'GET' });
-
-		if (!response.ok) {
-			toastState.trigger({
-				content: 'Error al aplicar este filtro',
-				color: 'red',
-				icon: 'CircleX'
-			});
+	async function applyFilters() {
+		if (endDate && !startDate) {
+			showValidation = true;
 			return;
 		}
 
-		const data = await response.json();
+		if (startDate && !endDate) endDate = new Date().toISOString().split('T')[0];
 
-		console.log(data);
+		const newUrl = new URL('/statistic', window.location.origin);
 
-		statisticGraph.statistic.status = data;
+		if (startDate && endDate) {
+			newUrl.searchParams.set('start_date', startDate);
+			newUrl.searchParams.set('end_date', endDate);
+		} else {
+			newUrl.searchParams.set('filter', selectedFilter);
+		}
+
+		isModalOpen = false;
+
+		goto(newUrl, { noScroll: true });
 	}
 </script>
 
-<div class="flex items-center justify-between pt-5">
-	<Button
-		class="inline-flex items-center bg-transparent py-0 text-center text-sm font-medium text-gray-500 hover:bg-transparent hover:text-gray-900 focus:ring-transparent dark:bg-transparent dark:text-gray-400 dark:hover:bg-transparent dark:hover:text-white dark:focus:ring-transparent"
-	>
-		{currentFilter}
-		<ChevronDown class="m-2.5 ms-1.5 w-2.5" />
-	</Button>
-	<Dropdown simple class="w-40" offset={-6}>
-		<DropdownItem data-filter="yesterday" onclick={filterGraph}>Ayer</DropdownItem>
-		<DropdownItem data-filter="today" onclick={filterGraph}>Hoy</DropdownItem>
-		<DropdownItem data-filter="7d" onclick={filterGraph}>Últimos 7 días</DropdownItem>
-		<DropdownItem data-filter="30d" onclick={filterGraph}>Últimos 30 días</DropdownItem>
-		<DropdownItem data-filter="90d" onclick={filterGraph}>Últimos 90 días</DropdownItem>
-	</Dropdown>
-</div>
+<Button onclick={() => (isModalOpen = true)} color="alternative" pill>
+	<SlidersHorizontal class="me-2" size="20" />
+	Filtros
+</Button>
+
+<Modal form bind:open={isModalOpen} size="xs">
+	<div class="flex flex-col space-y-6">
+		<h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Filtros</h3>
+		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Personalizado</p>
+		<div class="mb-6 grid gap-6 md:grid-cols-2">
+			<div>
+				<Label color={showValidation ? 'red' : undefined} for="start_date" class="mb-2">Desde</Label
+				>
+				<Input
+					color={showValidation ? 'red' : undefined}
+					type="date"
+					id="start_date"
+					bind:value={startDate}
+					onchange={() => (showValidation = false)}
+				/>
+				{#if showValidation}
+					<Helper color={showValidation ? 'red' : undefined} class="mt-2"
+						>Es necesario completar este campo</Helper
+					>
+				{/if}
+			</div>
+			<div>
+				<Label for="end_date" class="mb-2">Hasta</Label>
+				<Input type="date" id="end_date" bind:value={endDate} />
+			</div>
+		</div>
+		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Fecha</p>
+		<div class="space-y-3">
+			<Radio value="yesterday" bind:group={selectedFilter}>Ayer</Radio>
+			<Radio value="today" bind:group={selectedFilter}>Hoy</Radio>
+			<Radio value="7d" bind:group={selectedFilter}>Últimos 7 días</Radio>
+			<Radio value="30d" bind:group={selectedFilter}>Últimos 30 días</Radio>
+			<Radio value="90d" bind:group={selectedFilter}>Últimos 90 días</Radio>
+		</div>
+		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
+			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>
+			<Button color="red" onclick={applyFilters}>Aplicar filtros</Button>
+		</div>
+	</div>
+</Modal>

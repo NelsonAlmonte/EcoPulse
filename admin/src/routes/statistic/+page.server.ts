@@ -2,20 +2,29 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import type { Statistic } from '$lib/models/statistic.model';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch }) => {
-	const statistics = await getStatistics(fetch);
+export const load: PageServerLoad = async ({ fetch, url }) => {
+	const statistics = await getStatistics(fetch, url);
 
 	return { statistics };
 };
 
-async function getStatistics(fetch: typeof globalThis.fetch): Promise<Statistic> {
-	const [statusRes, categoryRes] = await Promise.all([
-		fetch(new URL('statistic/status', PUBLIC_API_URL)),
-		fetch(new URL('statistic/category', PUBLIC_API_URL))
-	]);
+async function getStatistics(fetch: typeof globalThis.fetch, url: URL): Promise<Statistic> {
+	let apiUrls = [
+		new URL('statistic/status', PUBLIC_API_URL),
+		new URL('statistic/category', PUBLIC_API_URL)
+	];
+
+	apiUrls = apiUrls.map((value) => {
+		value.searchParams.set('filter', url.searchParams.get('filter') ?? '');
+		value.searchParams.set('start_date', url.searchParams.get('start_date') ?? '');
+		value.searchParams.set('end_date', url.searchParams.get('end_date') ?? '');
+		return value;
+	});
+
+	const [statusResponse, categoryResponse] = await Promise.all(apiUrls.map((url) => fetch(url)));
 
 	return {
-		status: await statusRes.json(),
-		category: await categoryRes.json()
+		status: await statusResponse.json(),
+		category: await categoryResponse.json()
 	};
 }

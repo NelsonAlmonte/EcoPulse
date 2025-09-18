@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { PageHeader } from '$lib/types/ui.type';
+	import type { Statistic } from '$lib/models/statistic.model.js';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 	import StatusGraph from '$lib/components/statistic/StatusGraph.svelte';
 	import CategoryGraph from '$lib/components/statistic/CategoryGraph.svelte';
-	import type { Statistic } from '$lib/models/statistic.model.js';
+	import Filter from '$lib/components/statistic/Filter.svelte';
 
 	let { data } = $props();
 	let statistics: Statistic = $derived(data.statistics);
@@ -29,6 +30,9 @@
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
+<div class="mb-4">
+	<Filter />
+</div>
 <div class="flex gap-4">
 	<StatusGraph status={statistics.status} />
 	<CategoryGraph category={statistics.category} />
