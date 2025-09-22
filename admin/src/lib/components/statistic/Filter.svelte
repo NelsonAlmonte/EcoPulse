@@ -3,7 +3,7 @@
 	import { SlidersHorizontal } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 
-	let isModalOpen = $state(true);
+	let isModalOpen = $state(false);
 	let selectedFilter = $state('7d');
 	let startDate = $state('');
 	let endDate = $state('');
@@ -73,7 +73,7 @@
 		</div>
 		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
 			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>
-			<Button color="red" onclick={applyFilters}>Aplicar filtros</Button>
+			<Button color="emerald" onclick={applyFilters}>Aplicar filtros</Button>
 		</div>
 	</div>
 </Modal>

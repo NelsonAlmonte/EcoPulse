@@ -1,9 +1,4 @@
-export interface GetStatusStatistic {
-  status: string;
-  value: number;
-}
-
-export interface GetCategoryStatistic {
-  category: string;
+export interface Statistic {
+  label: string;
   value: number;
 }

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { ApexOptions } from 'apexcharts';
-	import type { StatusStatistic } from '$lib/models/statistic.model';
 	import { Card } from 'flowbite-svelte';
 	import { Chart } from '@flowbite-svelte-plugins/chart';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
+	import type { Statistic } from '$lib/models/statistic.model';
 
-	let { status }: { status: StatusStatistic[] } = $props();
+	let { status }: { status: Statistic[] } = $props();
 	let isLoading = $state(false);
 	let options: ApexOptions = $state({
 		series: status.map((val) => val.value),
@@ -59,7 +59,7 @@
 			}
 		},
 		labels: status.map(
-			(val) => val.status.toLowerCase().charAt(0).toUpperCase() + val.status.toLowerCase().slice(1)
+			(val) => val.label.toLowerCase().charAt(0).toUpperCase() + val.label.toLowerCase().slice(1)
 		),
 		dataLabels: {
 			enabled: false
@@ -95,7 +95,7 @@
 				<dt
 					class="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm font-medium text-amber-600 dark:bg-gray-500 dark:text-amber-300"
 				>
-					{status.find((val) => val.status === 'PENDIENTE')!.value}
+					{status.find((val) => val.label === 'PENDIENTE')!.value}
 				</dt>
 				<dd class="text-sm font-medium text-amber-600 dark:text-amber-300">Pendiente</dd>
 			</dl>
@@ -105,7 +105,7 @@
 				<dt
 					class="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-sm font-medium text-emerald-600 dark:bg-gray-500 dark:text-emerald-300"
 				>
-					{status.find((val) => val.status === 'RESUELTO')!.value}
+					{status.find((val) => val.label === 'RESUELTO')!.value}
 				</dt>
 				<dd class="text-sm font-medium text-emerald-600 dark:text-emerald-300">Resuelto</dd>
 			</dl>
@@ -115,7 +115,7 @@
 				<dt
 					class="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-sm font-medium text-red-600 dark:bg-gray-500 dark:text-red-300"
 				>
-					{status.find((val) => val.status === 'DESCARTADO')!.value}
+					{status.find((val) => val.label === 'DESCARTADO')!.value}
 				</dt>
 				<dd class="text-sm font-medium text-red-600 dark:text-red-300">Descartado</dd>
 			</dl>
@@ -136,6 +136,6 @@
 			<span class="sr-only">Loading...</span>
 		</div>
 	{:else}
-		<Chart {options} class="py-6" />
+		<Chart {options} class="pt-6" />
 	{/if}
 </Card>

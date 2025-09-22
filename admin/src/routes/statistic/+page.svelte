@@ -5,9 +5,11 @@
 	import StatusGraph from '$lib/components/statistic/StatusGraph.svelte';
 	import CategoryGraph from '$lib/components/statistic/CategoryGraph.svelte';
 	import Filter from '$lib/components/statistic/Filter.svelte';
+	import DateGraph from '$lib/components/statistic/DateGraph.svelte';
+	import TopCategoriesGraph from '$lib/components/statistic/TopCategoriesGraph.svelte';
 
 	let { data } = $props();
-	let statistics: Statistic = $derived(data.statistics);
+	let statistics: Record<string, Statistic[]> = $derived(data.statistics);
 	const pageHeaderProps: PageHeader = {
 		title: 'Reportes',
 		back_url: '/',
@@ -33,7 +35,9 @@
 <div class="mb-4">
 	<Filter />
 </div>
-<div class="flex gap-4">
+<div class="flex flex-wrap gap-4">
 	<StatusGraph status={statistics.status} />
 	<CategoryGraph category={statistics.category} />
+	<DateGraph date={statistics.date} />
+	<TopCategoriesGraph category={statistics.category} />
 </div>

@@ -19,7 +19,7 @@ export class StatisticService {
     );
   }
 
-  getIssuesStatus(where: Prisma.IssueWhereInput) {
+  getIssuesByStatus(where: Prisma.IssueWhereInput) {
     return this.prisma.issue.groupBy({
       by: ['status'],
       _count: {
@@ -29,13 +29,31 @@ export class StatisticService {
     });
   }
 
-  getIssuesCategories(where: Prisma.IssueWhereInput) {
+  getIssuesByCategories(where: Prisma.IssueWhereInput) {
     return this.prisma.issue.groupBy({
       by: ['categoryId'],
       _count: {
         _all: true,
       },
       where,
+      orderBy: {
+        _count: {
+          categoryId: 'desc',
+        },
+      },
     });
+  }
+
+  getIssuesByDate(where) {
+    return this.prisma.$queryRawUnsafe<{ day: Date; count: number }[]>(
+      `SELECT DATE_TRUNC('day', "createdAt")::date as day, COUNT(*)::int as count
+      FROM "Issue"
+      WHERE "createdAt" >= $1
+        AND "createdAt" < $2
+      GROUP BY day
+      ORDER BY day ASC`,
+      where.createdAt.gte,
+      where.createdAt.lt,
+    );
   }
 }

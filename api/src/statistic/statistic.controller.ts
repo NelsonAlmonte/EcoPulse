@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { StatisticService } from './statistic.service';
-import { GetCategoryStatistic, GetStatusStatistic } from './statistic.dto';
+import { Statistic } from './statistic.dto';
 import { CategoryService } from 'src/category/category.service';
 import { Prisma, Status } from '@prisma/client';
 
@@ -16,14 +16,14 @@ export class StatisticController {
     @Query('filter') filter: string = '7d',
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
-  ): Promise<GetStatusStatistic[] | null> {
+  ): Promise<Statistic[] | null> {
     const statisticFilter = this.buildStatisticFilter(
       filter,
       start_date,
       end_date,
     );
     const statistics =
-      await this.statisticService.getIssuesStatus(statisticFilter);
+      await this.statisticService.getIssuesByStatus(statisticFilter);
 
     if (!statistics) return null;
 
@@ -32,10 +32,10 @@ export class StatisticController {
     return statuses.map((status) => {
       const found = statistics.find((s) => s.status === status);
       return {
-        status,
+        label: status,
         value: found ? found._count._all : 0,
       };
-    }) as GetStatusStatistic[];
+    }) as Statistic[];
   }
 
   @Get('category')
@@ -43,14 +43,14 @@ export class StatisticController {
     @Query('filter') filter: string = '7d',
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
-  ): Promise<GetCategoryStatistic[] | null> {
+  ): Promise<Statistic[] | null> {
     const statisticFilter = this.buildStatisticFilter(
       filter,
       start_date,
       end_date,
     );
     const statistics =
-      await this.statisticService.getIssuesCategories(statisticFilter);
+      await this.statisticService.getIssuesByCategories(statisticFilter);
 
     if (!statistics) return null;
 
@@ -58,9 +58,38 @@ export class StatisticController {
     const categoryMap = new Map(categories.map((c) => [c.id, c.name]));
 
     return statistics.map((stat) => ({
-      category: categoryMap.get(stat.categoryId) ?? 'Desconocida',
+      label: categoryMap.get(stat.categoryId) ?? 'Desconocida',
       value: stat._count._all,
-    })) as GetCategoryStatistic[];
+    })) as Statistic[];
+  }
+
+  @Get('date')
+  async date(
+    @Query('filter') filter: string = '7d',
+    @Query('start_date') start_date?: string,
+    @Query('end_date') end_date?: string,
+  ): Promise<Statistic[] | null> {
+    const statisticFilter = this.buildStatisticFilter(
+      filter,
+      start_date,
+      end_date,
+    );
+    const statistics =
+      await this.statisticService.getIssuesByDate(statisticFilter);
+
+    if (!statistics) return null;
+
+    return statistics.map((stat) => {
+      const date = new Date(stat.day);
+
+      return {
+        label: date.toLocaleDateString('es-ES', {
+          day: '2-digit',
+          month: 'short',
+        }),
+        value: stat.count,
+      };
+    }) as Statistic[];
   }
 
   buildStatisticFilter(

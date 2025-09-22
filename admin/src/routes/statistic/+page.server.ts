@@ -8,10 +8,14 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	return { statistics };
 };
 
-async function getStatistics(fetch: typeof globalThis.fetch, url: URL): Promise<Statistic> {
+async function getStatistics(
+	fetch: typeof globalThis.fetch,
+	url: URL
+): Promise<Record<string, Statistic[]>> {
 	let apiUrls = [
 		new URL('statistic/status', PUBLIC_API_URL),
-		new URL('statistic/category', PUBLIC_API_URL)
+		new URL('statistic/category', PUBLIC_API_URL),
+		new URL('statistic/date', PUBLIC_API_URL)
 	];
 
 	apiUrls = apiUrls.map((value) => {
@@ -21,10 +25,13 @@ async function getStatistics(fetch: typeof globalThis.fetch, url: URL): Promise<
 		return value;
 	});
 
-	const [statusResponse, categoryResponse] = await Promise.all(apiUrls.map((url) => fetch(url)));
+	const [statusResponse, categoryResponse, dateResponse] = await Promise.all(
+		apiUrls.map((url) => fetch(url))
+	);
 
 	return {
 		status: await statusResponse.json(),
-		category: await categoryResponse.json()
+		category: await categoryResponse.json(),
+		date: await dateResponse.json()
 	};
 }
