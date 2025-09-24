@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { pageHeaderState, toastState } from '$lib/store/ui.svelte';
+	import { Deck } from '@deck.gl/core';
 	import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 	import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 	import { DOMINICAN_REPUBLIC_COORDINATES } from '$lib/constants/system.constant';

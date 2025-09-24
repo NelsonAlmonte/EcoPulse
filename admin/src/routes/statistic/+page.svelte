@@ -35,9 +35,15 @@
 <div class="mb-4">
 	<Filter />
 </div>
-<div class="flex flex-wrap gap-4">
+<div class="mb-4 flex flex-wrap gap-4">
 	<StatusGraph status={statistics.status} />
-	<CategoryGraph category={statistics.category} />
-	<DateGraph date={statistics.date} />
+	<div class="flex-1">
+		<DateGraph date={statistics.date} />
+	</div>
+</div>
+<div class="flex flex-wrap gap-4">
+	<div class="flex-1">
+		<CategoryGraph category={statistics.category} />
+	</div>
 	<TopCategoriesGraph category={statistics.category} />
 </div>

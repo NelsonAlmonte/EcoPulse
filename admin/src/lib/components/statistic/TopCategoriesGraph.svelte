@@ -80,7 +80,7 @@
 	};
 </script>
 
-<Card class="p-4 md:p-6">
+<Card class="p-4 md:p-6" size="lg">
 	<h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">
 		Categorias con mas incidencias
 	</h5>

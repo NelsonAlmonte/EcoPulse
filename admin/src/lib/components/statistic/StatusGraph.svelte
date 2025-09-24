@@ -84,7 +84,7 @@
 	});
 </script>
 
-<Card class="rounded-xl p-4 md:p-6">
+<Card class="rounded-xl p-4 md:p-6" size="md">
 	<h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Reporte por estados</h5>
 
 	<div class="mt-4 rounded-lg bg-gray-50 p-3 dark:bg-gray-700">

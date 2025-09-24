@@ -98,7 +98,7 @@
 	});
 </script>
 
-<Card class="rounded-xl p-4 md:p-6">
+<Card class="max-w-full rounded-xl p-4 md:p-6">
 	<h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Reporte por fecha</h5>
 	<div class="my-4">
 		<div class="flex items-center">
