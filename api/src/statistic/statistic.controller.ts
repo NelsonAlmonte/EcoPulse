@@ -3,6 +3,7 @@ import { StatisticService } from './statistic.service';
 import { Statistic } from './statistic.dto';
 import { CategoryService } from 'src/category/category.service';
 import { Prisma, Status } from '@prisma/client';
+import { Bounds } from 'src/issue/issue.params';
 
 @Controller('statistic')
 export class StatisticController {
@@ -17,11 +18,7 @@ export class StatisticController {
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
   ): Promise<Statistic[] | null> {
-    const statisticFilter = this.buildStatisticFilter(
-      filter,
-      start_date,
-      end_date,
-    );
+    const statisticFilter = this.buildDateFilter(filter, start_date, end_date);
     const statistics =
       await this.statisticService.getIssuesByStatus(statisticFilter);
 
@@ -40,22 +37,47 @@ export class StatisticController {
 
   @Get('category')
   async category(
-    @Query('filter') filter: string = '7d',
+    @Query('filter') filter: string = '90d',
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
+    @Query('north') north?: string,
+    @Query('south') south?: string,
+    @Query('east') east?: string,
+    @Query('west') west?: string,
+    @Query('status') status?: string,
+    @Query('categories') categories?: string,
   ): Promise<Statistic[] | null> {
-    const statisticFilter = this.buildStatisticFilter(
-      filter,
-      start_date,
-      end_date,
-    );
-    const statistics =
-      await this.statisticService.getIssuesByCategories(statisticFilter);
+    let where = this.buildDateFilter(filter, start_date, end_date);
+    const andFilters: Prisma.IssueWhereInput[] = [];
+
+    if (north && south && east && west) {
+      const bounds: Bounds = {
+        north: Number(north),
+        south: Number(south),
+        east: Number(east),
+        west: Number(west),
+      };
+
+      andFilters.push(this.buildBoundsFilter(bounds));
+    }
+
+    if (status && categories) {
+      andFilters.push(this.buildClassificationFilter(status, categories));
+    }
+
+    if (andFilters.length > 0) {
+      where = {
+        ...where,
+        AND: andFilters,
+      };
+    }
+
+    const statistics = await this.statisticService.getIssuesByCategories(where);
 
     if (!statistics) return null;
 
-    const categories = await this.categoryService.getCategories();
-    const categoryMap = new Map(categories.map((c) => [c.id, c.name]));
+    const categoriesList = await this.categoryService.getCategories();
+    const categoryMap = new Map(categoriesList.map((c) => [c.id, c.name]));
 
     return statistics.map((stat) => ({
       label: categoryMap.get(stat.categoryId) ?? 'Desconocida',
@@ -69,11 +91,7 @@ export class StatisticController {
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
   ): Promise<Statistic[] | null> {
-    const statisticFilter = this.buildStatisticFilter(
-      filter,
-      start_date,
-      end_date,
-    );
+    const statisticFilter = this.buildDateFilter(filter, start_date, end_date);
     const statistics =
       await this.statisticService.getIssuesByDate(statisticFilter);
 
@@ -92,7 +110,7 @@ export class StatisticController {
     }) as Statistic[];
   }
 
-  buildStatisticFilter(
+  buildDateFilter(
     filter: string,
     start_date?: string,
     end_date?: string,
@@ -131,6 +149,37 @@ export class StatisticController {
       createdAt: {
         gte: start,
         lt: end,
+      },
+    };
+
+    return where;
+  }
+
+  buildBoundsFilter(bounds: Bounds): Prisma.IssueWhereInput {
+    const where: Prisma.IssueWhereInput = {
+      latitude: {
+        gte: bounds.south,
+        lte: bounds.north,
+      },
+      longitude: {
+        gte: bounds.west,
+        lte: bounds.east,
+      },
+    };
+
+    return where;
+  }
+
+  buildClassificationFilter(
+    status: string,
+    categories: string,
+  ): Prisma.IssueWhereInput {
+    const where: Prisma.IssueWhereInput = {
+      status: {
+        in: status.split(',') as Status[],
+      },
+      categoryId: {
+        in: categories.split(','),
       },
     };
 

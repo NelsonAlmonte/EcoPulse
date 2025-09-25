@@ -72,6 +72,7 @@
 					{/snippet}
 					<SidebarItem label="Mapa de calor" href="/statistic/heatmap" />
 					<SidebarItem label="Reportes" href="/statistic" />
+					<SidebarItem label="Mapa analítico" href="/statistic/map-analytics" />
 				</SidebarDropdownWrapper>
 			</SidebarGroup>
 			<SidebarGroup border>
