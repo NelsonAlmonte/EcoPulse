@@ -13,9 +13,9 @@ async function getStatistics(
 	url: URL
 ): Promise<Record<string, Statistic[]>> {
 	let apiUrls = [
-		// new URL('statistic/status', PUBLIC_API_URL),
-		new URL('statistic/category', PUBLIC_API_URL)
-		// new URL('statistic/date', PUBLIC_API_URL)
+		new URL('statistic/status', PUBLIC_API_URL),
+		new URL('statistic/category', PUBLIC_API_URL),
+		new URL('statistic/date', PUBLIC_API_URL)
 	];
 
 	apiUrls = apiUrls.map((value) => {
@@ -24,20 +24,20 @@ async function getStatistics(
 		value.searchParams.set('east', url.searchParams.get('east') ?? '0');
 		value.searchParams.set('west', url.searchParams.get('west') ?? '0');
 		value.searchParams.set('status', url.searchParams.get('status') ?? '');
+		value.searchParams.set('defined_date', url.searchParams.get('defined_date') ?? '');
 		value.searchParams.set('start_date', url.searchParams.get('start_date') ?? '');
 		value.searchParams.set('end_date', url.searchParams.get('end_date') ?? '');
 		value.searchParams.set('categories', url.searchParams.get('categories') ?? '');
 		return value;
 	});
 
-	// const [statusResponse, categoryResponse, dateResponse] = await Promise.all(
-	// 	apiUrls.map((url) => fetch(url))
-	// );
-	const [categoryResponse] = await Promise.all(apiUrls.map((url) => fetch(url)));
+	const [statusResponse, categoryResponse, dateResponse] = await Promise.all(
+		apiUrls.map((url) => fetch(url))
+	);
 
 	return {
-		// status: await statusResponse.json(),
-		category: await categoryResponse.json()
-		// date: await dateResponse.json()
+		status: await statusResponse.json(),
+		category: await categoryResponse.json(),
+		date: await dateResponse.json()
 	};
 }

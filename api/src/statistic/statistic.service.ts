@@ -44,16 +44,66 @@ export class StatisticService {
     });
   }
 
-  getIssuesByDate(where) {
+  getIssuesByDate(where: Prisma.IssueWhereInput) {
+    const conditions: string[] = [];
+    const params: any[] = [];
+
+    if (where.createdAt as Prisma.DateTimeFilter) {
+      params.push((where.createdAt as Prisma.DateTimeFilter).gte);
+      conditions.push(`"createdAt" >= $${params.length}`);
+    }
+
+    if (where.createdAt as Prisma.DateTimeFilter) {
+      params.push((where.createdAt as Prisma.DateTimeFilter).lt);
+      conditions.push(`"createdAt" < $${params.length}`);
+    }
+
+    if (
+      where.latitude &&
+      (where.latitude as Prisma.FloatFilter).gte !== undefined &&
+      (where.latitude as Prisma.FloatFilter).lte !== undefined
+    ) {
+      params.push((where.latitude as Prisma.FloatFilter).gte);
+      params.push((where.latitude as Prisma.FloatFilter).lte);
+      conditions.push(
+        `"latitude" BETWEEN $${params.length - 1} AND $${params.length}`,
+      );
+    }
+
+    if (
+      where.longitude &&
+      (where.longitude as Prisma.FloatFilter).gte !== undefined &&
+      (where.longitude as Prisma.FloatFilter).lte !== undefined
+    ) {
+      params.push((where.longitude as Prisma.FloatFilter).gte);
+      params.push((where.longitude as Prisma.FloatFilter).lte);
+      conditions.push(
+        `"longitude" BETWEEN $${params.length - 1} AND $${params.length}`,
+      );
+    }
+
+    if (where.status && (where.status as Prisma.EnumStatusFilter).in) {
+      params.push((where.status as Prisma.EnumStatusFilter).in);
+      conditions.push(`"status" = ANY($${params.length}::"Status"[])`);
+    }
+
+    if (where.categoryId && (where.categoryId as Prisma.StringFilter).in) {
+      params.push((where.categoryId as Prisma.StringFilter).in);
+      conditions.push(`"categoryId" = ANY($${params.length})`);
+    }
+
+    const whereSQL =
+      conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
     return this.prisma.$queryRawUnsafe<{ day: Date; count: number }[]>(
-      `SELECT DATE_TRUNC('day', "createdAt")::date as day, COUNT(*)::int as count
-      FROM "Issue"
-      WHERE "createdAt" >= $1
-        AND "createdAt" < $2
-      GROUP BY day
-      ORDER BY day ASC`,
-      where.createdAt.gte,
-      where.createdAt.lt,
+      `
+    SELECT DATE_TRUNC('day', "createdAt")::date as day, COUNT(*)::int as count
+    FROM "Issue"
+    ${whereSQL}
+    GROUP BY day
+    ORDER BY day ASC
+    `,
+      ...params,
     );
   }
 }

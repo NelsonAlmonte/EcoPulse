@@ -19,9 +19,11 @@ async function getStatistics(
 	];
 
 	apiUrls = apiUrls.map((value) => {
-		value.searchParams.set('filter', url.searchParams.get('filter') ?? '');
+		value.searchParams.set('status', url.searchParams.get('status') ?? '');
+		value.searchParams.set('defined_date', url.searchParams.get('defined_date') ?? '');
 		value.searchParams.set('start_date', url.searchParams.get('start_date') ?? '');
 		value.searchParams.set('end_date', url.searchParams.get('end_date') ?? '');
+		value.searchParams.set('categories', url.searchParams.get('categories') ?? '');
 		return value;
 	});
 

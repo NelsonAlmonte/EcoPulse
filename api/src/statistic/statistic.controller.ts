@@ -5,6 +5,14 @@ import { CategoryService } from 'src/category/category.service';
 import { Prisma, Status } from '@prisma/client';
 import { Bounds } from 'src/issue/issue.params';
 
+interface WhereParams {
+  status?: string;
+  defined_date?: string;
+  start_date?: string;
+  end_date?: string;
+  categories?: string;
+  bounds?: Bounds;
+}
 @Controller('statistic')
 export class StatisticController {
   constructor(
@@ -14,13 +22,31 @@ export class StatisticController {
 
   @Get('status')
   async status(
-    @Query('filter') filter: string = '7d',
+    @Query('defined_date') defined_date: string = '7d',
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
+    @Query('north') north?: string,
+    @Query('south') south?: string,
+    @Query('east') east?: string,
+    @Query('west') west?: string,
+    @Query('status') status?: string,
+    @Query('categories') categories?: string,
   ): Promise<Statistic[] | null> {
-    const statisticFilter = this.buildDateFilter(filter, start_date, end_date);
-    const statistics =
-      await this.statisticService.getIssuesByStatus(statisticFilter);
+    const filter: WhereParams = {
+      defined_date: defined_date,
+      start_date: start_date,
+      end_date: end_date,
+      bounds: {
+        north: Number(north),
+        south: Number(south),
+        east: Number(east),
+        west: Number(west),
+      },
+      status: status,
+      categories: categories,
+    };
+    const where = this.buildWhere(filter);
+    const statistics = await this.statisticService.getIssuesByStatus(where);
 
     if (!statistics) return null;
 
@@ -37,7 +63,7 @@ export class StatisticController {
 
   @Get('category')
   async category(
-    @Query('filter') filter: string = '90d',
+    @Query('defined_date') defined_date: string = '7d',
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
     @Query('north') north?: string,
@@ -47,31 +73,20 @@ export class StatisticController {
     @Query('status') status?: string,
     @Query('categories') categories?: string,
   ): Promise<Statistic[] | null> {
-    let where = this.buildDateFilter(filter, start_date, end_date);
-    const andFilters: Prisma.IssueWhereInput[] = [];
-
-    if (north && south && east && west) {
-      const bounds: Bounds = {
+    const filter: WhereParams = {
+      defined_date: defined_date,
+      start_date: start_date,
+      end_date: end_date,
+      bounds: {
         north: Number(north),
         south: Number(south),
         east: Number(east),
         west: Number(west),
-      };
-
-      andFilters.push(this.buildBoundsFilter(bounds));
-    }
-
-    if (status && categories) {
-      andFilters.push(this.buildClassificationFilter(status, categories));
-    }
-
-    if (andFilters.length > 0) {
-      where = {
-        ...where,
-        AND: andFilters,
-      };
-    }
-
+      },
+      status: status,
+      categories: categories,
+    };
+    const where = this.buildWhere(filter);
     const statistics = await this.statisticService.getIssuesByCategories(where);
 
     if (!statistics) return null;
@@ -87,13 +102,31 @@ export class StatisticController {
 
   @Get('date')
   async date(
-    @Query('filter') filter: string = '7d',
+    @Query('defined_date') defined_date: string = '7d',
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
+    @Query('north') north?: string,
+    @Query('south') south?: string,
+    @Query('east') east?: string,
+    @Query('west') west?: string,
+    @Query('status') status?: string,
+    @Query('categories') categories?: string,
   ): Promise<Statistic[] | null> {
-    const statisticFilter = this.buildDateFilter(filter, start_date, end_date);
-    const statistics =
-      await this.statisticService.getIssuesByDate(statisticFilter);
+    const filter: WhereParams = {
+      defined_date: defined_date,
+      start_date: start_date,
+      end_date: end_date,
+      bounds: {
+        north: Number(north),
+        south: Number(south),
+        east: Number(east),
+        west: Number(west),
+      },
+      status: status,
+      categories: categories,
+    };
+    const where = this.buildWhere(filter);
+    const statistics = await this.statisticService.getIssuesByDate(where);
 
     if (!statistics) return null;
 
@@ -111,7 +144,7 @@ export class StatisticController {
   }
 
   buildDateFilter(
-    filter: string,
+    defined_date: string,
     start_date?: string,
     end_date?: string,
   ): Prisma.IssueWhereInput {
@@ -119,7 +152,7 @@ export class StatisticController {
     let start: Date = start_date ? new Date(start_date) : undefined;
     let end: Date = end_date ? new Date(end_date) : now;
 
-    switch (filter) {
+    switch (defined_date) {
       case 'hoy':
         start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         break;
@@ -171,17 +204,56 @@ export class StatisticController {
   }
 
   buildClassificationFilter(
-    status: string,
-    categories: string,
+    status?: string,
+    categories?: string,
   ): Prisma.IssueWhereInput {
     const where: Prisma.IssueWhereInput = {
       status: {
-        in: status.split(',') as Status[],
+        in: status ? (status.split(',') as Status[]) : undefined,
       },
       categoryId: {
-        in: categories.split(','),
+        in: categories ? categories.split(',') : undefined,
       },
     };
+
+    return where;
+  }
+
+  buildWhere(filter: WhereParams): Prisma.IssueWhereInput {
+    const where: Prisma.IssueWhereInput = {};
+
+    Object.assign(
+      where,
+      this.buildDateFilter(
+        filter.defined_date,
+        filter.start_date,
+        filter.end_date,
+      ),
+    );
+
+    if (
+      filter.bounds.north &&
+      filter.bounds.south &&
+      filter.bounds.east &&
+      filter.bounds.west
+    ) {
+      Object.assign(
+        where,
+        this.buildBoundsFilter({
+          north: filter.bounds.north,
+          south: filter.bounds.south,
+          east: filter.bounds.east,
+          west: filter.bounds.west,
+        }),
+      );
+    }
+
+    if (filter.status || filter.categories) {
+      Object.assign(
+        where,
+        this.buildClassificationFilter(filter.status, filter.categories),
+      );
+    }
 
     return where;
   }

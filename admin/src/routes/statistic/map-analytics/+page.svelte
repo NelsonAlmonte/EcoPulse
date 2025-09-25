@@ -6,9 +6,18 @@
 	import AnalyticMap from '$lib/components/statistic/AnalyticMap.svelte';
 	import { Heading } from 'flowbite-svelte';
 	import Filter from '$lib/components/issue/Filter.svelte';
+	import StatusGraph from '$lib/components/statistic/StatusGraph.svelte';
+	import DateGraph from '$lib/components/statistic/DateGraph.svelte';
+	import TopCategoriesGraph from '$lib/components/statistic/TopCategoriesGraph.svelte';
 
 	let { data } = $props();
 	let statistics: Record<string, Statistic[]> = $derived(data.statistics);
+	let totalIssues = $derived.by(() => {
+		return statistics.category.reduce(
+			(accumulator, currentValue) => accumulator + currentValue.value,
+			0
+		);
+	});
 	const pageHeaderProps: PageHeader = {
 		title: 'Mapa analítico',
 		back_url: '/statistic',
@@ -28,20 +37,21 @@
 		]
 	};
 
-	// $effect(() => {
-	// 	issueList.list = data.issues;
-	// });
-
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
 <div class="grid h-[calc(100vh-300px)] grid-cols-2 gap-8">
 	<div class="no-scrollbar overflow-y-scroll pb-10">
 		<div class="mb-4 flex items-center justify-between">
-			<Heading tag="h6">0 incidencias</Heading>
+			<Heading tag="h6">{totalIssues} incidencias</Heading>
 			<Filter />
 		</div>
-		<CategoryGraph category={statistics.category} />
+		<div class="grid grid-cols-2 gap-4">
+			<StatusGraph status={statistics.status} />
+			<CategoryGraph category={statistics.category} />
+			<DateGraph date={statistics.date} />
+			<TopCategoriesGraph category={statistics.category} />
+		</div>
 	</div>
 	<div>
 		<AnalyticMap />

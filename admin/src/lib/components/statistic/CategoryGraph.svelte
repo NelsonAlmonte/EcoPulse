@@ -22,7 +22,7 @@
 		],
 		chart: {
 			type: 'bar',
-			height: '500px',
+			height: '280px',
 			// width: '100%',
 			fontFamily: 'Inter, sans-serif',
 			toolbar: {

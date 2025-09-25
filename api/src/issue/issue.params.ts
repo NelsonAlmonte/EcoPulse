@@ -14,8 +14,10 @@ export interface PaginationParams {
 
 export interface IssueFilterParams {
   status?: Status[];
+  defined_date?: string;
   start_date?: Date;
   end_date?: Date;
   categories?: string[];
   order?: Prisma.IssueOrderByWithRelationInput;
+  bounds?: Bounds;
 }

@@ -3,7 +3,16 @@
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import type { Category } from '$lib/models/category.model';
 	import { SlidersHorizontal } from '@lucide/svelte';
-	import { Button, Modal, Label, Input, Checkbox, Radio, type CheckboxItem } from 'flowbite-svelte';
+	import {
+		Button,
+		Modal,
+		Label,
+		Input,
+		Checkbox,
+		Radio,
+		type CheckboxItem,
+		Helper
+	} from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 
 	let isModalOpen = $state(false);
@@ -11,6 +20,7 @@
 	let status: string[] = $state([]);
 	let startDate = $state('');
 	let endDate = $state('');
+	let definedDate = $state('7d');
 	let selectedOrder = $state('createdAt:desc');
 	const statusChoices: CheckboxItem[] = [
 		{ value: 'PENDIENTE', label: 'Pendiente' },
@@ -19,6 +29,7 @@
 	];
 	let categoryChoices: CheckboxItem[] = $state([]);
 	let isLoading = $state(true);
+	let showValidation = $state(false);
 
 	onMount(async () => {
 		const categories = await getCategories();
@@ -38,6 +49,13 @@
 	}
 
 	function applyFilters() {
+		const dateFilters = getDateFilters();
+
+		if (dateFilters.end_date && !dateFilters.start_date) {
+			showValidation = true;
+			return;
+		}
+
 		const filters = [
 			{
 				name: 'status',
@@ -45,11 +63,15 @@
 			},
 			{
 				name: 'start_date',
-				value: startDate
+				value: dateFilters.start_date ? dateFilters.start_date : null
 			},
 			{
 				name: 'end_date',
-				value: endDate
+				value: dateFilters.end_date ? dateFilters.end_date : null
+			},
+			{
+				name: 'defined_date',
+				value: dateFilters.defined_date ? dateFilters.defined_date : null
 			},
 			{
 				name: 'categories',
@@ -60,6 +82,7 @@
 				value: selectedOrder
 			}
 		];
+
 		const newUrl = new URL(window.location.href);
 
 		for (const filter of filters) {
@@ -70,6 +93,21 @@
 		isModalOpen = false;
 
 		goto(newUrl, { noScroll: true });
+	}
+
+	function getDateFilters() {
+		if (startDate && !endDate) endDate = new Date().toISOString().split('T')[0];
+
+		if (startDate && endDate) {
+			return {
+				start_date: startDate,
+				end_date: endDate
+			};
+		} else {
+			return {
+				defined_date: definedDate
+			};
+		}
 	}
 </script>
 
@@ -92,16 +130,36 @@
 				classes={{ div: 'p-3 flex-1' }}
 			/>
 		</div>
-		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Fecha de reporte</p>
+		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Rango de fecha personalizado</p>
 		<div class="mb-6 grid gap-6 md:grid-cols-2">
 			<div>
-				<Label for="start_date" class="mb-2">Desde</Label>
-				<Input type="date" id="start_date" bind:value={startDate} />
+				<Label color={showValidation ? 'red' : undefined} for="start_date" class="mb-2">Desde</Label
+				>
+				<Input
+					color={showValidation ? 'red' : undefined}
+					type="date"
+					id="start_date"
+					bind:value={startDate}
+					onchange={() => (showValidation = false)}
+				/>
+				{#if showValidation}
+					<Helper color={showValidation ? 'red' : undefined} class="mt-2"
+						>Es necesario completar este campo</Helper
+					>
+				{/if}
 			</div>
 			<div>
 				<Label for="end_date" class="mb-2">Hasta</Label>
 				<Input type="date" id="end_date" bind:value={endDate} />
 			</div>
+		</div>
+		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Rango de fecha definido</p>
+		<div class="space-y-3">
+			<Radio value="yesterday" bind:group={definedDate}>Ayer</Radio>
+			<Radio value="today" bind:group={definedDate}>Hoy</Radio>
+			<Radio value="7d" bind:group={definedDate}>Últimos 7 días</Radio>
+			<Radio value="30d" bind:group={definedDate}>Últimos 30 días</Radio>
+			<Radio value="90d" bind:group={definedDate}>Últimos 90 días</Radio>
 		</div>
 		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Categorias</p>
 		<div class="grid w-full grid-cols-2 gap-4">
@@ -122,7 +180,7 @@
 		</div>
 		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
 			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>
-			<Button color="red" onclick={applyFilters}>Aplicar filtros</Button>
+			<Button color="emerald" onclick={applyFilters}>Aplicar filtros</Button>
 		</div>
 	</div>
 </Modal>

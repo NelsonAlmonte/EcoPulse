@@ -4,9 +4,9 @@
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 	import StatusGraph from '$lib/components/statistic/StatusGraph.svelte';
 	import CategoryGraph from '$lib/components/statistic/CategoryGraph.svelte';
-	import Filter from '$lib/components/statistic/Filter.svelte';
 	import DateGraph from '$lib/components/statistic/DateGraph.svelte';
 	import TopCategoriesGraph from '$lib/components/statistic/TopCategoriesGraph.svelte';
+	import Filter from '$lib/components/issue/Filter.svelte';
 
 	let { data } = $props();
 	let statistics: Record<string, Statistic[]> = $derived(data.statistics);

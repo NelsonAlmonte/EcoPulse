@@ -11,7 +11,7 @@
 		series: status.map((val) => val.value),
 		colors: ['#fcd34d', '#059669', '#dc2626'],
 		chart: {
-			height: 320,
+			height: 280,
 			width: '100%',
 			type: 'donut'
 		},
