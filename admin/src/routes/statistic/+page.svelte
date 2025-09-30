@@ -6,10 +6,17 @@
 	import CategoryGraph from '$lib/components/statistic/CategoryGraph.svelte';
 	import DateGraph from '$lib/components/statistic/DateGraph.svelte';
 	import TopCategoriesGraph from '$lib/components/statistic/TopCategoriesGraph.svelte';
-	import Filter from '$lib/components/issue/Filter.svelte';
+	import Filter from '$lib/components/ui/Filter.svelte';
+	import { Heading } from 'flowbite-svelte';
 
 	let { data } = $props();
 	let statistics: Record<string, Statistic[]> = $derived(data.statistics);
+	let totalIssues = $derived.by(() => {
+		return statistics.category.reduce(
+			(accumulator, currentValue) => accumulator + currentValue.value,
+			0
+		);
+	});
 	const pageHeaderProps: PageHeader = {
 		title: 'Reportes',
 		back_url: '/',
@@ -32,7 +39,8 @@
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
-<div class="mb-4">
+<div class="mb-4 flex items-center justify-between">
+	<Heading tag="h6">{totalIssues} incidencias</Heading>
 	<Filter />
 </div>
 <div class="mb-4 flex flex-wrap gap-4">

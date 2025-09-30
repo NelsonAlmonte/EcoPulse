@@ -2,7 +2,7 @@
 	import type { PageProps } from './$types';
 	import type { PageHeader } from '$lib/types/ui.type';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
-	import Filter from '$lib/components/issue/Filter.svelte';
+	import Filter from '$lib/components/ui/Filter.svelte';
 	import Heatmap from '$lib/components/statistic/Heatmap.svelte';
 	import { Heading } from 'flowbite-svelte';
 

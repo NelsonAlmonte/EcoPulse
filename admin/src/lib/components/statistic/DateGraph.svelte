@@ -1,19 +1,21 @@
 <script lang="ts">
 	import type { Statistic } from '$lib/models/statistic.model';
 	import type { ApexOptions } from 'apexcharts';
+	import type { AlertProps } from '$lib/types/ui.type';
 	import { Chart } from '@flowbite-svelte-plugins/chart';
 	import { Card } from 'flowbite-svelte';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
-	import { FileSearch } from '@lucide/svelte';
+	import SkeletonLoading from './SkeletonLoading.svelte';
+	import Alert from '$lib/components/ui/Alert.svelte';
 
 	let { date }: { date: Statistic[] } = $props();
-	let totalIssues = $derived.by(() => {
-		return date.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0);
+	let isEmpty = $derived.by(() => {
+		return date.length === 0;
 	});
 	let isLoading = $state(false);
 	let options: ApexOptions = $state({
 		chart: {
-			height: '500px',
+			height: 340,
 			type: 'area',
 			fontFamily: 'Inter, sans-serif',
 			dropShadow: {
@@ -74,6 +76,12 @@
 		// 	show: false
 		// }
 	});
+	const alertProps: AlertProps = {
+		title: 'Sin resultados',
+		content: 'No se encontraron reportes para este gráfico.',
+		subcontent: 'Selecciona otro periodo de tiempo para visualizar datos.',
+		classes: ['bg-gray-50 dark:bg-gray-700']
+	};
 
 	beforeNavigate(() => {
 		isLoading = true;
@@ -99,36 +107,13 @@
 </script>
 
 <Card class="max-w-full rounded-xl p-4 md:p-6">
-	<h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Reporte por fecha</h5>
-	<div class="my-4">
-		<div class="flex items-center">
-			<div
-				class="me-3 flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700"
-			>
-				<FileSearch class="h-6 w-6 text-gray-500 dark:text-gray-400" />
-			</div>
-			<div>
-				<h5 class="pb-1 text-2xl font-bold leading-none text-gray-900 dark:text-white">
-					{totalIssues}
-				</h5>
-				<p class="text-sm font-normal text-gray-500 dark:text-gray-400">Total de incidencias</p>
-			</div>
-		</div>
-	</div>
-
+	<h5 class="mb-4 text-xl font-bold leading-none text-gray-900 dark:text-white">
+		Reporte por fecha
+	</h5>
 	{#if isLoading}
-		<div role="status" class="max-w-sm animate-pulse md:p-6">
-			<div class="mt-4 flex items-baseline">
-				<div class="h-72 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
-				<div class="ms-6 h-56 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
-				<div class="ms-6 h-72 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
-				<div class="ms-6 h-64 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
-				<div class="ms-6 h-80 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
-				<div class="ms-6 h-72 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
-				<div class="ms-6 h-80 w-full rounded-t-lg bg-gray-200 dark:bg-gray-700"></div>
-			</div>
-			<span class="sr-only">Loading...</span>
-		</div>
+		<SkeletonLoading />
+	{:else if isEmpty}
+		<Alert {alertProps} />
 	{:else}
 		<Chart {options} class="pt-6" />
 	{/if}

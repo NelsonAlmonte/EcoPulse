@@ -155,8 +155,8 @@
 		</div>
 		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Rango de fecha definido</p>
 		<div class="space-y-3">
-			<Radio value="yesterday" bind:group={definedDate}>Ayer</Radio>
-			<Radio value="today" bind:group={definedDate}>Hoy</Radio>
+			<Radio value="ayer" bind:group={definedDate}>Ayer</Radio>
+			<Radio value="hoy" bind:group={definedDate}>Hoy</Radio>
 			<Radio value="7d" bind:group={definedDate}>Últimos 7 días</Radio>
 			<Radio value="30d" bind:group={definedDate}>Últimos 30 días</Radio>
 			<Radio value="90d" bind:group={definedDate}>Últimos 90 días</Radio>

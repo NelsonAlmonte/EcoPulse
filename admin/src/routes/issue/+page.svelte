@@ -7,7 +7,7 @@
 	import { issueList } from '$lib/store/issue.svelte';
 	import DeleteButton from '$lib/components/issue/DeleteButton.svelte';
 	import Status from '$lib/components/ui/Status.svelte';
-	import Filter from '$lib/components/issue/Filter.svelte';
+	import Filter from '$lib/components/ui/Filter.svelte';
 
 	let { data }: PageProps = $props();
 	let isLoading = $state(false);

@@ -22,7 +22,7 @@ export class StatisticController {
 
   @Get('status')
   async status(
-    @Query('defined_date') defined_date: string = '7d',
+    @Query('defined_date') defined_date?: string,
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
     @Query('north') north?: string,
@@ -63,7 +63,7 @@ export class StatisticController {
 
   @Get('category')
   async category(
-    @Query('defined_date') defined_date: string = '7d',
+    @Query('defined_date') defined_date?: string,
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
     @Query('north') north?: string,
@@ -102,7 +102,7 @@ export class StatisticController {
 
   @Get('date')
   async date(
-    @Query('defined_date') defined_date: string = '7d',
+    @Query('defined_date') defined_date?: string,
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
     @Query('north') north?: string,
@@ -148,11 +148,12 @@ export class StatisticController {
     start_date?: string,
     end_date?: string,
   ): Prisma.IssueWhereInput {
+    const definedDate = defined_date === '' ? '7d' : defined_date;
     const now = new Date();
     let start: Date = start_date ? new Date(start_date) : undefined;
     let end: Date = end_date ? new Date(end_date) : now;
 
-    switch (defined_date) {
+    switch (definedDate) {
       case 'hoy':
         start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         break;

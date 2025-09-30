@@ -5,7 +5,7 @@
 	import CategoryGraph from '$lib/components/statistic/CategoryGraph.svelte';
 	import AnalyticMap from '$lib/components/statistic/AnalyticMap.svelte';
 	import { Heading } from 'flowbite-svelte';
-	import Filter from '$lib/components/issue/Filter.svelte';
+	import Filter from '$lib/components/ui/Filter.svelte';
 	import StatusGraph from '$lib/components/statistic/StatusGraph.svelte';
 	import DateGraph from '$lib/components/statistic/DateGraph.svelte';
 	import TopCategoriesGraph from '$lib/components/statistic/TopCategoriesGraph.svelte';
@@ -46,11 +46,11 @@
 			<Heading tag="h6">{totalIssues} incidencias</Heading>
 			<Filter />
 		</div>
-		<div class="grid grid-cols-2 gap-4">
+		<div class="grid grid-cols-1 gap-4">
 			<StatusGraph status={statistics.status} />
 			<CategoryGraph category={statistics.category} />
-			<DateGraph date={statistics.date} />
 			<TopCategoriesGraph category={statistics.category} />
+			<DateGraph date={statistics.date} />
 		</div>
 	</div>
 	<div>
