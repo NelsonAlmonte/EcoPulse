@@ -76,13 +76,13 @@
 				</SidebarDropdownWrapper>
 			</SidebarGroup>
 			<SidebarGroup border>
-				<SidebarDropdownWrapper label="Setting" classes={{ btn: 'p-2' }}>
+				<SidebarDropdownWrapper label="Configuración" classes={{ btn: 'p-2' }}>
 					{#snippet icon()}
 						<Settings
 							class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					{/snippet}
-					<SidebarItem label="Account" href="" />
+					<SidebarItem label="Categorias" href="/category" />
 				</SidebarDropdownWrapper>
 			</SidebarGroup>
 		</SidebarWrapper>
