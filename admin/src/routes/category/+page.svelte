@@ -1,8 +1,12 @@
 <script lang="ts">
-	import type { PageHeader } from '$lib/types/ui.type';
-	import { pageHeaderState } from '$lib/store/ui.svelte';
+	import type { AlertProps, PageHeader } from '$lib/types/ui.type';
+	import { pageHeaderState, toastState } from '$lib/store/ui.svelte';
 	import * as lucide from '@lucide/svelte/icons';
+	import { PlusIcon } from '@lucide/svelte/icons';
 	import { type Icon as IconType } from '@lucide/svelte';
+	import { Button, Heading, Input, Label, Modal, Popover, Tooltip } from 'flowbite-svelte';
+	import Alert from '$lib/components/ui/Alert.svelte';
+	import { PUBLIC_API_URL } from '$env/static/public';
 
 	type LucideIcon = {
 		name: string;
@@ -10,9 +14,16 @@
 	};
 	let { data } = $props();
 	let isLoading = $state(false);
-	const icons: LucideIcon[] = Object.entries(lucide)
-		.filter((icon) => icon[0].includes('Icon'))
-		.map((val) => ({ name: val[0], icon: val[1] as typeof IconType }));
+	let isModalOpen = $state(true);
+	let iconToSearch = $state('');
+	let categoryName = $state('');
+	let icons: LucideIcon[] = $derived(
+		Object.entries(lucide)
+			.filter((icon) => icon[0].includes('Icon'))
+			.filter((icon) => icon[0].includes(iconToSearch))
+			.map((val) => ({ name: val[0], icon: val[1] as typeof IconType }))
+			.slice(0, 32)
+	);
 	const pageHeaderProps: PageHeader = {
 		title: 'Listado de categorias',
 		back_url: '/',
@@ -31,20 +42,54 @@
 			}
 		]
 	};
+	const alertProps: AlertProps = {
+		title: 'Sin resultados',
+		content: 'No encontramos ningún ícono que coincida con tu búsqueda.',
+		subcontent: 'Intenta con otro término o revisa la lista completa de iconos.',
+		classes: ['bg-gray-50 dark:bg-gray-700']
+	};
 
 	Object.assign(pageHeaderState, pageHeaderProps);
+
+	async function saveCategory() {
+		isLoading = true;
+
+		const apiUrl = new URL(`category`, PUBLIC_API_URL);
+		const response = await fetch(apiUrl, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ name: categoryName, icon: iconToSearch })
+		});
+
+		if (!response.ok) {
+			toastState.trigger({
+				content: 'Error al agregar esta categoria',
+				color: 'red',
+				icon: 'CircleX'
+			});
+			return;
+		}
+
+		toastState.trigger({
+			content: 'Categoria agregada',
+			color: 'emerald',
+			icon: 'CircleCheck'
+		});
+
+		isLoading = false;
+		isModalOpen = false;
+	}
 </script>
 
-<div class="grid grid-cols-8">
-	{#each icons as icon}
-		{@const Icon = icon.icon}
-		<div>
-			<Icon />
-			<small>{icon.name}</small>
-		</div>
-	{/each}
+<div class="mb-4 flex items-center justify-between">
+	<Heading tag="h6">{data.categories.length} categorias</Heading>
+	<Button onclick={() => (isModalOpen = true)} color="alternative" pill>
+		<PlusIcon class="me-2" size="20" />
+		Agregar
+	</Button>
 </div>
-
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 	<table class="w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400">
 		<thead class="text-xs uppercase text-gray-700 dark:text-gray-400">
@@ -97,3 +142,59 @@
 		</tbody>
 	</table>
 </div>
+<Modal bind:open={isModalOpen} size="xs">
+	<div class="flex flex-col space-y-6">
+		<h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Agrega una categoria</h3>
+		<Label class="space-y-2">
+			<span>Nombre</span>
+			<Input
+				type="text"
+				name="name"
+				placeholder="Punto de basura, lampara caida, señalización faltante, etc"
+				autocomplete="off"
+				required
+				bind:value={categoryName}
+			/>
+		</Label>
+		<Label class="space-y-2">
+			<span>Icono</span>
+			<Input
+				type="text"
+				name="icon"
+				id="icon"
+				placeholder="Buscar icono"
+				autocomplete="off"
+				required
+				bind:value={iconToSearch}
+			/>
+		</Label>
+		<Popover
+			class="w-110 text-sm font-light "
+			triggeredBy="#icon"
+			trigger="click"
+			placement="bottom"
+		>
+			{#if icons.length}
+				<div class="grid grid-cols-8 gap-2">
+					{#each icons as icon (icon.name)}
+						{@const Icon = icon.icon}
+						<button
+							class="flex cursor-pointer justify-center rounded-lg bg-gray-50 p-3 hover:bg-gray-100 dark:bg-gray-700"
+							type="button"
+							onclick={() => (iconToSearch = icon.name)}
+						>
+							<Tooltip>{icon.name}</Tooltip>
+							<Icon size="24" />
+						</button>
+					{/each}
+				</div>
+			{:else}
+				<Alert {alertProps} />
+			{/if}
+		</Popover>
+		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
+			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>
+			<Button color="emerald" onclick={saveCategory}>Guardar</Button>
+		</div>
+	</div>
+</Modal>

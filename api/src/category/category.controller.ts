@@ -29,7 +29,7 @@ export class CategoryController {
     return await this.categoryService.getCategory(id);
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Post()
   async create(
     @Body() createCategoryDto: Prisma.CategoryCreateInput,
