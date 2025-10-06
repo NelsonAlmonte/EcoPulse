@@ -23,8 +23,10 @@ import {
 } from 'src/issue/issue.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
-import { List } from 'src/response.dto';
-import { Bounds, IssueFilterParams, PaginationParams } from './issue.params';
+import { List } from 'src/util/interfaces/response.dto';
+import { Bounds, IssueFilterParams } from './issue.params';
+import { PaginationParams } from 'src/util/interfaces/response.params';
+import { buildPaginationParams } from 'src/util/functions/pagination.functions';
 
 @Controller('issue')
 export class IssueController {
@@ -76,7 +78,7 @@ export class IssueController {
       },
     };
     const issues = await this.issueService.getIssuesList(
-      this.buildPaginationParams(page, amount),
+      buildPaginationParams(page, amount),
       where,
       filter.order,
     );
@@ -96,13 +98,6 @@ export class IssueController {
     };
 
     return issueList;
-  }
-
-  buildPaginationParams(page: string, amount: string): PaginationParams {
-    return {
-      skip: page !== '1' ? (Number(page) - 1) * Number(amount) : 0,
-      take: Number(amount),
-    };
   }
 
   buildFilterParams(
@@ -176,8 +171,7 @@ export class IssueController {
     );
     let paginationParams: PaginationParams | undefined = undefined;
 
-    if (page || amount)
-      paginationParams = this.buildPaginationParams(page, amount);
+    if (page || amount) paginationParams = buildPaginationParams(page, amount);
 
     const where: Prisma.IssueWhereInput = {
       latitude: {

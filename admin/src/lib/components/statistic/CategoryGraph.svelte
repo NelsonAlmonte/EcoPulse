@@ -12,7 +12,6 @@
 	let isEmpty = $derived.by(() => {
 		return category.length === 0;
 	});
-	console.log(category);
 	let isLoading = $state(false);
 	let options: ApexOptions = $state({
 		colors: ['#1A56DB'],

@@ -7,14 +7,21 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { Category, Prisma } from '@prisma/client';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
+import { PaginationParams } from 'src/util/interfaces/response.params';
+import { buildPaginationParams } from 'src/util/functions/pagination.functions';
+import { List } from 'src/util/interfaces/response.dto';
 
 @Controller('category')
 export class CategoryController {
+  DEFAULT_PAGE = '1';
+  DEFAULT_AMOUNT = '5';
+
   constructor(private categoryService: CategoryService) {}
 
   // @UseGuards(SupabaseAuthGuard)
@@ -23,7 +30,31 @@ export class CategoryController {
     return await this.categoryService.getCategories();
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
+  @Get('list')
+  async categoriesList(
+    @Query('page') page: string = this.DEFAULT_PAGE,
+    @Query('amount') amount: string = this.DEFAULT_AMOUNT,
+  ): Promise<List<Category[]> | null> {
+    const categories = await this.categoryService.getCategoryList(
+      buildPaginationParams(page, amount),
+    );
+
+    if (!categories) return null;
+
+    const categoriesList: List<Category[]> = {
+      data: categories,
+      pagination: {
+        page: Number(page),
+        amount: Number(amount),
+        total: await this.categoryService.countCategories(),
+      },
+    };
+
+    return categoriesList;
+  }
+
+  // @UseGuards(SupabaseAuthGuard)
   @Get(':id')
   async subject(@Param('id') id: string): Promise<Category> {
     return await this.categoryService.getCategory(id);
@@ -46,7 +77,7 @@ export class CategoryController {
     return category;
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Put(':id')
   async update(
     @Body() updateCategoryDto: Prisma.CategoryUpdateInput,
@@ -66,7 +97,7 @@ export class CategoryController {
     return category;
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  // @UseGuards(SupabaseAuthGuard)
   @Delete(':id')
   async delete(
     @Param('id') id: string,

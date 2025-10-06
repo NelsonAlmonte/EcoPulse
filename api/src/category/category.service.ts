@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Category, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
+import { PaginationParams } from 'src/util/interfaces/response.params';
 
 @Injectable()
 export class CategoryService {
@@ -15,6 +16,13 @@ export class CategoryService {
       where: {
         id: id,
       },
+    });
+  }
+
+  getCategoryList(pagination: PaginationParams): Promise<Category[] | null> {
+    return this.prisma.category.findMany({
+      skip: pagination.skip,
+      take: pagination.take,
     });
   }
 
@@ -44,5 +52,9 @@ export class CategoryService {
         id: id,
       },
     });
+  }
+
+  async countCategories(): Promise<number> {
+    return this.prisma.category.count();
   }
 }

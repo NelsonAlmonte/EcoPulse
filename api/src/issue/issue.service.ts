@@ -7,7 +7,7 @@ import {
   SupaBaseUploadFileResponse,
 } from 'src/issue/issue.dto';
 import { PrismaService } from 'src/prisma.service';
-import { PaginationParams } from './issue.params';
+import { PaginationParams } from 'src/util/interfaces/response.params';
 
 @Injectable()
 export class IssueService {

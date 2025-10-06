@@ -1,28 +1,18 @@
 <script lang="ts">
-	import type { AlertProps, PageHeader } from '$lib/types/ui.type';
-	import { pageHeaderState, toastState } from '$lib/store/ui.svelte';
-	import * as lucide from '@lucide/svelte/icons';
-	import { PlusIcon } from '@lucide/svelte/icons';
-	import { type Icon as IconType } from '@lucide/svelte';
-	import { Button, Heading, Input, Label, Modal, Popover, Tooltip } from 'flowbite-svelte';
-	import Alert from '$lib/components/ui/Alert.svelte';
-	import { PUBLIC_API_URL } from '$env/static/public';
+	import type { PageHeader } from '$lib/types/ui.type';
+	import { pageHeaderState } from '$lib/store/ui.svelte';
+	import { Heading, PaginationNav } from 'flowbite-svelte';
+	import { categoryList } from '$lib/store/category.svelte.js';
+	import { afterNavigate, goto } from '$app/navigation';
+	import AddButton from '$lib/components/category/AddButton.svelte';
+	import EditButton from '$lib/components/category/EditButton.svelte';
 
-	type LucideIcon = {
-		name: string;
-		icon: typeof IconType;
-	};
 	let { data } = $props();
 	let isLoading = $state(false);
-	let isModalOpen = $state(true);
-	let iconToSearch = $state('');
-	let categoryName = $state('');
-	let icons: LucideIcon[] = $derived(
-		Object.entries(lucide)
-			.filter((icon) => icon[0].includes('Icon'))
-			.filter((icon) => icon[0].includes(iconToSearch))
-			.map((val) => ({ name: val[0], icon: val[1] as typeof IconType }))
-			.slice(0, 32)
+	let currentPage = $derived(Number(data.pagination.page));
+	let currentAmount = $derived(Number(data.pagination.amount));
+	let totalPages = $derived(
+		Math.ceil(data.categories.pagination.total / data.categories.pagination.amount)
 	);
 	const pageHeaderProps: PageHeader = {
 		title: 'Listado de categorias',
@@ -42,53 +32,34 @@
 			}
 		]
 	};
-	const alertProps: AlertProps = {
-		title: 'Sin resultados',
-		content: 'No encontramos ningún ícono que coincida con tu búsqueda.',
-		subcontent: 'Intenta con otro término o revisa la lista completa de iconos.',
-		classes: ['bg-gray-50 dark:bg-gray-700']
-	};
 
-	Object.assign(pageHeaderState, pageHeaderProps);
-
-	async function saveCategory() {
+	function handlePageChange(page: number) {
+		currentPage = page;
 		isLoading = true;
 
-		const apiUrl = new URL(`category`, PUBLIC_API_URL);
-		const response = await fetch(apiUrl, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ name: categoryName, icon: iconToSearch })
-		});
+		const newUrl = new URL(window.location.href);
 
-		if (!response.ok) {
-			toastState.trigger({
-				content: 'Error al agregar esta categoria',
-				color: 'red',
-				icon: 'CircleX'
-			});
-			return;
-		}
+		newUrl.searchParams.set('page', currentPage.toString());
+		newUrl.searchParams.set('amount', data.categories.pagination.amount.toString() ?? '5');
 
-		toastState.trigger({
-			content: 'Categoria agregada',
-			color: 'emerald',
-			icon: 'CircleCheck'
-		});
-
-		isLoading = false;
-		isModalOpen = false;
+		goto(newUrl);
 	}
+
+	afterNavigate(() => {
+		isLoading = false;
+		categoryList.list = data.categories;
+	});
+
+	categoryList.list = data.categories;
+
+	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
 <div class="mb-4 flex items-center justify-between">
-	<Heading tag="h6">{data.categories.length} categorias</Heading>
-	<Button onclick={() => (isModalOpen = true)} color="alternative" pill>
-		<PlusIcon class="me-2" size="20" />
-		Agregar
-	</Button>
+	<Heading tag="h6">{categoryList.list.pagination.total} categorias</Heading>
+	<AddButton
+		onSuccess={() => categoryList.refresh(currentPage.toString(), currentAmount.toString())}
+	/>
 </div>
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 	<table class="w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400">
@@ -103,7 +74,7 @@
 		</thead>
 		<tbody>
 			{#if !isLoading}
-				{#each data.categories as category (category.id)}
+				{#each categoryList.list.data as category (category.id)}
 					<tr class="border-b border-gray-200 dark:border-gray-700">
 						<th
 							scope="row"
@@ -122,7 +93,15 @@
 								year: 'numeric'
 							})}
 						</td>
-						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800"> </td>
+						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800">
+							<EditButton
+								id={category.id}
+								name={category.name}
+								icon={category.icon}
+								onSuccess={() =>
+									categoryList.refresh(currentPage.toString(), currentAmount.toString())}
+							/>
+						</td>
 					</tr>
 				{/each}
 			{:else}
@@ -142,59 +121,7 @@
 		</tbody>
 	</table>
 </div>
-<Modal bind:open={isModalOpen} size="xs">
-	<div class="flex flex-col space-y-6">
-		<h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Agrega una categoria</h3>
-		<Label class="space-y-2">
-			<span>Nombre</span>
-			<Input
-				type="text"
-				name="name"
-				placeholder="Punto de basura, lampara caida, señalización faltante, etc"
-				autocomplete="off"
-				required
-				bind:value={categoryName}
-			/>
-		</Label>
-		<Label class="space-y-2">
-			<span>Icono</span>
-			<Input
-				type="text"
-				name="icon"
-				id="icon"
-				placeholder="Buscar icono"
-				autocomplete="off"
-				required
-				bind:value={iconToSearch}
-			/>
-		</Label>
-		<Popover
-			class="w-110 text-sm font-light "
-			triggeredBy="#icon"
-			trigger="click"
-			placement="bottom"
-		>
-			{#if icons.length}
-				<div class="grid grid-cols-8 gap-2">
-					{#each icons as icon (icon.name)}
-						{@const Icon = icon.icon}
-						<button
-							class="flex cursor-pointer justify-center rounded-lg bg-gray-50 p-3 hover:bg-gray-100 dark:bg-gray-700"
-							type="button"
-							onclick={() => (iconToSearch = icon.name)}
-						>
-							<Tooltip>{icon.name}</Tooltip>
-							<Icon size="24" />
-						</button>
-					{/each}
-				</div>
-			{:else}
-				<Alert {alertProps} />
-			{/if}
-		</Popover>
-		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
-			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>
-			<Button color="emerald" onclick={saveCategory}>Guardar</Button>
-		</div>
-	</div>
-</Modal>
+
+<div class="mt-4 flex items-center justify-center">
+	<PaginationNav {currentPage} {totalPages} onPageChange={handlePageChange} size="large" />
+</div>
