@@ -13,21 +13,46 @@ import { UserService } from './user.service';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 import { GetIssueDto } from 'src/issue/issue.dto';
 import { GetUserDto, UpdateUserDto } from './user.dto';
+import { List } from 'src/util/interfaces/response.dto';
+import { buildPaginationParams } from 'src/util/functions/pagination.functions';
 
 @Controller('user')
 export class UserController {
+  DEFAULT_PAGE = '1';
+  DEFAULT_AMOUNT = '5';
+
   constructor(private userService: UserService) {}
+
+  @Get('list')
+  async usersList(
+    @Query('page') page: string = this.DEFAULT_PAGE,
+    @Query('amount') amount: string = this.DEFAULT_AMOUNT,
+  ): Promise<List<GetUserDto[]> | null> {
+    const users = await this.userService.getUsersList(
+      buildPaginationParams(page, amount),
+    );
+
+    if (!users) return null;
+
+    const usersList: List<GetUserDto[]> = {
+      data: users,
+      pagination: {
+        page: Number(page),
+        amount: Number(amount),
+        total: await this.userService.countUsers(),
+      },
+    };
+
+    return usersList;
+  }
 
   // @UseGuards(SupabaseAuthGuard)
   @Get(':user/issues')
   async issuesByUser(
     @Param('user') userId: string,
-    @Query('amount') amount?: number,
+    @Query('amount') amount?: string,
   ): Promise<GetIssueDto[] | null> {
-    const amountToTake =
-      typeof amount === 'string' && amount === 'undefined'
-        ? undefined
-        : Number(amount);
+    const amountToTake = amount ? Number(amount) : undefined;
 
     return await this.userService.getIssues(userId, amountToTake);
   }

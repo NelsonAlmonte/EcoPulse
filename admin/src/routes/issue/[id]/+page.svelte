@@ -28,7 +28,7 @@
 				url: '/issue'
 			},
 			{
-				title: 'Detalle',
+				title: 'Detalles',
 				url: '/'
 			}
 		]

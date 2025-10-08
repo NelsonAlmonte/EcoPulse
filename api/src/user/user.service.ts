@@ -3,10 +3,38 @@ import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserDto, GetUserDto, UpdateUserDto } from './user.dto';
 import { GetIssueDto } from 'src/issue/issue.dto';
+import { PaginationParams } from 'src/util/interfaces/response.params';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
+
+  async getUsersList(
+    pagination: PaginationParams,
+  ): Promise<GetUserDto[] | null> {
+    const users = await this.prisma.user.findMany({
+      include: {
+        _count: {
+          select: {
+            issues: true,
+          },
+        },
+      },
+      skip: pagination.skip,
+      take: pagination.take,
+    });
+
+    return users.map((user) => {
+      const transformedUser = {
+        ...user,
+        issues: user._count.issues ? user._count.issues : 0,
+      };
+
+      delete transformedUser._count;
+
+      return transformedUser;
+    });
+  }
 
   async getIssues(
     userId: string,
@@ -167,5 +195,9 @@ export class UserService {
         },
       },
     });
+  }
+
+  async countUsers(): Promise<number> {
+    return this.prisma.user.count();
   }
 }

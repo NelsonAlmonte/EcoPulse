@@ -15,6 +15,7 @@ export interface GetUserDto {
   last: string;
   email: string;
   createdAt: Date;
+  issues?: number;
 }
 
 export interface UpdateUserDto {
