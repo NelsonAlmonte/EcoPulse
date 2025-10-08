@@ -1,11 +1,12 @@
 <script lang="ts">
 	import type { PageHeader } from '$lib/types/ui.type';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
-	import { Heading, PaginationNav } from 'flowbite-svelte';
+	import { Button, Heading, PaginationNav } from 'flowbite-svelte';
 	import { categoryList } from '$lib/store/category.svelte.js';
 	import { afterNavigate, goto } from '$app/navigation';
 	import AddButton from '$lib/components/category/AddButton.svelte';
 	import EditButton from '$lib/components/category/EditButton.svelte';
+	import DeleteButton from '$lib/components/ui/DeleteButton.svelte';
 
 	let { data } = $props();
 	let isLoading = $state(false);
@@ -93,7 +94,7 @@
 								year: 'numeric'
 							})}
 						</td>
-						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800">
+						<td class="flex gap-x-2 bg-gray-50 px-6 py-4 dark:bg-gray-800">
 							<EditButton
 								id={category.id}
 								name={category.name}
@@ -101,6 +102,14 @@
 								onSuccess={() =>
 									categoryList.refresh(currentPage.toString(), currentAmount.toString())}
 							/>
+							<DeleteButton
+								endpoint={'category'}
+								id={category.id}
+								onDeleted={() =>
+									categoryList.refresh(currentPage.toString(), currentAmount.toString())}
+							>
+								<Button color="red" pill>Eliminar</Button>
+							</DeleteButton>
 						</td>
 					</tr>
 				{/each}

@@ -5,7 +5,7 @@
 	import { afterNavigate, goto } from '$app/navigation';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 	import { issueList } from '$lib/store/issue.svelte';
-	import DeleteButton from '$lib/components/issue/DeleteButton.svelte';
+	import DeleteButton from '$lib/components/ui/DeleteButton.svelte';
 	import Status from '$lib/components/ui/Status.svelte';
 	import Filter from '$lib/components/ui/Filter.svelte';
 
@@ -103,9 +103,10 @@
 								year: 'numeric'
 							})}
 						</td>
-						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800">
+						<td class="flex gap-x-2 bg-gray-50 px-6 py-4 dark:bg-gray-800">
 							<Button href="issue/{issue.id}" color="alternative" pill>Ver</Button>
 							<DeleteButton
+								endpoint={'issue'}
 								id={issue.id}
 								onDeleted={() =>
 									issueList.refresh(currentPage.toString(), currentAmount.toString())}

@@ -2,7 +2,7 @@
 	import { type Icon as IconType } from '@lucide/svelte';
 	import type { AlertProps } from '$lib/types/ui.type';
 	import type { OperationTypes } from '$lib/types/system.type';
-	import { Button, Input, Label, Modal, Popover, Tooltip } from 'flowbite-svelte';
+	import { Button, Input, Label, Modal, Popover, Spinner, Tooltip } from 'flowbite-svelte';
 	import Alert from '$lib/components/ui/Alert.svelte';
 	import * as lucide from '@lucide/svelte/icons';
 
@@ -12,16 +12,20 @@
 	};
 	let {
 		isModalOpen,
+		isLoading,
 		type,
 		initialName = '',
 		initialIcon = '',
-		onOperation
+		onOperation,
+		onClose
 	}: {
 		isModalOpen: boolean;
+		isLoading: boolean;
 		type: OperationTypes;
 		initialName?: string;
 		initialIcon?: string;
 		onOperation(name: string, icon: string): void | Promise<void>;
+		onClose(): void;
 	} = $props();
 	let categoryName = $state(initialName);
 	let iconToSearch = $state(initialIcon);
@@ -41,7 +45,7 @@
 	};
 </script>
 
-<Modal bind:open={isModalOpen} outsideclose={false} size="xs">
+<Modal bind:open={isModalOpen} outsideclose={false} onclose={() => onClose()} size="xs">
 	<div class="flex flex-col space-y-6">
 		<h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
 			{#if type === 'CREATE'}
@@ -101,7 +105,10 @@
 		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
 			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>
 			<Button color="emerald" onclick={() => onOperation(categoryName, iconToSearch)}>
-				{#if type === 'CREATE'}
+				{#if isLoading}
+					<Spinner class="me-3" size="4" />
+					Cargando...
+				{:else if type === 'CREATE'}
 					Guardar
 				{:else}
 					Actualizar

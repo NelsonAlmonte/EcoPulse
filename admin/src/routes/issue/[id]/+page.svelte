@@ -5,7 +5,7 @@
 	import { pageHeaderState } from '$lib/store/ui.svelte.js';
 	import IssueMap from '$lib/components/issue/IssueMap.svelte';
 	import Status from '$lib/components/ui/Status.svelte';
-	import DeleteButton from '$lib/components/issue/DeleteButton.svelte';
+	import DeleteButton from '$lib/components/ui/DeleteButton.svelte';
 	import ChangeStatus from '$lib/components/issue/ChangeStatus.svelte';
 	import { relativeTime } from '$lib/utils/relativeTime.js';
 	import { ChevronRight, EllipsisVertical, Maximize } from '@lucide/svelte';
@@ -98,7 +98,7 @@
 						onChanged={() => invalidateAll()}
 					/>
 				</Dropdown>
-				<DeleteButton id={data.issue.id} onDeleted={() => goto('/issue')}>
+				<DeleteButton endpoint={'issue'} id={data.issue.id} onDeleted={() => goto('/issue')}>
 					<DropdownItem class="rounded-lg text-base hover:bg-red-100 hover:text-red-700"
 						>Eliminar</DropdownItem
 					>

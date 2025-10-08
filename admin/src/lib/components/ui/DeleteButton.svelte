@@ -5,20 +5,24 @@
 	import { Button, Modal, Spinner } from 'flowbite-svelte';
 	import type { Snippet } from 'svelte';
 
-	let { id, onDeleted, children }: { id: string; onDeleted(): void; children: Snippet<[]> } =
-		$props();
+	let {
+		endpoint,
+		id,
+		onDeleted,
+		children
+	}: { endpoint: string; id: string; onDeleted(): void; children: Snippet<[]> } = $props();
 	let isConfirmationModalOpen = $state(false);
 	let isLoading = $state(false);
 
 	async function deleteItem() {
 		isLoading = true;
 
-		const apiUrl = new URL(`issue/${id}`, PUBLIC_API_URL);
+		const apiUrl = new URL(`${endpoint}/${id}`, PUBLIC_API_URL);
 		const response = await fetch(apiUrl, { method: 'DELETE' });
 
 		if (!response.ok) {
 			toastState.trigger({
-				content: 'Error al eliminar la incidencia',
+				content: 'Error al eliminar este registro',
 				color: 'red',
 				icon: 'CircleX'
 			});
@@ -28,7 +32,7 @@
 		onDeleted();
 
 		toastState.trigger({
-			content: 'Incidencia eliminada',
+			content: 'Registro eliminado',
 			color: 'emerald',
 			icon: 'CircleCheck'
 		});
@@ -38,15 +42,25 @@
 	}
 </script>
 
-<button class="cursor-pointer" onclick={() => (isConfirmationModalOpen = true)}>
+<div
+	class="cursor-pointer"
+	role="button"
+	tabindex="0"
+	onclick={() => (isConfirmationModalOpen = true)}
+	onkeydown={(e) => {
+		if (e.key === 'Enter' || e.key === ' ') {
+			isConfirmationModalOpen = true;
+		}
+	}}
+>
 	{@render children()}
-</button>
+</div>
 
 <Modal bind:open={isConfirmationModalOpen} size="xs" permanent>
 	<div class="text-center">
 		<CircleAlert class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200" />
 		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-			¿Desea eliminar esta incidencia?
+			¿Desea eliminar este registro?
 		</h3>
 		<div class="space-x-2">
 			<Button color="red" onclick={deleteItem} disabled={isLoading}>
