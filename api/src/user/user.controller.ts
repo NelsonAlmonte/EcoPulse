@@ -23,7 +23,7 @@ import {
 @Controller('user')
 export class UserController {
   DEFAULT_PAGE = '1';
-  DEFAULT_AMOUNT = '5';
+  DEFAULT_AMOUNT = '6';
 
   constructor(
     private userService: UserService,
@@ -65,6 +65,7 @@ export class UserController {
     @Query('end_date') end_date?: string,
     @Query('categories') categories?: string,
     @Query('order') order?: string,
+    @Query('all') all?: string,
   ): Promise<List<GetIssueDto[]> | null> {
     const where = buildFilterParams(
       status,
@@ -72,6 +73,7 @@ export class UserController {
       start_date,
       end_date,
       categories,
+      all,
     );
 
     Object.assign(where, { userId });

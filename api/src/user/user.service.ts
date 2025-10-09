@@ -145,16 +145,28 @@ export class UserService {
     });
   }
 
-  getUser(id: string): Promise<GetUserDto | null> {
-    return this.prisma.user.findUnique({
-      omit: {
-        password: true,
-        role: true,
-      },
+  async getUser(id: string): Promise<GetUserDto | null> {
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
       },
+      include: {
+        _count: {
+          select: {
+            issues: true,
+          },
+        },
+      },
     });
+
+    const transformedUser = {
+      ...user,
+      issues: user._count.issues ? user._count.issues : 0,
+    };
+
+    delete transformedUser._count;
+
+    return transformedUser;
   }
 
   updateUser(updateUserDto: UpdateUserDto, id: string): Promise<GetUserDto> {

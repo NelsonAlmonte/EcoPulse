@@ -41,11 +41,38 @@
 		<IssueList />
 	</div>
 	<div>
-		<h1>Hola hola hola</h1>
-		<h1>Hola hola hola</h1>
-		<h1>Hola hola hola</h1>
-		<h1>Hola hola hola</h1>
-		<h1>Hola hola hola</h1>
+		<dl>
+			<div class="border-b-1 mb-4 border-b-gray-300 pb-2">
+				<dt class="mb-2 text-lg font-medium text-gray-900">Nombres</dt>
+				<dd class="font-medium capitalize text-gray-500">{data.user.name}</dd>
+			</div>
+			<div class="border-b-1 mb-4 border-b-gray-300 pb-2">
+				<dt class="mb-2 text-lg font-medium text-gray-900">Apellidos</dt>
+				<dd class="font-medium capitalize text-gray-500">{data.user.last}</dd>
+			</div>
+			<div class="border-b-1 mb-4 border-b-gray-300 pb-2">
+				<dt class="mb-2 text-lg font-medium text-gray-900">Correo</dt>
+				<dd class="font-medium capitalize text-gray-500">{data.user.email}</dd>
+			</div>
+			<div class="border-b-1 mb-4 border-b-gray-300 pb-2">
+				<dt class="mb-2 text-lg font-medium text-gray-900">Rol</dt>
+				<dd class="font-medium capitalize text-gray-500">{data.user.role}</dd>
+			</div>
+			<div class="border-b-1 mb-4 border-b-gray-300 pb-2">
+				<dt class="mb-2 text-lg font-medium text-gray-900">Fecha de registro</dt>
+				<dd class="font-medium capitalize text-gray-500">
+					{new Date(data.user.createdAt).toLocaleDateString('es-ES', {
+						day: '2-digit',
+						month: '2-digit',
+						year: 'numeric'
+					})}
+				</dd>
+			</div>
+			<div class="border-b-1 mb-4 border-b-gray-300 pb-2">
+				<dt class="mb-2 text-lg font-medium text-gray-900">Reportes</dt>
+				<dd class="font-medium capitalize text-gray-500">{data.user.issues}</dd>
+			</div>
+		</dl>
 	</div>
 </div>
 

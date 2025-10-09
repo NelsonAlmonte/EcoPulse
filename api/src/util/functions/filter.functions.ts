@@ -6,10 +6,13 @@ export function buildFilterParams(
   start_date?: string,
   end_date?: string,
   categories?: string,
+  all?: string,
 ): Prisma.IssueWhereInput {
   const where: Prisma.IssueWhereInput = {};
 
-  Object.assign(where, buildDateFilter(defined_date, start_date, end_date));
+  if (!all)
+    Object.assign(where, buildDateFilter(defined_date, start_date, end_date));
+
   Object.assign(where, {
     status: {
       in: status ? (status.split(',') as Status[]) : undefined,

@@ -10,6 +10,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	apiUrl.searchParams.set('start_date', url.searchParams.get('start_date') ?? '');
 	apiUrl.searchParams.set('end_date', url.searchParams.get('end_date') ?? '');
 	apiUrl.searchParams.set('categories', url.searchParams.get('categories') ?? '');
+	apiUrl.searchParams.set('all', url.searchParams.get('all') ?? '');
 
 	const response = await fetch(apiUrl);
 	const issues = (await response.json()) as List<Pick<Issue, 'latitude' | 'longitude'>[]>;

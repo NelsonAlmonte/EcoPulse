@@ -24,6 +24,7 @@ async function getStatistics(
 		value.searchParams.set('start_date', url.searchParams.get('start_date') ?? '');
 		value.searchParams.set('end_date', url.searchParams.get('end_date') ?? '');
 		value.searchParams.set('categories', url.searchParams.get('categories') ?? '');
+		value.searchParams.set('all', url.searchParams.get('all') ?? '');
 		return value;
 	});
 

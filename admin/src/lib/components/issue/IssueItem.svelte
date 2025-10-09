@@ -3,6 +3,7 @@
 	import Status from '$lib/components/ui/Status.svelte';
 	import { relativeTime } from '$lib/utils/relativeTime';
 	import { Star } from '@lucide/svelte';
+	import { Tooltip } from 'flowbite-svelte';
 
 	let { issue }: { issue: Issue } = $props();
 </script>
@@ -23,10 +24,20 @@
 					>
 						{issue.category.name}
 					</a>
-					<p class="mt-2 text-sm font-normal leading-tight text-gray-700 dark:text-gray-400">
+					<p
+						class="mt-2 text-sm font-normal leading-tight text-gray-700 dark:text-gray-400"
+						id="issue-date-{issue.id}"
+					>
 						{issue.user.name}
 						{issue.user.last} • {relativeTime(issue.createdAt).split('hace ')[1]}
 					</p>
+					<Tooltip triggeredBy="#issue-date-{issue.id}">
+						{new Date(issue.createdAt).toLocaleDateString('es-ES', {
+							day: '2-digit',
+							month: '2-digit',
+							year: 'numeric'
+						})}
+					</Tooltip>
 				</div>
 				<div class="inline-flex items-center">
 					<Star size="24" class="fill-emerald-800 stroke-emerald-800" />

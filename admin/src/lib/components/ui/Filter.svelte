@@ -28,6 +28,7 @@
 		{ value: 'DESCARTADO', label: 'Descartado' }
 	];
 	let categoryChoices: CheckboxItem[] = $state([]);
+	let allIssues = $state(false);
 	let isLoading = $state(true);
 	let showValidation = $state(false);
 
@@ -39,7 +40,56 @@
 		categoryChoices = categories.map((category) => {
 			return { value: category.id, label: category.name };
 		});
+
+		restoreFilters();
 	});
+
+	function restoreFilters() {
+		const currentUrlParams = new URLSearchParams(location.search);
+		const params = [
+			'status',
+			'defined_date',
+			'start_date',
+			'end_date',
+			'categories',
+			'order',
+			'all'
+		];
+
+		for (const param of params) {
+			const value = currentUrlParams.get(param);
+			if (!value) continue;
+
+			switch (param) {
+				case 'status':
+					status = value.split(',');
+					break;
+
+				case 'categories':
+					categories = value.split(',');
+					break;
+
+				case 'defined_date':
+					definedDate = value;
+					break;
+
+				case 'start_date':
+					startDate = value;
+					break;
+
+				case 'end_date':
+					endDate = value;
+					break;
+
+				case 'order':
+					selectedOrder = value;
+					break;
+				case 'all':
+					allIssues = true;
+					break;
+			}
+		}
+	}
 
 	async function getCategories() {
 		const apiUrl = new URL('category', PUBLIC_API_URL);
@@ -80,6 +130,10 @@
 			{
 				name: 'order',
 				value: selectedOrder
+			},
+			{
+				name: 'all',
+				value: allIssues ? '1' : null
 			}
 		];
 
@@ -178,6 +232,8 @@
 			<Radio value="highlights:desc" bind:group={selectedOrder}>Más destacados</Radio>
 			<Radio value="highlights:asc" bind:group={selectedOrder}>Menos destacados</Radio>
 		</div>
+		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Otros</p>
+		<Checkbox bind:checked={allIssues}>Ver todas las incidencias</Checkbox>
 		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
 			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>
 			<Button color="emerald" onclick={applyFilters}>Aplicar filtros</Button>

@@ -13,6 +13,7 @@ interface WhereParams {
   end_date?: string;
   categories?: string;
   bounds?: Bounds;
+  all?: string;
 }
 @Controller('statistic')
 export class StatisticController {
@@ -32,19 +33,21 @@ export class StatisticController {
     @Query('west') west?: string,
     @Query('status') status?: string,
     @Query('categories') categories?: string,
+    @Query('all') all?: string,
   ): Promise<Statistic[] | null> {
     const filter: WhereParams = {
-      defined_date: defined_date,
-      start_date: start_date,
-      end_date: end_date,
+      defined_date,
+      start_date,
+      end_date,
       bounds: {
         north: Number(north),
         south: Number(south),
         east: Number(east),
         west: Number(west),
       },
-      status: status,
-      categories: categories,
+      status,
+      categories,
+      all,
     };
     const where = this.buildWhere(filter);
     const statistics = await this.statisticService.getIssuesByStatus(where);
@@ -73,19 +76,21 @@ export class StatisticController {
     @Query('west') west?: string,
     @Query('status') status?: string,
     @Query('categories') categories?: string,
+    @Query('all') all?: string,
   ): Promise<Statistic[] | null> {
     const filter: WhereParams = {
-      defined_date: defined_date,
-      start_date: start_date,
-      end_date: end_date,
+      defined_date,
+      start_date,
+      end_date,
       bounds: {
         north: Number(north),
         south: Number(south),
         east: Number(east),
         west: Number(west),
       },
-      status: status,
-      categories: categories,
+      status,
+      categories,
+      all,
     };
     const where = this.buildWhere(filter);
     const statistics = await this.statisticService.getIssuesByCategories(where);
@@ -112,19 +117,21 @@ export class StatisticController {
     @Query('west') west?: string,
     @Query('status') status?: string,
     @Query('categories') categories?: string,
+    @Query('all') all?: string,
   ): Promise<Statistic[] | null> {
     const filter: WhereParams = {
-      defined_date: defined_date,
-      start_date: start_date,
-      end_date: end_date,
+      defined_date,
+      start_date,
+      end_date,
       bounds: {
         north: Number(north),
         south: Number(south),
         east: Number(east),
         west: Number(west),
       },
-      status: status,
-      categories: categories,
+      status,
+      categories,
+      all,
     };
     const where = this.buildWhere(filter);
     const statistics = await this.statisticService.getIssuesByDate(where);
@@ -178,10 +185,15 @@ export class StatisticController {
   buildWhere(filter: WhereParams): Prisma.IssueWhereInput {
     const where: Prisma.IssueWhereInput = {};
 
-    Object.assign(
-      where,
-      buildDateFilter(filter.defined_date, filter.start_date, filter.end_date),
-    );
+    if (!filter.all)
+      Object.assign(
+        where,
+        buildDateFilter(
+          filter.defined_date,
+          filter.start_date,
+          filter.end_date,
+        ),
+      );
 
     if (
       filter.bounds.north &&

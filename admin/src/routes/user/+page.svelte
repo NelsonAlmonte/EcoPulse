@@ -94,7 +94,7 @@
 						</td>
 						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800"> {user.issues} </td>
 						<td class="flex gap-x-2 px-6 py-4">
-							<Button href="user/{user.id}" color="alternative" pill>Ver</Button>
+							<Button href="user/{user.id}?all=1" color="alternative" pill>Ver</Button>
 							<DeleteButton
 								endpoint={'user'}
 								id={user.id}

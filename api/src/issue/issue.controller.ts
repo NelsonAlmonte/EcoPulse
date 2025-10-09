@@ -62,6 +62,7 @@ export class IssueController {
     @Query('end_date') end_date?: string,
     @Query('categories') categories?: string,
     @Query('order') order?: string,
+    @Query('all') all?: string,
   ): Promise<List<Issue[]> | null> {
     const where = buildFilterParams(
       status,
@@ -69,6 +70,7 @@ export class IssueController {
       start_date,
       end_date,
       categories,
+      all,
     );
     const orderFilter = buildOrderParam(order);
     const issues = await this.issueService.getIssuesList(
@@ -109,6 +111,7 @@ export class IssueController {
     @Query('end_date') end_date?: string,
     @Query('categories') categories?: string,
     @Query('order') order?: string,
+    @Query('all') all?: string,
   ): Promise<List<GetIssueListDto[]> | null> {
     const bounds: Bounds = {
       north: Number(north),
@@ -133,7 +136,14 @@ export class IssueController {
 
     Object.assign(
       where,
-      buildFilterParams(status, defined_date, start_date, end_date, categories),
+      buildFilterParams(
+        status,
+        defined_date,
+        start_date,
+        end_date,
+        categories,
+        all,
+      ),
     );
 
     const orderFilter = buildOrderParam(order);
@@ -167,6 +177,7 @@ export class IssueController {
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
     @Query('categories') categories?: string,
+    @Query('all') all?: string,
   ): Promise<List<Pick<Issue, 'latitude' | 'longitude'>[]> | null> {
     const where = buildFilterParams(
       status,
@@ -174,6 +185,7 @@ export class IssueController {
       start_date,
       end_date,
       categories,
+      all,
     );
     const issues = await this.issueService.getIssuesCoordinates(where);
 
