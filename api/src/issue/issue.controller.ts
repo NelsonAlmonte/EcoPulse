@@ -13,7 +13,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { IssueService } from './issue.service';
-import { Issue, Prisma, Status } from '@prisma/client';
+import { Issue, Prisma } from '@prisma/client';
 import {
   CreateIssueDto,
   GetIssueDto,
@@ -24,9 +24,13 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 import { List } from 'src/util/interfaces/response.dto';
-import { Bounds, IssueFilterParams } from './issue.params';
+import { Bounds } from './issue.params';
 import { PaginationParams } from 'src/util/interfaces/response.params';
 import { buildPaginationParams } from 'src/util/functions/pagination.functions';
+import {
+  buildFilterParams,
+  buildOrderParam,
+} from 'src/util/functions/filter.functions';
 
 @Controller('issue')
 export class IssueController {
@@ -53,34 +57,24 @@ export class IssueController {
     @Query('page') page: string = this.DEFAULT_PAGE,
     @Query('amount') amount: string = this.DEFAULT_AMOUNT,
     @Query('status') status?: string,
+    @Query('defined_date') defined_date?: string,
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
     @Query('categories') categories?: string,
     @Query('order') order?: string,
   ): Promise<List<Issue[]> | null> {
-    const filter = this.buildFilterParams(
+    const where = buildFilterParams(
       status,
+      defined_date,
       start_date,
       end_date,
       categories,
-      order,
     );
-    const where: Prisma.IssueWhereInput = {
-      status: {
-        in: filter.status,
-      },
-      createdAt: {
-        gte: filter.start_date,
-        lte: filter.end_date,
-      },
-      categoryId: {
-        in: filter.categories,
-      },
-    };
+    const orderFilter = buildOrderParam(order);
     const issues = await this.issueService.getIssuesList(
       buildPaginationParams(page, amount),
       where,
-      filter.order,
+      orderFilter,
     );
 
     if (!issues) return null;
@@ -100,47 +94,6 @@ export class IssueController {
     return issueList;
   }
 
-  buildFilterParams(
-    status?: string,
-    start_date?: string,
-    end_date?: string,
-    categories?: string,
-    order?: string,
-  ): IssueFilterParams {
-    return {
-      status: status ? (status.split(',') as Status[]) : undefined,
-      start_date: start_date ? new Date(start_date) : undefined,
-      end_date: end_date ? new Date(end_date) : undefined,
-      categories: categories ? categories.split(',') : undefined,
-      order: this.buildOrderParam(order),
-    };
-  }
-
-  buildOrderParam(
-    order?: string,
-  ): Prisma.IssueOrderByWithRelationInput | undefined {
-    let orderBy: Prisma.IssueOrderByWithRelationInput | undefined = undefined;
-
-    if (order) {
-      const column = order.split(':')[0];
-      const value = order.split(':')[1] as Prisma.SortOrder;
-
-      if (column === 'highlights') {
-        orderBy = {
-          highlights: {
-            _count: value,
-          },
-        };
-      } else {
-        orderBy = {
-          [order.split(':')[0]]: order.split(':')[1],
-        };
-      }
-    }
-
-    return orderBy;
-  }
-
   // @UseGuards(SupabaseAuthGuard)
   @Get('in-bound')
   async issuesInBounds(
@@ -151,6 +104,7 @@ export class IssueController {
     @Query('page') page?: string,
     @Query('amount') amount?: string,
     @Query('status') status?: string,
+    @Query('defined_date') defined_date?: string,
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
     @Query('categories') categories?: string,
@@ -162,13 +116,6 @@ export class IssueController {
       east: Number(east),
       west: Number(west),
     };
-    const filter = this.buildFilterParams(
-      status,
-      start_date,
-      end_date,
-      categories,
-      order,
-    );
     let paginationParams: PaginationParams | undefined = undefined;
 
     if (page || amount) paginationParams = buildPaginationParams(page, amount);
@@ -182,21 +129,18 @@ export class IssueController {
         gte: bounds.west,
         lte: bounds.east,
       },
-      status: {
-        in: filter.status,
-      },
-      createdAt: {
-        gte: filter.start_date,
-        lte: filter.end_date,
-      },
-      categoryId: {
-        in: filter.categories,
-      },
     };
+
+    Object.assign(
+      where,
+      buildFilterParams(status, defined_date, start_date, end_date, categories),
+    );
+
+    const orderFilter = buildOrderParam(order);
     const issues = await this.issueService.getIssuesInBounds(
       paginationParams,
       where,
-      filter.order,
+      orderFilter,
     );
 
     if (!issues) return null;
@@ -219,28 +163,18 @@ export class IssueController {
   @Get('coords')
   async issuesCoordinates(
     @Query('status') status?: string,
+    @Query('defined_date') defined_date?: string,
     @Query('start_date') start_date?: string,
     @Query('end_date') end_date?: string,
     @Query('categories') categories?: string,
   ): Promise<List<Pick<Issue, 'latitude' | 'longitude'>[]> | null> {
-    const filter = this.buildFilterParams(
+    const where = buildFilterParams(
       status,
+      defined_date,
       start_date,
       end_date,
       categories,
     );
-    const where: Prisma.IssueWhereInput = {
-      status: {
-        in: filter.status,
-      },
-      createdAt: {
-        gte: filter.start_date,
-        lte: filter.end_date,
-      },
-      categoryId: {
-        in: filter.categories,
-      },
-    };
     const issues = await this.issueService.getIssuesCoordinates(where);
 
     if (!issues) return null;

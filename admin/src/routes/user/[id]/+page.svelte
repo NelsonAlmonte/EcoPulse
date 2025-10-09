@@ -30,13 +30,32 @@
 	};
 
 	$effect(() => {
-		// TODO: Cambiar el endpoint para que retorne list. Revisar lo de las imagenes
-		issueList.list.data = data.issues;
+		issueList.list = data.issues;
 	});
 
 	Object.assign(pageHeaderState, pageHeaderProps);
-
-	console.log(data);
 </script>
 
-<IssueList />
+<div class="grid h-[calc(100vh-300px)] grid-cols-2 gap-8">
+	<div class="no-scrollbar overflow-y-scroll pb-10">
+		<IssueList />
+	</div>
+	<div>
+		<h1>Hola hola hola</h1>
+		<h1>Hola hola hola</h1>
+		<h1>Hola hola hola</h1>
+		<h1>Hola hola hola</h1>
+		<h1>Hola hola hola</h1>
+	</div>
+</div>
+
+<style>
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+
+	.no-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+</style>

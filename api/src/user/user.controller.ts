@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Put,
   Query,
   UseGuards,
@@ -15,13 +14,21 @@ import { GetIssueDto } from 'src/issue/issue.dto';
 import { GetUserDto, UpdateUserDto } from './user.dto';
 import { List } from 'src/util/interfaces/response.dto';
 import { buildPaginationParams } from 'src/util/functions/pagination.functions';
+import { IssueService } from 'src/issue/issue.service';
+import {
+  buildFilterParams,
+  buildOrderParam,
+} from 'src/util/functions/filter.functions';
 
 @Controller('user')
 export class UserController {
   DEFAULT_PAGE = '1';
   DEFAULT_AMOUNT = '5';
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private issueService: IssueService,
+  ) {}
 
   @Get('list')
   async usersList(
@@ -50,11 +57,48 @@ export class UserController {
   @Get(':user/issues')
   async issuesByUser(
     @Param('user') userId: string,
-    @Query('amount') amount?: string,
-  ): Promise<GetIssueDto[] | null> {
-    const amountToTake = amount ? Number(amount) : undefined;
+    @Query('page') page: string = this.DEFAULT_PAGE,
+    @Query('amount') amount: string = this.DEFAULT_AMOUNT,
+    @Query('status') status?: string,
+    @Query('defined_date') defined_date?: string,
+    @Query('start_date') start_date?: string,
+    @Query('end_date') end_date?: string,
+    @Query('categories') categories?: string,
+    @Query('order') order?: string,
+  ): Promise<List<GetIssueDto[]> | null> {
+    const where = buildFilterParams(
+      status,
+      defined_date,
+      start_date,
+      end_date,
+      categories,
+    );
 
-    return await this.userService.getIssues(userId, amountToTake);
+    Object.assign(where, { userId });
+
+    const orderFilter = buildOrderParam(order);
+    const issues = await this.userService.getIssues(
+      userId,
+      buildPaginationParams(page, amount),
+      where,
+      orderFilter,
+    );
+
+    if (!issues) return null;
+
+    const issueList: List<GetIssueDto[]> = {
+      data: issues.map((issue) => ({
+        ...issue,
+        photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+      })),
+      pagination: {
+        page: Number(page),
+        amount: Number(amount),
+        total: await this.issueService.countIssues(where),
+      },
+    };
+
+    return issueList;
   }
 
   // @UseGuards(SupabaseAuthGuard)

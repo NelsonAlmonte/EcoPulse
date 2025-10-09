@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserDto, GetUserDto, UpdateUserDto } from './user.dto';
 import { GetIssueDto } from 'src/issue/issue.dto';
@@ -38,12 +38,14 @@ export class UserService {
 
   async getIssues(
     userId: string,
-    amount?: number,
+    pagination: PaginationParams,
+    where: Prisma.IssueWhereInput,
+    order: Prisma.IssueOrderByWithRelationInput,
   ): Promise<GetIssueDto[] | null> {
     const issues = await this.prisma.issue.findMany({
-      where: {
-        userId,
-      },
+      skip: pagination.skip,
+      take: pagination.take,
+      where,
       include: {
         category: true,
         user: {
@@ -67,10 +69,7 @@ export class UserService {
           },
         },
       },
-      take: amount,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: order,
     });
 
     return issues.map((issue) => {
