@@ -19,6 +19,16 @@
 			label: 'descartado',
 			color: 'red',
 			icon: 'CircleX'
+		},
+		{
+			label: 'activo',
+			color: 'emerald',
+			icon: 'CircleCheck'
+		},
+		{
+			label: 'desactivado',
+			color: 'red',
+			icon: 'CircleX'
 		}
 	];
 	let currentStatus = $state<StatusOption>(statusOptions[0]);

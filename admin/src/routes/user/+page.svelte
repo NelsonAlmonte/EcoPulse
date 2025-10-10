@@ -4,7 +4,8 @@
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 	import { userList } from '$lib/store/user.svelte';
 	import { Button, Heading, PaginationNav } from 'flowbite-svelte';
-	import DeleteButton from '$lib/components/ui/DeleteButton.svelte';
+	import Status from '$lib/components/ui/Status.svelte';
+	import ChangeStatusButton from '$lib/components/ui/ChangeStatusButton.svelte';
 
 	let { data } = $props();
 	let isLoading = $state(false);
@@ -66,7 +67,8 @@
 				<th scope="col" class="bg-gray-50 px-6 py-3"> Rol </th>
 				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Fecha de registro </th>
 				<th scope="col" class="bg-gray-50 px-6 py-3"> Reportes </th>
-				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Accciones </th>
+				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Estado </th>
+				<th scope="col" class="bg-gray-50 px-6 py-3"> Acciones </th>
 			</tr>
 		</thead>
 		<tbody>
@@ -93,22 +95,34 @@
 							})}
 						</td>
 						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800"> {user.issues} </td>
-						<td class="flex gap-x-2 px-6 py-4">
+						<td class="px-6 py-4">
+							{#if user.isActive === true}
+								<Status status={'activo'} />
+							{:else}
+								<Status status={'desactivado'} />
+							{/if}
+						</td>
+						<td class="flex gap-x-2 bg-gray-50 px-6 py-4 dark:bg-gray-800">
 							<Button href="user/{user.id}?all=1" color="alternative" pill>Ver</Button>
-							<DeleteButton
+							<ChangeStatusButton
 								endpoint={'user'}
 								id={user.id}
-								onDeleted={() => userList.refresh(currentPage.toString(), currentAmount.toString())}
+								status={user.isActive}
+								onChaged={() => userList.refresh(currentPage.toString(), currentAmount.toString())}
 							>
-								<Button color="red" pill>Eliminar</Button>
-							</DeleteButton>
+								{#if user.isActive === true}
+									<Button color="red" pill>Desactivar</Button>
+								{:else}
+									<Button color="emerald" pill>Activar</Button>
+								{/if}
+							</ChangeStatusButton>
 						</td>
 					</tr>
 				{/each}
 			{:else}
 				{#each { length: 5 }}
 					<tr class="border-b border-gray-200 dark:border-gray-700">
-						{#each { length: 7 }}
+						{#each { length: 8 }}
 							<td class="px-6 py-4">
 								<div role="status" class="max-w-sm animate-pulse">
 									<div class="mb-4 h-2.5 w-36 rounded-full bg-gray-200 dark:bg-gray-700"></div>

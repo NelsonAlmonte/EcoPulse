@@ -3,4 +3,5 @@ export interface Category {
   name: string;
   icon: string;
   createdAt: string;
+  isActive: boolean;
 }

@@ -29,6 +29,7 @@ model User {
   email      String      @unique
   password   String
   createdAt  DateTime    @default(now())
+  isActive   Boolean     @default(true)
   role       Role        @default(USER)
   issues     Issue[]
   highlights Highlight[]
@@ -54,14 +55,15 @@ model Category {
   name      String
   icon      String
   createdAt DateTime @default(now())
+  isActive   Boolean     @default(true)
   issues    Issue[]
 }
 
 model Highlight {
-  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
-  issueId String
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  issueId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
   createdAt DateTime @default(now())
 
   @@id([issueId, userId])

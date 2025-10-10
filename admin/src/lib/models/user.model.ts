@@ -6,6 +6,7 @@ export interface User {
 	createdAt: string;
 	role: Role;
 	issues: number;
+	isActive: boolean;
 }
 
 export type Role = 'ADMIN' | 'USER';

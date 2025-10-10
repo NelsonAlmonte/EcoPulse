@@ -6,7 +6,8 @@
 	import { afterNavigate, goto } from '$app/navigation';
 	import AddButton from '$lib/components/category/AddButton.svelte';
 	import EditButton from '$lib/components/category/EditButton.svelte';
-	import DeleteButton from '$lib/components/ui/DeleteButton.svelte';
+	import ChangeStatusButton from '$lib/components/ui/ChangeStatusButton.svelte';
+	import Status from '$lib/components/ui/Status.svelte';
 
 	let { data } = $props();
 	let isLoading = $state(false);
@@ -70,7 +71,8 @@
 				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Nombre </th>
 				<th scope="col" class="bg-gray-50 px-6 py-3"> Icono </th>
 				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Fecha </th>
-				<th scope="col" class="bg-gray-50 px-6 py-3"> Accciones </th>
+				<th scope="col" class="bg-gray-50 px-6 py-3"> Estado </th>
+				<th scope="col" class=" px-6 py-3"> Accciones </th>
 			</tr>
 		</thead>
 		<tbody>
@@ -94,7 +96,14 @@
 								year: 'numeric'
 							})}
 						</td>
-						<td class="flex gap-x-2 bg-gray-50 px-6 py-4 dark:bg-gray-800">
+						<td class=" bg-gray-50 px-6 py-4 dark:bg-gray-800">
+							{#if category.isActive === true}
+								<Status status={'activo'} />
+							{:else}
+								<Status status={'desactivado'} />
+							{/if}
+						</td>
+						<td class="flex gap-x-2 px-6 py-4">
 							<EditButton
 								id={category.id}
 								name={category.name}
@@ -102,21 +111,26 @@
 								onSuccess={() =>
 									categoryList.refresh(currentPage.toString(), currentAmount.toString())}
 							/>
-							<DeleteButton
+							<ChangeStatusButton
 								endpoint={'category'}
 								id={category.id}
-								onDeleted={() =>
+								status={category.isActive}
+								onChaged={() =>
 									categoryList.refresh(currentPage.toString(), currentAmount.toString())}
 							>
-								<Button color="red" pill>Eliminar</Button>
-							</DeleteButton>
+								{#if category.isActive === true}
+									<Button color="red" pill>Desactivar</Button>
+								{:else}
+									<Button color="emerald" pill>Activar</Button>
+								{/if}
+							</ChangeStatusButton>
 						</td>
 					</tr>
 				{/each}
 			{:else}
 				{#each { length: 5 }}
 					<tr class="border-b border-gray-200 dark:border-gray-700">
-						{#each { length: 5 }}
+						{#each { length: 6 }}
 							<td class="px-6 py-4">
 								<div role="status" class="max-w-sm animate-pulse">
 									<div class="mb-4 h-2.5 w-36 rounded-full bg-gray-200 dark:bg-gray-700"></div>

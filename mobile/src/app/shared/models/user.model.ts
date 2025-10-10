@@ -4,6 +4,7 @@ export interface User {
   last: string;
   email: string;
   createdAt: string;
+  isActive: boolean;
 }
 
 export interface Counters {

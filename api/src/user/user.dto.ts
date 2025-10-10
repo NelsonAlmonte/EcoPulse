@@ -16,9 +16,11 @@ export interface GetUserDto {
   email: string;
   createdAt: Date;
   issues?: number;
+  isActive: boolean;
 }
 
 export interface UpdateUserDto {
   name: string;
   last: string;
+  isActive: boolean;
 }
