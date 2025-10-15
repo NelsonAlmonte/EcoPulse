@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { PageHeader } from '$lib/types/ui.type.js';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
-	import IssueList from '$lib/components/issue/IssueList.svelte';
 	import { issueList } from '$lib/store/issue.svelte';
+	import IssueList from '$lib/components/issue/IssueList.svelte';
+	import Status from '$lib/components/ui/Status.svelte';
 
 	let { data } = $props();
 
@@ -71,6 +72,16 @@
 			<div class="border-b-1 mb-4 border-b-gray-300 pb-2">
 				<dt class="mb-2 text-lg font-medium text-gray-900">Reportes</dt>
 				<dd class="font-medium capitalize text-gray-500">{data.user.issues}</dd>
+			</div>
+			<div class="border-b-1 mb-4 border-b-gray-300 pb-2">
+				<dt class="mb-2 text-lg font-medium text-gray-900">Estado</dt>
+				<dd class="font-medium capitalize text-gray-500">
+					{#if data.user.isActive === true}
+						<Status status={'activo'} />
+					{:else}
+						<Status status={'desactivado'} />
+					{/if}
+				</dd>
 			</div>
 		</dl>
 	</div>
