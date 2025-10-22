@@ -38,19 +38,19 @@
 
 	const pageHeaderProps: PageHeader = {
 		title: 'Listado de incidencias',
-		back_url: '/',
+		back_url: '/admin',
 		breadcrumbs: [
 			{
 				title: 'Inicio',
-				url: '/'
+				url: '/admin'
 			},
 			{
 				title: 'Incidencias',
-				url: '/issue'
+				url: '/admin/issue'
 			},
 			{
 				title: 'Listado',
-				url: '/issue'
+				url: '/'
 			}
 		]
 	};

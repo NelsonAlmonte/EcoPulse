@@ -40,7 +40,7 @@
 	<Sidebar disableBreakpoints={true} class="top-16" {activeUrl}>
 		<SidebarWrapper class="overflow-y-auto rounded-sm px-3 py-0 dark:bg-gray-800">
 			<SidebarGroup>
-				<SidebarItem label="Inicio" href="/">
+				<SidebarItem label="Inicio" href="/admin">
 					{#snippet icon()}
 						<House
 							class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
@@ -53,8 +53,8 @@
 							class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					{/snippet}
-					<SidebarItem label="Listado" href="/issue" />
-					<SidebarItem label="Mapa" href="/issue/map" />
+					<SidebarItem label="Listado" href="/admin/issue" />
+					<SidebarItem label="Mapa" href="/admin/issue/map" />
 				</SidebarDropdownWrapper>
 				<SidebarDropdownWrapper label="Usuarios" classes={{ btn: 'p-2' }}>
 					{#snippet icon()}
@@ -62,7 +62,7 @@
 							class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					{/snippet}
-					<SidebarItem label="Listado" href="/user" />
+					<SidebarItem label="Listado" href="/admin/user" />
 				</SidebarDropdownWrapper>
 				<SidebarDropdownWrapper label="Estadísticas" classes={{ btn: 'p-2' }}>
 					{#snippet icon()}
@@ -70,9 +70,9 @@
 							class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					{/snippet}
-					<SidebarItem label="Mapa de calor" href="/statistic/heatmap" />
-					<SidebarItem label="Reportes" href="/statistic" />
-					<SidebarItem label="Mapa analítico" href="/statistic/map-analytics" />
+					<SidebarItem label="Mapa de calor" href="/admin/statistic/heatmap" />
+					<SidebarItem label="Reportes" href="/admin/statistic" />
+					<SidebarItem label="Mapa analítico" href="/admin/statistic/map-analytics" />
 				</SidebarDropdownWrapper>
 			</SidebarGroup>
 			<SidebarGroup border>
@@ -82,7 +82,7 @@
 							class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					{/snippet}
-					<SidebarItem label="Categorias" href="/category" />
+					<SidebarItem label="Categorias" href="/admin/category" />
 				</SidebarDropdownWrapper>
 			</SidebarGroup>
 		</SidebarWrapper>

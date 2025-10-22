@@ -13,19 +13,19 @@
 	let { data } = $props();
 	const pageHeaderProps: PageHeader = {
 		title: 'Detalles de la incidencia',
-		back_url: '/issue',
+		back_url: '/admin/issue',
 		breadcrumbs: [
 			{
 				title: 'Inicio',
-				url: '/'
+				url: '/admin'
 			},
 			{
 				title: 'Incidencias',
-				url: '/issue'
+				url: '/admin/issue'
 			},
 			{
 				title: 'Listado',
-				url: '/issue'
+				url: '/admin/issue'
 			},
 			{
 				title: 'Detalles',

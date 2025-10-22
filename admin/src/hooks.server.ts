@@ -28,10 +28,6 @@ const supabase: Handle = async ({ event, resolve }) => {
 				});
 			}
 		}
-		// auth: {
-		// 	// persistSession: true
-		// 	// autoRefreshToken: false
-		// }
 	});
 
 	/**

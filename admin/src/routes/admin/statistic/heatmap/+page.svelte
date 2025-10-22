@@ -9,19 +9,19 @@
 	let { data }: PageProps = $props();
 	const pageHeaderProps: PageHeader = {
 		title: 'Mapa de calor',
-		back_url: '/statistic',
+		back_url: '/admin/statistic',
 		breadcrumbs: [
 			{
 				title: 'Inicio',
-				url: '/'
+				url: '/admin'
 			},
 			{
 				title: 'Estadísticas',
-				url: '/statistic'
+				url: '/admin/statistic'
 			},
 			{
 				title: 'Mapa de calor',
-				url: '/statistic/heatmap'
+				url: '/admin/statistic/heatmap'
 			}
 		]
 	};

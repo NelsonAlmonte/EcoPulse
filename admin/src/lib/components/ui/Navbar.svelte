@@ -24,7 +24,7 @@
 		>
 			<Menu class="h-4 w-4 text-gray-950" />
 		</Button>
-		<NavBrand href="/">
+		<NavBrand href="/admin">
 			<img src="/img/logo.png" alt="Flowbite Svelte" class="h-6 w-6 rounded-full" />
 			<span class="ml-2 self-center whitespace-nowrap text-xl font-semibold dark:text-white"
 				>EcoPulse</span

@@ -9,15 +9,15 @@
 	let { data }: PageProps = $props();
 	const pageHeaderProps: PageHeader = {
 		title: 'Mapa de incidencias',
-		back_url: '/issue',
+		back_url: '/admin/issue',
 		breadcrumbs: [
 			{
 				title: 'Inicio',
-				url: '/'
+				url: '/admin'
 			},
 			{
 				title: 'Incidencias',
-				url: '/issue'
+				url: '/admin/issue'
 			},
 			{
 				title: 'Mapa',

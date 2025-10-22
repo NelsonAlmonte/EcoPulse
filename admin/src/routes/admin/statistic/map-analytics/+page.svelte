@@ -20,19 +20,19 @@
 	});
 	const pageHeaderProps: PageHeader = {
 		title: 'Mapa analítico',
-		back_url: '/statistic',
+		back_url: '/admin/statistic',
 		breadcrumbs: [
 			{
 				title: 'Inicio',
-				url: '/'
+				url: '/admin'
 			},
 			{
 				title: 'Estadísticas',
-				url: '/statistic'
+				url: '/admin/statistic'
 			},
 			{
 				title: 'Mapa analítico',
-				url: '/statistic/map-analytics'
+				url: '/admin/statistic/map-analytics'
 			}
 		]
 	};

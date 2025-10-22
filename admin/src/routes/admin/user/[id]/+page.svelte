@@ -9,19 +9,19 @@
 
 	const pageHeaderProps: PageHeader = {
 		title: 'Detalles del usuario',
-		back_url: '/user',
+		back_url: '/admin/user',
 		breadcrumbs: [
 			{
 				title: 'Inicio',
-				url: '/'
+				url: '/admin'
 			},
 			{
 				title: 'Usuarios',
-				url: '/user'
+				url: '/admin/user'
 			},
 			{
 				title: 'Listado',
-				url: '/user'
+				url: '/admin/user'
 			},
 			{
 				title: 'Detalles',

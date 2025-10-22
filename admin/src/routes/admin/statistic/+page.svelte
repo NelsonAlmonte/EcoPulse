@@ -19,19 +19,19 @@
 	});
 	const pageHeaderProps: PageHeader = {
 		title: 'Reportes',
-		back_url: '/',
+		back_url: '/admin',
 		breadcrumbs: [
 			{
 				title: 'Inicio',
-				url: '/'
+				url: '/admin'
 			},
 			{
 				title: 'Estadísticas',
-				url: '/statistic'
+				url: '/admin/statistic'
 			},
 			{
 				title: 'Reportes',
-				url: '/statistic'
+				url: '/admin/statistic'
 			}
 		]
 	};

@@ -1,32 +1,36 @@
 <script lang="ts">
-	import type { PageHeader } from '$lib/types/ui.type.js';
-	import { afterNavigate, goto } from '$app/navigation';
+	import type { PageHeader } from '$lib/types/ui.type';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
-	import { userList } from '$lib/store/user.svelte';
 	import { Button, Heading, PaginationNav } from 'flowbite-svelte';
-	import Status from '$lib/components/ui/Status.svelte';
+	import { categoryList } from '$lib/store/category.svelte.js';
+	import { afterNavigate, goto } from '$app/navigation';
+	import AddButton from '$lib/components/category/AddButton.svelte';
+	import EditButton from '$lib/components/category/EditButton.svelte';
 	import ChangeStatusButton from '$lib/components/ui/ChangeStatusButton.svelte';
+	import Status from '$lib/components/ui/Status.svelte';
 
 	let { data } = $props();
 	let isLoading = $state(false);
 	let currentPage = $derived(Number(data.pagination.page));
 	let currentAmount = $derived(Number(data.pagination.amount));
-	let totalPages = $derived(Math.ceil(data.users.pagination.total / data.users.pagination.amount));
+	let totalPages = $derived(
+		Math.ceil(data.categories.pagination.total / data.categories.pagination.amount)
+	);
 	const pageHeaderProps: PageHeader = {
-		title: 'Listado de usuarios',
-		back_url: '/',
+		title: 'Listado de categorias',
+		back_url: '/admin/category',
 		breadcrumbs: [
 			{
 				title: 'Inicio',
-				url: '/'
+				url: '/admin'
 			},
 			{
-				title: 'Usuarios',
-				url: '/user'
+				title: 'Configuración',
+				url: '/admin/category'
 			},
 			{
 				title: 'Listado',
-				url: '/user'
+				url: '/admin/category'
 			}
 		]
 	};
@@ -38,79 +42,83 @@
 		const newUrl = new URL(window.location.href);
 
 		newUrl.searchParams.set('page', currentPage.toString());
-		newUrl.searchParams.set('amount', data.users.pagination.amount.toString() ?? '5');
+		newUrl.searchParams.set('amount', data.categories.pagination.amount.toString() ?? '5');
 
 		goto(newUrl);
 	}
 
 	afterNavigate(() => {
 		isLoading = false;
-		userList.list = data.users;
+		categoryList.list = data.categories;
 	});
 
-	userList.list = data.users;
+	categoryList.list = data.categories;
 
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
 <div class="mb-4 flex items-center justify-between">
-	<Heading tag="h6">{userList.list.pagination.total} usuarios</Heading>
+	<Heading tag="h6">{categoryList.list.pagination.total} categorias</Heading>
+	<AddButton
+		onSuccess={() => categoryList.refresh(currentPage.toString(), currentAmount.toString())}
+	/>
 </div>
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 	<table class="w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400">
 		<thead class="text-xs uppercase text-gray-700 dark:text-gray-400">
 			<tr>
 				<th scope="col" class="bg-gray-50 px-6 py-3 dark:bg-gray-800"> Id </th>
-				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Nombres </th>
-				<th scope="col" class="bg-gray-50 px-6 py-3"> Apellidos </th>
-				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Correo </th>
-				<th scope="col" class="bg-gray-50 px-6 py-3"> Rol </th>
-				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Fecha de registro </th>
-				<th scope="col" class="bg-gray-50 px-6 py-3"> Reportes </th>
-				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Estado </th>
-				<th scope="col" class="bg-gray-50 px-6 py-3"> Acciones </th>
+				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Nombre </th>
+				<th scope="col" class="bg-gray-50 px-6 py-3"> Icono </th>
+				<th scope="col" class="px-6 py-3 dark:bg-gray-800"> Fecha </th>
+				<th scope="col" class="bg-gray-50 px-6 py-3"> Estado </th>
+				<th scope="col" class=" px-6 py-3"> Accciones </th>
 			</tr>
 		</thead>
 		<tbody>
 			{#if !isLoading}
-				{#each userList.list.data as user (user.id)}
+				{#each categoryList.list.data as category (category.id)}
 					<tr class="border-b border-gray-200 dark:border-gray-700">
 						<th
 							scope="row"
 							class="whitespace-nowrap bg-gray-50 px-6 py-4 font-medium text-gray-900 dark:bg-gray-800 dark:text-white"
 						>
-							{user.id}
+							{category.id}
 						</th>
-						<td class="px-6 py-4"> {user.name} </td>
+						<td class="px-6 py-4"> {category.name} </td>
 						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800">
-							{user.last}
+							{category.icon}
 						</td>
-						<td class="px-6 py-4"> {user.email} </td>
-						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800"> {user.role} </td>
-						<td class=" px-6 py-4">
-							{new Date(user.createdAt).toLocaleDateString('es-ES', {
+						<td class="px-6 py-4">
+							{new Date(category.createdAt).toLocaleDateString('es-ES', {
 								day: '2-digit',
 								month: '2-digit',
 								year: 'numeric'
 							})}
 						</td>
-						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800"> {user.issues} </td>
-						<td class="px-6 py-4">
-							{#if user.isActive === true}
+						<td class=" bg-gray-50 px-6 py-4 dark:bg-gray-800">
+							{#if category.isActive === true}
 								<Status status={'activo'} />
 							{:else}
 								<Status status={'desactivado'} />
 							{/if}
 						</td>
-						<td class="flex gap-x-2 bg-gray-50 px-6 py-4 dark:bg-gray-800">
-							<Button href="user/{user.id}?all=1" color="alternative" pill>Ver</Button>
+						<td class="flex gap-x-2 px-6 py-4">
+							<EditButton
+								id={category.id}
+								name={category.name}
+								icon={category.icon}
+								onSuccess={() =>
+									categoryList.refresh(currentPage.toString(), currentAmount.toString())}
+							/>
 							<ChangeStatusButton
-								endpoint={'user'}
-								id={user.id}
-								status={user.isActive}
-								onChaged={() => userList.refresh(currentPage.toString(), currentAmount.toString())}
+								endpoint={'category'}
+								id={category.id}
+								status={category.isActive}
+								onChaged={() =>
+									categoryList.refresh(currentPage.toString(), currentAmount.toString())}
 							>
-								{#if user.isActive === true}
+								{#if category.isActive === true}
 									<Button color="red" pill>Desactivar</Button>
 								{:else}
 									<Button color="emerald" pill>Activar</Button>
@@ -122,7 +130,7 @@
 			{:else}
 				{#each { length: 5 }}
 					<tr class="border-b border-gray-200 dark:border-gray-700">
-						{#each { length: 8 }}
+						{#each { length: 6 }}
 							<td class="px-6 py-4">
 								<div role="status" class="max-w-sm animate-pulse">
 									<div class="mb-4 h-2.5 w-36 rounded-full bg-gray-200 dark:bg-gray-700"></div>

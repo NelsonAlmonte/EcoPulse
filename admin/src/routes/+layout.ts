@@ -14,10 +14,6 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
 				global: {
 					fetch
 				}
-				// auth: {
-				// 	persistSession: true
-				// 	// autoRefreshToken: false
-				// }
 			})
 		: createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
 				global: {
@@ -29,10 +25,6 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
 						return data.cookies;
 					}
 				}
-				// auth: {
-				// 	persistSession: true
-				// 	// autoRefreshToken: false
-				// }
 			});
 
 	/**
