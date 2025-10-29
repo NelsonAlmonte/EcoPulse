@@ -1,12 +1,12 @@
-import { createServerClient } from '@supabase/ssr';
 import { type Handle, redirect } from '@sveltejs/kit';
+import type { User } from '$lib/models/user.model';
+import { createServerClient } from '@supabase/ssr';
 import { sequence } from '@sveltejs/kit/hooks';
 import {
 	PUBLIC_SUPABASE_URL,
 	PUBLIC_SUPABASE_PUBLISHABLE_KEY,
 	PUBLIC_API_URL
 } from '$env/static/public';
-import type { User } from '$lib/models/user.model';
 
 const supabase: Handle = async ({ event, resolve }) => {
 	/**
@@ -68,14 +68,22 @@ const supabase: Handle = async ({ event, resolve }) => {
 
 const authGuard: Handle = async ({ event, resolve }) => {
 	const { session, user } = await event.locals.safeGetSession();
+	const publicRoutes = ['/auth/login'];
+	const currentPath = event.url.pathname;
+
 	event.locals.session = session;
 	event.locals.user = user;
 
-	const publicRoutes = ['/auth/login', '/auth/register', '/auth/error'];
-	const currentPath = event.url.pathname;
-
 	if (publicRoutes.includes(currentPath)) {
 		return resolve(event);
+	}
+
+	if (currentPath === '/') {
+		if (session) {
+			throw redirect(303, '/admin');
+		} else {
+			throw redirect(303, '/auth/login');
+		}
 	}
 
 	if (!session && currentPath.startsWith('/admin')) {
@@ -94,6 +102,11 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	}
 
 	const userToBeVerified = (await res.json()) as User;
+
+	if (!userToBeVerified.isActive) {
+		console.log('Usuario no activo');
+		throw redirect(303, '/auth/login');
+	}
 
 	if (userToBeVerified.role !== 'ADMIN') {
 		console.log('Usuario no autorizado');
