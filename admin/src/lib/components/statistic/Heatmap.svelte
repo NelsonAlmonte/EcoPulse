@@ -89,7 +89,7 @@
 					return;
 				}
 
-				const newUrl = new URL('/issue/map', window.location.origin);
+				const newUrl = new URL('/admin/issue/map', window.location.origin);
 
 				newUrl.searchParams.set('lat', position.lat().toString());
 				newUrl.searchParams.set('lng', position.lng().toString());

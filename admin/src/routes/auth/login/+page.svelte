@@ -18,7 +18,7 @@
 	</header>
 
 	<div class="flex h-screen items-center justify-start">
-		<div class="mx-4 w-1/2 max-w-xl">
+		<div class="mx-4 w-1/2 max-w-lg">
 			<div class="py-4">
 				<h1 class="mb-4 text-4xl font-bold text-white">
 					Bienvenido a <span class="text-emerald-500">EcoPulse</span>

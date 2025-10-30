@@ -1,5 +1,6 @@
 <script>
 	import { sidebarState } from '$lib/store/ui.svelte';
+	import { userSession } from '$lib/store/userSession.svelte';
 	import { Menu, User } from '@lucide/svelte';
 	import {
 		Navbar,
@@ -38,15 +39,14 @@
 	</div>
 	<Dropdown placement="bottom" triggeredBy="#avatar-menu">
 		<DropdownHeader>
-			<span class="block text-sm">Bonnie Green</span>
-			<span class="block truncate text-sm font-medium">name@flowbite.com</span>
+			<span class="block text-sm">{userSession.user?.name} {userSession.user?.last}</span>
+			<span class="block truncate text-sm font-medium">{userSession.user?.email}</span>
 		</DropdownHeader>
 		<DropdownGroup>
-			<DropdownItem>Dashboard</DropdownItem>
-			<DropdownItem>Settings</DropdownItem>
-			<DropdownItem>Earnings</DropdownItem>
+			<DropdownItem data-sveltekit-preload-data="off" href="/auth/logout"
+				>Cerrar sesión</DropdownItem
+			>
 		</DropdownGroup>
-		<DropdownHeader>Sign out</DropdownHeader>
 	</Dropdown>
 	<div class="h-12"></div>
 </Navbar>

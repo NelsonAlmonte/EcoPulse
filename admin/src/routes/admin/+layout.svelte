@@ -1,7 +1,4 @@
 <script lang="ts">
-	import '../../app.css';
-	import { onMount } from 'svelte';
-	import { invalidate } from '$app/navigation';
 	import favicon from '$lib/assets/favicon.svg';
 	import Sidebar from '$lib/components/ui/Sidebar.svelte';
 	import PageLoad from '$lib/components/ui/PageLoad.svelte';
@@ -9,19 +6,7 @@
 	import Header from '$lib/components/ui/Header.svelte';
 	import Toast from '$lib/components/ui/Toast.svelte';
 
-	let { data, children } = $props();
-	let { session, supabase } = $derived(data);
-
-	onMount(() => {
-		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
-			if (newSession?.expires_at !== session?.expires_at) {
-				console.log('newsession', newSession);
-				console.log('sessuib', session);
-				invalidate('supabase:auth');
-			}
-		});
-		return () => data.subscription.unsubscribe();
-	});
+	let { children } = $props();
 </script>
 
 <svelte:head>
@@ -38,25 +23,3 @@
 	<Header />
 	{@render children?.()}
 </div>
-
-<!-- <script>
-	let { data, children } = $props();
-	let { supabase } = $derived(data);
-
-	async function logout() {
-		const { error } = await supabase.auth.signOut();
-		if (error) {
-			console.error(error);
-		}
-	}
-</script>
-
-<header>
-	<nav>
-		<a href="/">Home</a>
-	</nav>
-	<button onclick={logout}>Logout</button>
-</header>
-<main>
-	{@render children()}
-</main> -->

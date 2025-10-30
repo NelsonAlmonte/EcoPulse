@@ -18,7 +18,7 @@
 			<div class="flex items-center justify-between">
 				<div>
 					<a
-						href="/issue/{issue.id}"
+						href="/admin/issue/{issue.id}"
 						class="text-base font-bold text-gray-900 hover:underline dark:text-white"
 						target="_blank"
 					>

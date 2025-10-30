@@ -2,13 +2,18 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { invalidate } from '$app/navigation';
+	import { userSession } from '$lib/store/userSession.svelte';
 	import favicon from '$lib/assets/favicon.svg';
 
 	let { data, children } = $props();
-	let { session, supabase } = $derived(data);
+	let { session, supabase, loggedUser } = $derived(data);
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
+			if (loggedUser) {
+				userSession.user = loggedUser;
+			}
+
 			if (newSession?.expires_at !== session?.expires_at) {
 				console.log('newsession', newSession);
 				console.log('sessuib', session);
