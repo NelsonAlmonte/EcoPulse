@@ -14,7 +14,7 @@
 	} from 'flowbite-svelte';
 </script>
 
-<Navbar class="shadow-sm" navContainerClass="mx-0">
+<Navbar class="shadow-sm" navContainerClass="container mx-auto">
 	<SidebarButton onclick={() => (sidebarState.canShow = true)} class="mb-2" />
 	<div class="flex">
 		<Button
