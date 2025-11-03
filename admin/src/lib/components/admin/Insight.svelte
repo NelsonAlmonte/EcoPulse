@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { InsightProps } from '$lib/types/ui.type';
 	import { icons } from '$lib/constants/icons.constant';
-	import { Heading } from 'flowbite-svelte';
+	import { Card, Heading } from 'flowbite-svelte';
 
 	let { insightProps }: { insightProps: InsightProps } = $props();
 </script>
 
-<div class="rounded-xl px-8 py-6 shadow">
+<Card class="rounded-xl px-8 py-6">
 	<div class="flex items-center justify-start">
 		{#if insightProps.icon}
 			{@const Icon = icons[insightProps.icon]}
@@ -17,4 +17,4 @@
 			<span class=" text-gray-600">{insightProps.label}</span>
 		</div>
 	</div>
-</div>
+</Card>

@@ -2,6 +2,12 @@
 	import type { InsightProps, PageHeader } from '$lib/types/ui.type';
 	import { pageHeaderState } from '$lib/store/ui.svelte';
 	import Insight from '$lib/components/admin/Insight.svelte';
+	import CategoryGraph from '$lib/components/statistic/CategoryGraph.svelte';
+	import DateGraph from '$lib/components/statistic/DateGraph.svelte';
+	import Filter from '$lib/components/ui/Filter.svelte';
+	import { Heading, Card, Button } from 'flowbite-svelte';
+	import { ChartColumn, FileSearch, Handshake, MapPinned, Users } from '@lucide/svelte';
+	import { userSession } from '$lib/store/userSession.svelte.js';
 
 	let { data } = $props();
 	const insights: InsightProps[] = [
@@ -40,8 +46,47 @@
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
-<div class="grid grid-cols-4 gap-x-4">
+<Card class="mb-8 rounded-xl p-4 sm:p-6 md:p-8" size="xl">
+	<Handshake class="mb-3 h-8 w-8 text-emerald-600" />
+	<h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900">
+		Hola, {userSession.user?.name} — bienvenido al panel de administración.
+	</h5>
+	<p class="mb-3 font-normal text-gray-600">Opciones destacadas para una gestión más eficiente.</p>
+	<div>
+		<Button href="/admin/issue" color="alternative" pill>
+			<FileSearch class="me-2" size="20" />
+			Listado de incidencias
+		</Button>
+
+		<Button href="/admin/issue/map" color="alternative" pill>
+			<MapPinned class="me-2" size="20" />
+			Mapa de incidencias
+		</Button>
+
+		<Button href="/admin/statistic" color="alternative" pill>
+			<ChartColumn class="me-2" size="20" />
+			Reportes
+		</Button>
+
+		<Button href="/admin/user" color="alternative" pill>
+			<Users class="me-2" size="20" />
+			Listado de usuarios
+		</Button>
+	</div>
+</Card>
+<div class="mb-4 flex items-center justify-between">
+	<Heading tag="h6">Métricas clave</Heading>
+</div>
+<div class="mb-8 grid grid-cols-4 gap-x-4">
 	{#each insights as insight}
 		<Insight insightProps={insight} />
 	{/each}
+</div>
+<div class="mb-4 flex items-center justify-between">
+	<Heading tag="h6">Incidencias de esta semana</Heading>
+	<Filter />
+</div>
+<div class="grid grid-cols-2 gap-x-4">
+	<CategoryGraph category={data.categoryStatistic} />
+	<DateGraph date={data.dateStatistic} />
 </div>

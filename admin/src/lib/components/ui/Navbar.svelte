@@ -23,7 +23,7 @@
 			color="light"
 			onclick={() => (sidebarState.canShow = true)}
 		>
-			<Menu class="h-4 w-4 text-gray-950" />
+			<Menu size="40" class="h-4 w-4 text-gray-950" />
 		</Button>
 		<NavBrand href="/admin">
 			<img src="/img/logo.png" alt="Flowbite Svelte" class="h-6 w-6 rounded-full" />

@@ -13,7 +13,7 @@
 				size="lg"
 				color="light"
 			>
-				<ArrowLeft size="20" />
+				<ArrowLeft size="16" />
 			</Button>
 		{/if}
 		<Heading tag="h3">{pageHeaderState.title}</Heading>
