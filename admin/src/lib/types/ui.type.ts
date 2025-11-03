@@ -70,3 +70,9 @@ export type StatusOption = {
 	color: FlowbiteColor;
 	icon: IconKey;
 };
+
+export type InsightProps = {
+	label: string;
+	value: number;
+	icon: IconKey;
+};

@@ -112,7 +112,7 @@ export class IssueService {
     });
   }
 
-  async countIssues(where?: Prisma.IssueWhereInput): Promise<number> {
+  countIssues(where?: Prisma.IssueWhereInput): Promise<number> {
     return this.prisma.issue.count({ where: where ?? undefined });
   }
 

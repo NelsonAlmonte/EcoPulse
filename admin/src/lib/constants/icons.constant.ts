@@ -3,10 +3,14 @@ import {
 	CircleCheck,
 	CircleDot,
 	CircleX,
+	FileCheck,
+	FileQuestionMark,
+	FileSearch,
 	Globe,
 	MapPin,
 	Star,
-	User
+	User,
+	Users
 } from '@lucide/svelte';
 
 export const icons = {
@@ -17,5 +21,9 @@ export const icons = {
 	MapPin,
 	Star,
 	CircleCheck,
-	CircleX
+	CircleX,
+	FileSearch,
+	FileCheck,
+	FileQuestionMark,
+	Users
 };

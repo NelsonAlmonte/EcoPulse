@@ -208,7 +208,7 @@ export class UserService {
     });
   }
 
-  async countUsers(): Promise<number> {
-    return this.prisma.user.count();
+  countUsers(where?: Prisma.UserWhereInput): Promise<number> {
+    return this.prisma.user.count({ where: where ?? undefined });
   }
 }

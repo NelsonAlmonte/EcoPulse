@@ -2,9 +2,11 @@ import {
   BadRequestException,
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -13,7 +15,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { IssueService } from './issue.service';
-import { Issue, Prisma } from '@prisma/client';
+import { Issue, Prisma, Status } from '@prisma/client';
 import {
   CreateIssueDto,
   GetIssueDto,
@@ -34,9 +36,6 @@ import {
 
 @Controller('issue')
 export class IssueController {
-  DEFAULT_PAGE = '1';
-  DEFAULT_AMOUNT = '5';
-
   constructor(private issueService: IssueService) {}
 
   // @UseGuards(SupabaseAuthGuard)
@@ -54,8 +53,8 @@ export class IssueController {
 
   @Get('list')
   async issuesList(
-    @Query('page') page: string = this.DEFAULT_PAGE,
-    @Query('amount') amount: string = this.DEFAULT_AMOUNT,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('amount', new DefaultValuePipe(5), ParseIntPipe) amount: number,
     @Query('status') status?: string,
     @Query('defined_date') defined_date?: string,
     @Query('start_date') start_date?: string,
@@ -103,8 +102,8 @@ export class IssueController {
     @Query('south') south: string,
     @Query('east') east: string,
     @Query('west') west: string,
-    @Query('page') page?: string,
-    @Query('amount') amount?: string,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('amount', ParseIntPipe) amount: number,
     @Query('status') status?: string,
     @Query('defined_date') defined_date?: string,
     @Query('start_date') start_date?: string,
@@ -179,6 +178,8 @@ export class IssueController {
     @Query('categories') categories?: string,
     @Query('all') all?: string,
   ): Promise<List<Pick<Issue, 'latitude' | 'longitude'>[]> | null> {
+    const DEFAULT_PAGE = 1;
+    const DEFAULT_AMOUNT = 5;
     const where = buildFilterParams(
       status,
       defined_date,
@@ -194,13 +195,23 @@ export class IssueController {
     const issueList: List<Pick<Issue, 'latitude' | 'longitude'>[]> = {
       data: issues,
       pagination: {
-        page: Number(this.DEFAULT_PAGE),
-        amount: Number(this.DEFAULT_AMOUNT),
+        page: DEFAULT_PAGE,
+        amount: DEFAULT_AMOUNT,
         total: await this.issueService.countIssues(where),
       },
     };
 
     return issueList;
+  }
+
+  // @UseGuards(SupabaseAuthGuard)
+  @Get('count')
+  async countIssues(@Query('status') status?: Status): Promise<number | null> {
+    const where: Prisma.IssueWhereInput = {
+      status,
+    };
+
+    return this.issueService.countIssues(where);
   }
 
   // @UseGuards(SupabaseAuthGuard)

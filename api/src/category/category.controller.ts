@@ -2,9 +2,11 @@ import {
   BadRequestException,
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -19,9 +21,6 @@ import { List } from 'src/util/interfaces/response.dto';
 
 @Controller('category')
 export class CategoryController {
-  DEFAULT_PAGE = '1';
-  DEFAULT_AMOUNT = '5';
-
   constructor(private categoryService: CategoryService) {}
 
   // @UseGuards(SupabaseAuthGuard)
@@ -33,8 +32,8 @@ export class CategoryController {
   // @UseGuards(SupabaseAuthGuard)
   @Get('list')
   async categoriesList(
-    @Query('page') page: string = this.DEFAULT_PAGE,
-    @Query('amount') amount: string = this.DEFAULT_AMOUNT,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('amount', new DefaultValuePipe(5), ParseIntPipe) amount: number,
   ): Promise<List<Category[]> | null> {
     const categories = await this.categoryService.getCategoryList(
       buildPaginationParams(page, amount),

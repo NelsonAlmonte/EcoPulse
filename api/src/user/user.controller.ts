@@ -2,8 +2,11 @@ import {
   BadRequestException,
   Body,
   Controller,
+  DefaultValuePipe,
   Get,
   Param,
+  ParseBoolPipe,
+  ParseIntPipe,
   Put,
   Query,
   UseGuards,
@@ -19,12 +22,10 @@ import {
   buildFilterParams,
   buildOrderParam,
 } from 'src/util/functions/filter.functions';
+import { Prisma } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
-  DEFAULT_PAGE = '1';
-  DEFAULT_AMOUNT = '6';
-
   constructor(
     private userService: UserService,
     private issueService: IssueService,
@@ -32,8 +33,8 @@ export class UserController {
 
   @Get('list')
   async usersList(
-    @Query('page') page: string = this.DEFAULT_PAGE,
-    @Query('amount') amount: string = this.DEFAULT_AMOUNT,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('amount', new DefaultValuePipe(6), ParseIntPipe) amount: number,
   ): Promise<List<GetUserDto[]> | null> {
     const users = await this.userService.getUsersList(
       buildPaginationParams(page, amount),
@@ -44,8 +45,8 @@ export class UserController {
     const usersList: List<GetUserDto[]> = {
       data: users,
       pagination: {
-        page: Number(page),
-        amount: Number(amount),
+        page: page,
+        amount: amount,
         total: await this.userService.countUsers(),
       },
     };
@@ -57,8 +58,8 @@ export class UserController {
   @Get(':user/issues')
   async issuesByUser(
     @Param('user') userId: string,
-    @Query('page') page: string = this.DEFAULT_PAGE,
-    @Query('amount') amount: string = this.DEFAULT_AMOUNT,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('amount', new DefaultValuePipe(6), ParseIntPipe) amount: number,
     @Query('status') status?: string,
     @Query('defined_date') defined_date?: string,
     @Query('start_date') start_date?: string,
@@ -101,6 +102,19 @@ export class UserController {
     };
 
     return issueList;
+  }
+
+  // @UseGuards(SupabaseAuthGuard)
+  @Get('count')
+  async countUsers(
+    @Query('isActive', new ParseBoolPipe({ optional: true }))
+    isActive?: boolean,
+  ): Promise<number | null> {
+    const where: Prisma.UserWhereInput = {
+      isActive,
+    };
+
+    return this.userService.countUsers(where);
   }
 
   // @UseGuards(SupabaseAuthGuard)
