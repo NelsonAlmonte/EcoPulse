@@ -33,12 +33,12 @@
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
-<div class="grid h-[calc(100vh-300px)] grid-cols-2 gap-8">
-	<div class="no-scrollbar overflow-y-scroll pb-10">
-		<IssueList />
-	</div>
-	<div>
+<div class="grid grid-cols-1 gap-8 lg:h-[calc(100vh-300px)] lg:grid-cols-2">
+	<div class="order-1 lg:order-2">
 		<ExploreMap lat={data.mapParams.lat} lng={data.mapParams.lng} zoom={data.mapParams.zoom} />
+	</div>
+	<div class="no-scrollbar order-2 overflow-y-scroll pb-10 lg:order-1">
+		<IssueList />
 	</div>
 </div>
 

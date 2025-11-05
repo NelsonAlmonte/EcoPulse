@@ -12,11 +12,15 @@
 	import { ChartArea, FileSearch, House, Settings, Users, XIcon } from '@lucide/svelte';
 	import { page } from '$app/state';
 	import { sidebarState } from '$lib/store/ui.svelte';
+	import { beforeNavigate } from '$app/navigation';
 
 	let activeUrl = $state(page.url.pathname);
-	const spanClass = 'flex-1 ms-3 whitespace-nowrap';
 	$effect(() => {
 		activeUrl = page.url.pathname;
+	});
+
+	beforeNavigate(() => {
+		sidebarState.canShow = false;
 	});
 </script>
 

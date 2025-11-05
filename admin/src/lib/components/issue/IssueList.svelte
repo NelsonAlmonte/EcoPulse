@@ -36,7 +36,7 @@
 	<Filter />
 </div>
 {#if issueList.list.data.length}
-	<div class="grid grid-cols-2 gap-4">
+	<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 		{#each issueList.list.data as issue (issue.id)}
 			<IssueItem {issue} />
 		{/each}

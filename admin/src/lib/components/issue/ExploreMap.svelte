@@ -105,4 +105,4 @@
 	}
 </script>
 
-<div bind:this={mapElement} class="h-full w-full rounded-xl"></div>
+<div bind:this={mapElement} class="h-140 w-full rounded-xl lg:h-full"></div>

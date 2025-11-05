@@ -52,7 +52,7 @@
 		Hola, {userSession.user?.name} — bienvenido al panel de administración.
 	</h5>
 	<p class="mb-3 font-normal text-gray-600">Opciones destacadas para una gestión más eficiente.</p>
-	<div>
+	<div class="space-y-2 lg:space-y-0">
 		<Button href="/admin/issue" color="alternative" pill>
 			<FileSearch class="me-2" size="20" />
 			Listado de incidencias
@@ -77,7 +77,7 @@
 <div class="mb-4 flex items-center justify-between">
 	<Heading tag="h6">Métricas clave</Heading>
 </div>
-<div class="mb-8 grid grid-cols-4 gap-x-4">
+<div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 	{#each insights as insight}
 		<Insight insightProps={insight} />
 	{/each}
@@ -86,7 +86,7 @@
 	<Heading tag="h6">Incidencias de esta semana</Heading>
 	<Filter />
 </div>
-<div class="grid grid-cols-2 gap-x-4">
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
 	<CategoryGraph category={data.categoryStatistic} />
 	<DateGraph date={data.dateStatistic} />
 </div>

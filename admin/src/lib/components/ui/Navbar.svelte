@@ -9,13 +9,11 @@
 		DropdownItem,
 		DropdownHeader,
 		DropdownGroup,
-		SidebarButton,
 		Button
 	} from 'flowbite-svelte';
 </script>
 
 <Navbar class="shadow-sm" navContainerClass="container mx-auto">
-	<SidebarButton onclick={() => (sidebarState.canShow = true)} class="mb-2" />
 	<div class="flex">
 		<Button
 			class="p-2! me-4 cursor-pointer"
@@ -32,7 +30,7 @@
 			>
 		</NavBrand>
 	</div>
-	<div class="flex items-center md:order-2">
+	<div class="flex h-12 items-center md:order-2">
 		<div class="cursor-pointer rounded-full bg-gray-100 p-2" id="avatar-menu">
 			<User />
 		</div>
@@ -48,5 +46,4 @@
 			>
 		</DropdownGroup>
 	</Dropdown>
-	<div class="h-12"></div>
 </Navbar>

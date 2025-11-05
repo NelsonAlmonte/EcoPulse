@@ -6,7 +6,7 @@
 	let { insightProps }: { insightProps: InsightProps } = $props();
 </script>
 
-<Card class="rounded-xl px-8 py-6">
+<Card class="rounded-xl px-8 py-6" size="xl">
 	<div class="flex items-center justify-start">
 		{#if insightProps.icon}
 			{@const Icon = icons[insightProps.icon]}

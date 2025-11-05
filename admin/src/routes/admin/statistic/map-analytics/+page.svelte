@@ -40,8 +40,11 @@
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
 
-<div class="grid h-[calc(100vh-300px)] grid-cols-2 gap-8">
-	<div class="no-scrollbar overflow-y-scroll pb-10">
+<div class="grid grid-cols-1 gap-8 lg:h-[calc(100vh-300px)] lg:grid-cols-2">
+	<div class="order-1 lg:order-2">
+		<AnalyticMap />
+	</div>
+	<div class="no-scrollbar order-2 overflow-y-scroll pb-10 lg:order-1">
 		<div class="mb-4 flex items-center justify-between">
 			<Heading tag="h6">{totalIssues} incidencias</Heading>
 			<Filter />
@@ -52,9 +55,6 @@
 			<TopCategoriesGraph category={statistics.category} />
 			<DateGraph date={statistics.date} />
 		</div>
-	</div>
-	<div>
-		<AnalyticMap />
 	</div>
 </div>
 

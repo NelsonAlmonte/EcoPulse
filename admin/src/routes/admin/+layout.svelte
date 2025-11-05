@@ -19,7 +19,7 @@
 <Sidebar />
 <Toast />
 
-<div class="container mx-auto py-4">
+<div class="container mx-auto px-2 py-4 xl:px-0">
 	<Header />
 	{@render children?.()}
 </div>

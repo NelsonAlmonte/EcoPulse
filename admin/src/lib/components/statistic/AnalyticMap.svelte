@@ -6,7 +6,6 @@
 
 	let mapElement: HTMLDivElement;
 	let map: google.maps.Map;
-	let markers: google.maps.marker.AdvancedMarkerElement[] = [];
 	let isMapLoaded = $state(false);
 
 	onMount(async () => {
@@ -59,4 +58,4 @@
 	}
 </script>
 
-<div bind:this={mapElement} class="h-full w-full rounded-xl"></div>
+<div bind:this={mapElement} class="h-140 w-full rounded-xl lg:h-full"></div>

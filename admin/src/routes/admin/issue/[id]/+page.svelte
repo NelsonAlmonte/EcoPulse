@@ -107,11 +107,11 @@
 		</div>
 	</div>
 </div>
-<div class="flex space-x-8">
+<div class="flex flex-col space-y-8 xl:flex-row xl:space-x-8">
 	<div class="relative">
 		<img class="w-100 h-150 rounded-xl object-cover" src={data.issue.photo} alt="Foto" />
 		<Button
-			class="p-2! absolute end-0 top-0 m-4 cursor-pointer"
+			class="p-2! absolute start-0 top-0 m-4 cursor-pointer"
 			size="lg"
 			color="light"
 			onclick={() => (isModalOpen = true)}
@@ -120,7 +120,7 @@
 		</Button>
 	</div>
 	<div class="flex-1">
-		<div class="flex justify-between space-x-8">
+		<div class="flex flex-col justify-between space-y-8 xl:flex-row xl:space-x-8">
 			<IssueMap issue={data.issue} />
 			<div class="flex-1">
 				<dl>
