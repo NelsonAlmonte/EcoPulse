@@ -11,7 +11,9 @@
 		Checkbox,
 		Radio,
 		type CheckboxItem,
-		Helper
+		Helper,
+		Accordion,
+		AccordionItem
 	} from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 
@@ -170,70 +172,84 @@
 	Filtros
 </Button>
 
-<Modal form bind:open={isModalOpen} size="xs">
+<Modal form bind:open={isModalOpen} size="sm">
 	<div class="flex flex-col space-y-6">
 		<h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Filtros</h3>
-		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Estado</p>
-		<div
-			class="flex w-full items-center justify-between divide-x divide-gray-200 rounded-lg border border-gray-200 sm:flex rtl:divide-x-reverse dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800"
-		>
-			<Checkbox
-				inline
-				choices={statusChoices}
-				bind:group={status}
-				classes={{ div: 'p-3 flex-1' }}
-			/>
-		</div>
-		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Rango de fecha personalizado</p>
-		<div class="mb-6 grid gap-6 md:grid-cols-2">
-			<div>
-				<Label color={showValidation ? 'red' : undefined} for="start_date" class="mb-2">Desde</Label
+		<Accordion>
+			<AccordionItem>
+				{#snippet header()}Estado{/snippet}
+				<div
+					class="flex w-full items-center justify-between divide-x divide-gray-200 rounded-lg border border-gray-200 sm:flex rtl:divide-x-reverse dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800"
 				>
-				<Input
-					color={showValidation ? 'red' : undefined}
-					type="date"
-					id="start_date"
-					bind:value={startDate}
-					onchange={() => (showValidation = false)}
-				/>
-				{#if showValidation}
-					<Helper color={showValidation ? 'red' : undefined} class="mt-2"
-						>Es necesario completar este campo</Helper
-					>
-				{/if}
-			</div>
-			<div>
-				<Label for="end_date" class="mb-2">Hasta</Label>
-				<Input type="date" id="end_date" bind:value={endDate} />
-			</div>
-		</div>
-		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Rango de fecha definido</p>
-		<div class="space-y-3">
-			<Radio value="ayer" bind:group={definedDate}>Ayer</Radio>
-			<Radio value="hoy" bind:group={definedDate}>Hoy</Radio>
-			<Radio value="7d" bind:group={definedDate}>Últimos 7 días</Radio>
-			<Radio value="30d" bind:group={definedDate}>Últimos 30 días</Radio>
-			<Radio value="90d" bind:group={definedDate}>Últimos 90 días</Radio>
-		</div>
-		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Categorias</p>
-		<div class="grid w-full grid-cols-2 gap-4">
-			{#if isLoading}
-				{#each { length: 10 }}
-					<div class="h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700"></div>
-				{/each}
-			{:else}
-				<Checkbox choices={categoryChoices} bind:group={categories} />
-			{/if}
-		</div>
-		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Ordenar por</p>
-		<div class="space-y-3">
-			<Radio value="createdAt:desc" bind:group={selectedOrder}>Más recientes primero</Radio>
-			<Radio value="createdAt:asc" bind:group={selectedOrder}>Más antiguos</Radio>
-			<Radio value="highlights:desc" bind:group={selectedOrder}>Más destacados</Radio>
-			<Radio value="highlights:asc" bind:group={selectedOrder}>Menos destacados</Radio>
-		</div>
-		<p class="mb-4 font-semibold text-gray-900 dark:text-white">Otros</p>
-		<Checkbox bind:checked={allIssues}>Ver todas las incidencias</Checkbox>
+					<Checkbox
+						inline
+						choices={statusChoices}
+						bind:group={status}
+						classes={{ div: 'p-3 flex-1' }}
+					/>
+				</div>
+			</AccordionItem>
+			<AccordionItem>
+				{#snippet header()}Fechas{/snippet}
+				<p class="mb-4 font-semibold text-gray-900 dark:text-white">Rango de fecha personalizado</p>
+				<div class="mb-6 grid gap-6 md:grid-cols-2">
+					<div>
+						<Label color={showValidation ? 'red' : undefined} for="start_date" class="mb-2"
+							>Desde</Label
+						>
+						<Input
+							color={showValidation ? 'red' : undefined}
+							type="date"
+							id="start_date"
+							bind:value={startDate}
+							onchange={() => (showValidation = false)}
+						/>
+						{#if showValidation}
+							<Helper color={showValidation ? 'red' : undefined} class="mt-2"
+								>Es necesario completar este campo</Helper
+							>
+						{/if}
+					</div>
+					<div>
+						<Label for="end_date" class="mb-2">Hasta</Label>
+						<Input type="date" id="end_date" bind:value={endDate} />
+					</div>
+				</div>
+				<p class="mb-4 font-semibold text-gray-900 dark:text-white">Rango de fecha definido</p>
+				<div class="space-y-3">
+					<Radio value="ayer" bind:group={definedDate}>Ayer</Radio>
+					<Radio value="hoy" bind:group={definedDate}>Hoy</Radio>
+					<Radio value="7d" bind:group={definedDate}>Últimos 7 días</Radio>
+					<Radio value="30d" bind:group={definedDate}>Últimos 30 días</Radio>
+					<Radio value="90d" bind:group={definedDate}>Últimos 90 días</Radio>
+				</div>
+			</AccordionItem>
+			<AccordionItem>
+				{#snippet header()}Categorias{/snippet}
+				<div class="grid w-full grid-cols-2 gap-4">
+					{#if isLoading}
+						{#each { length: 10 }}
+							<div class="h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700"></div>
+						{/each}
+					{:else}
+						<Checkbox choices={categoryChoices} bind:group={categories} />
+					{/if}
+				</div>
+			</AccordionItem>
+			<AccordionItem>
+				{#snippet header()}Orden{/snippet}
+				<div class="space-y-3">
+					<Radio value="createdAt:desc" bind:group={selectedOrder}>Más recientes primero</Radio>
+					<Radio value="createdAt:asc" bind:group={selectedOrder}>Más antiguos</Radio>
+					<Radio value="highlights:desc" bind:group={selectedOrder}>Más destacados</Radio>
+					<Radio value="highlights:asc" bind:group={selectedOrder}>Menos destacados</Radio>
+				</div>
+			</AccordionItem>
+			<AccordionItem>
+				{#snippet header()}Otros filtros{/snippet}
+				<Checkbox bind:checked={allIssues}>Ver todas las incidencias</Checkbox>
+			</AccordionItem>
+		</Accordion>
 		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
 			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>
 			<Button color="emerald" onclick={applyFilters}>Aplicar filtros</Button>

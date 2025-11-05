@@ -15,8 +15,6 @@
 			}
 
 			if (newSession?.expires_at !== session?.expires_at) {
-				console.log('newsession', newSession);
-				console.log('sessuib', session);
 				invalidate('supabase:auth');
 			}
 		});
