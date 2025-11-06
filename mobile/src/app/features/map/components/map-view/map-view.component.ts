@@ -10,7 +10,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { GoogleMap, Marker } from '@capacitor/google-maps';
+import { GoogleMap, LatLngBounds, Marker } from '@capacitor/google-maps';
 import { Geolocation } from '@capacitor/geolocation';
 import { environment } from 'src/environments/environment';
 import { ApiResult } from '@core/interfaces/api.interface';
@@ -19,11 +19,8 @@ import { ModalController } from '@ionic/angular/standalone';
 import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
 import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
+import { Bounds } from '@shared/models/user.model';
 
-interface UnsafeCluster {
-  latitude: number | (() => number);
-  longitude: number | (() => number);
-}
 @Component({
   selector: 'app-map-view',
   templateUrl: './map-view.component.html',
@@ -31,7 +28,7 @@ interface UnsafeCluster {
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MapViewComponent implements AfterViewInit {
-  issues = input.required<ApiResult<Issue[]>>();
+  // issues = input.required<ApiResult<Issue[]>>();
   injector = inject(Injector);
   modalController = inject(ModalController);
   issueService = inject(IssueService);
@@ -61,7 +58,7 @@ export class MapViewComponent implements AfterViewInit {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         },
-        zoom: 14,
+        zoom: 10,
         streetViewControl: false,
         mapTypeControl: false,
         fullscreenControl: false,
@@ -69,8 +66,13 @@ export class MapViewComponent implements AfterViewInit {
       },
     });
 
+    this.map.setOnCameraIdleListener((ev) => {
+      console.log(ev);
+
+      this.issueService.getIssuesByBounds(this.getBounds(ev.bounds));
+    });
+
     await this.addMarkers();
-    await this.zoomOnCluster();
     await this.viewIssueDetail();
   }
 
@@ -99,8 +101,8 @@ export class MapViewComponent implements AfterViewInit {
   async addMarkers() {
     effect(
       async () => {
-        const issues = this.issues().data;
-
+        const issues = this.issueService.issues().data.items;
+        console.log(issues);
         if (!issues) return;
 
         if (this.markerIds.length > 0) {
@@ -119,27 +121,20 @@ export class MapViewComponent implements AfterViewInit {
         this.markerIds.forEach((id, index) => {
           this.markerData.set(id, issues[index]!);
         });
-
-        await this.map.enableClustering();
       },
       { injector: this.injector }
     );
   }
 
-  async zoomOnCluster() {
-    await this.map.setOnClusterClickListener(async (cluster) => {
-      const { latitude, longitude } = cluster as UnsafeCluster;
-      const lat = typeof latitude === 'function' ? latitude() : latitude;
-      const lng = typeof longitude === 'function' ? longitude() : longitude;
+  getBounds(bounds: LatLngBounds): Bounds {
+    const ne = bounds.northeast;
+    const sw = bounds.southwest;
 
-      await this.map.setCamera({
-        coordinate: {
-          lat: lat,
-          lng: lng,
-        },
-        zoom: 18,
-        animationDuration: 500,
-      });
-    });
+    return {
+      north: ne.lat,
+      south: sw.lat,
+      east: ne.lng,
+      west: sw.lng,
+    };
   }
 }

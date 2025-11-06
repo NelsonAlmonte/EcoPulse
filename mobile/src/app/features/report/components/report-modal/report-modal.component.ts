@@ -157,7 +157,8 @@ export class ReportModalComponent {
         switchMap((result) => {
           if (result.error) return this.handleError(result.error);
 
-          issue.photo = `${result.data!.fullPath}`;
+          issue.photo = `${result.data.items!.fullPath}`;
+
           return this.issueService.createIssue(issue);
         })
       )
@@ -177,7 +178,7 @@ export class ReportModalComponent {
 
         this.issueService.issues.update((current) => ({
           ...current,
-          data: [...(current.data ?? []), result.data!],
+          data: { items: [...(current.data.items ?? []), result.data.items!] },
         }));
 
         this.currentStatus = 'default';
@@ -188,17 +189,17 @@ export class ReportModalComponent {
   updateUserIssues(
     currentData: ApiResult<Issue[]>,
     apiResult: ApiResult<Issue>
-  ) {
+  ): ApiResult<Issue[]> {
     const updatedData = [
-      apiResult.data!,
-      ...(currentData.data!.length >= 3
-        ? currentData.data!.slice(0, -1) ?? []
-        : currentData.data!),
+      apiResult.data.items!,
+      ...(currentData.data.items!.length >= 3
+        ? currentData.data.items!.slice(0, -1) ?? []
+        : currentData.data.items!),
     ];
 
     return {
       ...currentData,
-      data: updatedData,
+      data: { items: updatedData },
     };
   }
 

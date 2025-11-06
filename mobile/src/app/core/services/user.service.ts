@@ -14,12 +14,16 @@ export class UserService {
   apiService = inject(ApiService);
   issues = signal<ApiResult<Issue[]>>({
     status: 'LOADING',
-    data: [],
+    data: {
+      items: [],
+    },
     error: null,
   });
   user = signal<ApiResult<User>>({
     status: 'LOADING',
-    data: null,
+    data: {
+      items: null,
+    },
     error: null,
   });
   counters = signal<Counters>({
@@ -30,24 +34,36 @@ export class UserService {
   URL = `${environment.apiUrl}user`;
 
   getUserIssues(id: string, amount?: number): void {
-    this.issues.set({ status: 'LOADING', data: null, error: null });
+    this.issues.set({
+      status: 'LOADING',
+      data: {
+        items: null,
+      },
+      error: null,
+    });
 
     this.apiService
       .doFetch<Issue[]>(`${this.URL}/${id}/issues?amount=${amount}`)
       .subscribe((result) => {
-        if (result.data) {
-          const updatedData = result.data.map((issue) => ({
+        if (result.data.items) {
+          const updatedData = result.data.items.map((issue) => ({
             ...issue,
             photo: `${environment.publicBucketUrl}/${issue.photo}`,
           }));
 
-          this.issues.set({ ...result, data: updatedData });
+          this.issues.set({ ...result, data: { items: updatedData } });
         }
       });
   }
 
   getUser(id: string): void {
-    this.user.set({ status: 'LOADING', data: null, error: null });
+    this.user.set({
+      status: 'LOADING',
+      data: {
+        items: null,
+      },
+      error: null,
+    });
 
     this.apiService.doFetch<User>(`${this.URL}/${id}`).subscribe((result) => {
       if (result.data) {
@@ -125,18 +141,24 @@ export class UserService {
   }
 
   getHighlightsGiven(id: string): void {
-    this.issues.set({ status: 'LOADING', data: null, error: null });
+    this.issues.set({
+      status: 'LOADING',
+      data: {
+        items: null,
+      },
+      error: null,
+    });
 
     this.apiService
       .doFetch<Issue[]>(`${this.URL}/${id}/highlights/given`)
       .subscribe((result) => {
-        if (result.data) {
-          const updatedData = result.data.map((issue) => ({
+        if (result.data.items) {
+          const updatedData = result.data.items.map((issue) => ({
             ...issue,
             photo: `${environment.publicBucketUrl}/${issue.photo}`,
           }));
 
-          this.issues.set({ ...result, data: updatedData });
+          this.issues.set({ ...result, data: { items: updatedData } });
         }
       });
   }

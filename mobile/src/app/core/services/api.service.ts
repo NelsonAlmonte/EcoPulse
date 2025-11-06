@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
-import { ApiResult } from '@core/interfaces/api.interface';
+import { ApiPayload, ApiResult } from '@core/interfaces/api.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -9,14 +9,20 @@ import { ApiResult } from '@core/interfaces/api.interface';
 export class ApiService {
   http = inject(HttpClient);
 
-  doFetch<T = unknown>(url: string): Observable<ApiResult<T>> {
-    return this.http.get<T>(url).pipe(
-      map((data) => ({ status: 'SUCCESS' as const, data: data, error: null })),
+  doFetch<T>(url: string): Observable<ApiResult<T>> {
+    return this.http.get<ApiPayload<T>>(url).pipe(
+      map((data) => ({
+        status: 'SUCCESS' as const,
+        data,
+        error: null,
+      })),
       catchError((err) => {
         console.log(err);
         return of({
           status: 'ERROR' as const,
-          data: null,
+          data: {
+            items: null,
+          },
           error: err.error,
         });
       })
@@ -28,12 +34,18 @@ export class ApiService {
     body: U
   ): Observable<ApiResult<T>> {
     return this.http.post<T>(url, body).pipe(
-      map((data) => ({ status: 'SUCCESS' as const, data: data, error: null })),
+      map((data) => ({
+        status: 'SUCCESS' as const,
+        data: { items: data },
+        error: null,
+      })),
       catchError((err) => {
         console.log(err);
         return of({
           status: 'ERROR' as const,
-          data: null,
+          data: {
+            items: null,
+          },
           error: err.error,
         });
       })
@@ -42,12 +54,18 @@ export class ApiService {
 
   doDelete<T = unknown>(url: string): Observable<ApiResult<T>> {
     return this.http.delete<T>(url).pipe(
-      map((data) => ({ status: 'SUCCESS' as const, data: data, error: null })),
+      map((data) => ({
+        status: 'SUCCESS' as const,
+        data: { items: data },
+        error: null,
+      })),
       catchError((err) => {
         console.log(err);
         return of({
           status: 'ERROR' as const,
-          data: null,
+          data: {
+            items: null,
+          },
           error: err.error,
         });
       })
@@ -59,12 +77,18 @@ export class ApiService {
     body: U
   ): Observable<ApiResult<T>> {
     return this.http.put<T>(url, body).pipe(
-      map((data) => ({ status: 'SUCCESS' as const, data: data, error: null })),
+      map((data) => ({
+        status: 'SUCCESS' as const,
+        data: { items: data },
+        error: null,
+      })),
       catchError((err) => {
         console.log(err);
         return of({
           status: 'ERROR' as const,
-          data: null,
+          data: {
+            items: null,
+          },
           error: err.error,
         });
       })

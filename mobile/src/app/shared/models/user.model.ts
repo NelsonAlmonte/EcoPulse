@@ -12,3 +12,10 @@ export interface Counters {
   highlightsGiven?: number;
   highlightsReceived?: number;
 }
+
+export interface Bounds {
+  north: number;
+  south: number;
+  east: number;
+  west: number;
+}

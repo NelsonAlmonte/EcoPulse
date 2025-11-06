@@ -11,13 +11,21 @@ export class CategoryService {
   apiService = inject(ApiService);
   categories = signal<ApiResult<Category[]>>({
     status: 'LOADING',
-    data: [],
+    data: {
+      items: [],
+    },
     error: null,
   });
   URL = `${environment.apiUrl}category`;
 
   getCategories(): void {
-    this.categories.set({ status: 'LOADING', data: [], error: null });
+    this.categories.set({
+      status: 'LOADING',
+      data: {
+        items: [],
+      },
+      error: null,
+    });
 
     this.apiService
       .doFetch<Category[]>(this.URL)

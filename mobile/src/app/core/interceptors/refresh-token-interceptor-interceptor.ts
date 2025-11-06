@@ -30,12 +30,12 @@ export const refreshTokenInterceptorInterceptor: HttpInterceptorFn = (
           .refreshSession({ refresh_token: loggedUserData.refresh_token })
           .pipe(
             switchMap((result) => {
-              if (result.data) {
+              if (result.data.items) {
                 localStorage.setItem('auth', JSON.stringify(result.data));
 
                 const retryReq = req.clone({
                   setHeaders: {
-                    Authorization: `Bearer ${result.data.access_token}`,
+                    Authorization: `Bearer ${result.data.items.access_token}`,
                   },
                 });
 

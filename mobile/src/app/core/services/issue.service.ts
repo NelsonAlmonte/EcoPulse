@@ -6,6 +6,7 @@ import { CreateIssueDto } from '@shared/dto/issue.dto';
 import { Issue, SupaBaseUploadFileResponse } from '@shared/models/issue.model';
 import { environment } from 'src/environments/environment';
 import { ToastController } from '@ionic/angular/standalone';
+import { Bounds } from '@shared/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,12 +16,21 @@ export class IssueService {
   toastController = inject(ToastController);
   issues = signal<ApiResult<Issue[]>>({
     status: 'LOADING',
-    data: [],
+    data: {
+      items: [],
+      pagination: {
+        page: 1,
+        amount: 10,
+        total: 0,
+      },
+    },
     error: null,
   });
   issue = signal<ApiResult<Issue>>({
     status: 'LOADING',
-    data: null,
+    data: {
+      items: null,
+    },
     error: null,
   });
   URL = `${environment.apiUrl}issue`;
@@ -30,7 +40,18 @@ export class IssueService {
   }
 
   getIssues(): void {
-    this.issues.set({ status: 'LOADING', data: [], error: null });
+    this.issues.set({
+      status: 'LOADING',
+      data: {
+        items: [],
+        pagination: {
+          page: 1,
+          amount: 10,
+          total: 0,
+        },
+      },
+      error: null,
+    });
 
     this.apiService
       .doFetch<Issue[]>(this.URL)
@@ -38,7 +59,13 @@ export class IssueService {
   }
 
   getIssueByCoords(latitude: string, longitude: string): void {
-    this.issue.set({ status: 'LOADING', data: null, error: null });
+    this.issue.set({
+      status: 'LOADING',
+      data: {
+        items: null,
+      },
+      error: null,
+    });
 
     this.apiService
       .doFetch<Issue>(`${this.URL}/${latitude}/${longitude}`)
@@ -57,7 +84,13 @@ export class IssueService {
   }
 
   getIssue(issueId: string, userId: string): void {
-    this.issue.set({ status: 'LOADING', data: null, error: null });
+    this.issue.set({
+      status: 'LOADING',
+      data: {
+        items: null,
+      },
+      error: null,
+    });
 
     this.apiService
       .doFetch<Issue>(`${this.URL}/${issueId}/${userId}`)
@@ -77,6 +110,32 @@ export class IssueService {
         }
 
         this.issue.set(result);
+      });
+  }
+
+  getIssuesByBounds(bounds: Bounds): void {
+    this.issues.set({
+      status: 'LOADING',
+      data: {
+        items: [],
+        pagination: {
+          page: 1,
+          amount: 10,
+          total: 0,
+        },
+      },
+      error: null,
+    });
+
+    this.apiService
+      .doFetch<Issue[]>(
+        `${this.URL}/in-bound?north=${bounds.north}&south=${
+          bounds.south
+        }&east=${bounds.east}&west=${bounds.west}&page=${1}&amount=${10}`
+      )
+      .subscribe((result) => {
+        console.log(result);
+        this.issues.update(() => result);
       });
   }
 }

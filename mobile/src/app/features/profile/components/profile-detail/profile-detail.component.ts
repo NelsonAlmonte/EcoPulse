@@ -35,6 +35,6 @@ export class ProfileDetailComponent {
   logoutIcon = LogOutIcon;
 
   get userData() {
-    return this.user().data!;
+    return this.user().data.items!;
   }
 }

@@ -7,8 +7,8 @@
 } @if (userService.issues().status === 'ERROR') {
 <p>Handle error</p>
 } @if (userService.issues().status === 'SUCCESS') { @if
-(userService.issues().data?.length) { @for (issue of userService.issues().data;
-track $index) {
+(userService.issues().data.items?.length) { @for (issue of
+userService.issues().data.items; track $index) {
 <app-issue-detail [issue]="issue"></app-issue-detail>
 } } @else {
 <div

@@ -39,7 +39,9 @@ export class IssueDetailComponent {
   viewPhotoIcon = Maximize2Icon;
 
   get issueData() {
-    return this.issue()?.id ? this.issue() : this.issueService.issue().data;
+    return this.issue()?.id
+      ? this.issue()
+      : this.issueService.issue().data.items;
   }
 
   showIcon(iconName: string): LucideIconData {

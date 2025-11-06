@@ -30,6 +30,6 @@ export class MapPage implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.issueService.getIssues();
+    // this.issueService.getIssues();
   }
 }
