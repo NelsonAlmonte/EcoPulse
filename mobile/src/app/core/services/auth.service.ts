@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ApiResult } from '@core/interfaces/api.interface';
 import { ToastController } from '@ionic/angular/standalone';
+import { isPaginated } from '@shared/helpers/api.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -24,11 +25,11 @@ export class AuthService {
   login(loginUserDto: LoginUserDto): void {
     this.apiService
       .doPost<AuthResponseDto, LoginUserDto>(`${this.URL}/login`, loginUserDto)
-      .subscribe(async (result) => {
-        if (result.error) {
-          console.log(result.error);
+      .subscribe(async (response) => {
+        if (response.error) {
+          console.log(response.error);
           const toast = await this.toastController.create({
-            message: result.error.message,
+            message: response.error.message,
             duration: 6000,
             position: 'bottom',
             animated: true,
@@ -41,8 +42,10 @@ export class AuthService {
           return;
         }
 
-        localStorage.setItem('auth', JSON.stringify(result.data));
-        this.router.navigate(['/']);
+        if (!isPaginated(response.result)) {
+          localStorage.setItem('auth', JSON.stringify(response.result));
+          this.router.navigate(['/']);
+        }
       });
   }
 
@@ -52,11 +55,11 @@ export class AuthService {
         `${this.URL}/signup`,
         signupUserDto
       )
-      .subscribe(async (result) => {
-        if (result.error) {
-          console.log(result.error);
+      .subscribe(async (response) => {
+        if (response.error) {
+          console.log(response.error);
           const toast = await this.toastController.create({
-            message: result.error.message,
+            message: response.error.message,
             duration: 6000,
             position: 'bottom',
             animated: true,
@@ -69,8 +72,10 @@ export class AuthService {
           return;
         }
 
-        localStorage.setItem('auth', JSON.stringify(result.data));
-        this.router.navigate(['/']);
+        if (!isPaginated(response.result)) {
+          localStorage.setItem('auth', JSON.stringify(response.result));
+          this.router.navigate(['/']);
+        }
       });
   }
 

@@ -41,7 +41,7 @@ export class IssueDetailComponent {
   get issueData() {
     return this.issue()?.id
       ? this.issue()
-      : this.issueService.issue().data.items;
+      : this.issueService.issue().result.data;
   }
 
   showIcon(iconName: string): LucideIconData {

@@ -20,6 +20,7 @@ import { IssueDetailComponent } from '@features/report/components/issue-detail/i
 import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
 import { Bounds } from '@shared/models/user.model';
+import { isPaginated } from '@shared/helpers/api.helper';
 
 @Component({
   selector: 'app-map-view',
@@ -101,9 +102,14 @@ export class MapViewComponent implements AfterViewInit {
   async addMarkers() {
     effect(
       async () => {
-        const issues = this.issueService.issues().data.items;
-        console.log(issues);
-        if (!issues) return;
+        let issues = [] as Issue[];
+        const result = this.issueService.issues().result;
+
+        if (isPaginated(result)) {
+          if (!result.data) return;
+
+          issues = result.data;
+        }
 
         if (this.markerIds.length > 0) {
           await this.map.removeMarkers(this.markerIds);

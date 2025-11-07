@@ -154,31 +154,33 @@ export class ReportModalComponent {
     this.issueService
       .uploadPhoto(formData)
       .pipe(
-        switchMap((result) => {
-          if (result.error) return this.handleError(result.error);
+        switchMap((response) => {
+          if (response.error) return this.handleError(response.error);
 
-          issue.photo = `${result.data.items!.fullPath}`;
+          issue.photo = `${response.result.data!.fullPath}`;
 
           return this.issueService.createIssue(issue);
         })
       )
-      .subscribe((result) => {
-        if (result.error) {
-          from(this.handleError(result.error))
-            .pipe(switchMap(() => throwError(() => result.error)))
+      .subscribe((response) => {
+        if (response.error) {
+          from(this.handleError(response.error))
+            .pipe(switchMap(() => throwError(() => response.error)))
             .subscribe();
           return;
         }
 
-        this.modalController.dismiss(result.data, 'confirm');
+        this.modalController.dismiss(response.result, 'confirm');
 
         this.userService.issues.update((current) =>
-          this.updateUserIssues(current, result)
+          this.updateUserIssues(current, response)
         );
 
         this.issueService.issues.update((current) => ({
           ...current,
-          data: { items: [...(current.data.items ?? []), result.data.items!] },
+          data: {
+            items: [...(current.result.data ?? []), response.result.data!],
+          },
         }));
 
         this.currentStatus = 'default';
@@ -191,15 +193,15 @@ export class ReportModalComponent {
     apiResult: ApiResult<Issue>
   ): ApiResult<Issue[]> {
     const updatedData = [
-      apiResult.data.items!,
-      ...(currentData.data.items!.length >= 3
-        ? currentData.data.items!.slice(0, -1) ?? []
-        : currentData.data.items!),
+      apiResult.result.data!,
+      ...(currentData.result.data!.length >= 3
+        ? currentData.result.data!.slice(0, -1) ?? []
+        : currentData.result.data!),
     ];
 
     return {
       ...currentData,
-      data: { items: updatedData },
+      result: { data: updatedData },
     };
   }
 

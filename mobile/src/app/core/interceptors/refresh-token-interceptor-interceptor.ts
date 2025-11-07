@@ -1,6 +1,8 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
+import { AuthResponseDto } from '@shared/dto/auth.dto';
+import { isPaginated } from '@shared/helpers/api.helper';
 import { catchError, EMPTY, switchMap, throwError } from 'rxjs';
 
 const MAX_RETRIES = 1;
@@ -29,21 +31,28 @@ export const refreshTokenInterceptorInterceptor: HttpInterceptorFn = (
         return authService
           .refreshSession({ refresh_token: loggedUserData.refresh_token })
           .pipe(
-            switchMap((result) => {
-              if (result.data.items) {
-                localStorage.setItem('auth', JSON.stringify(result.data));
+            switchMap((response) => {
+              const result = response.result;
+              let auth = {} as AuthResponseDto;
 
-                const retryReq = req.clone({
-                  setHeaders: {
-                    Authorization: `Bearer ${result.data.items.access_token}`,
-                  },
-                });
+              if (!isPaginated(result)) {
+                if (!result) {
+                  authService.logout();
+                  return EMPTY;
+                }
 
-                return next(retryReq);
+                auth = result;
               }
 
-              authService.logout();
-              return EMPTY;
+              localStorage.setItem('auth', JSON.stringify(response.result));
+
+              const retryReq = req.clone({
+                setHeaders: {
+                  Authorization: `Bearer ${auth.access_token}`,
+                },
+              });
+
+              return next(retryReq);
             }),
             catchError(() => {
               authService.logout();

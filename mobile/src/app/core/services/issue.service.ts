@@ -16,8 +16,8 @@ export class IssueService {
   toastController = inject(ToastController);
   issues = signal<ApiResult<Issue[]>>({
     status: 'LOADING',
-    data: {
-      items: [],
+    result: {
+      data: [],
       pagination: {
         page: 1,
         amount: 10,
@@ -28,8 +28,8 @@ export class IssueService {
   });
   issue = signal<ApiResult<Issue>>({
     status: 'LOADING',
-    data: {
-      items: null,
+    result: {
+      data: null,
     },
     error: null,
   });
@@ -42,8 +42,8 @@ export class IssueService {
   getIssues(): void {
     this.issues.set({
       status: 'LOADING',
-      data: {
-        items: [],
+      result: {
+        data: [],
         pagination: {
           page: 1,
           amount: 10,
@@ -55,22 +55,22 @@ export class IssueService {
 
     this.apiService
       .doFetch<Issue[]>(this.URL)
-      .subscribe((result) => this.issues.set(result));
+      .subscribe((response) => this.issues.set(response));
   }
 
   getIssueByCoords(latitude: string, longitude: string): void {
     this.issue.set({
       status: 'LOADING',
-      data: {
-        items: null,
+      result: {
+        data: null,
       },
       error: null,
     });
 
     this.apiService
       .doFetch<Issue>(`${this.URL}/${latitude}/${longitude}`)
-      .subscribe((result) => {
-        if (result.data) this.issue.set(result);
+      .subscribe((response) => {
+        if (response.result) this.issue.set(response);
       });
   }
 
@@ -86,17 +86,17 @@ export class IssueService {
   getIssue(issueId: string, userId: string): void {
     this.issue.set({
       status: 'LOADING',
-      data: {
-        items: null,
+      result: {
+        data: null,
       },
       error: null,
     });
 
     this.apiService
       .doFetch<Issue>(`${this.URL}/${issueId}/${userId}`)
-      .subscribe(async (result) => {
-        if (result.error) {
-          console.log(result.error);
+      .subscribe(async (response) => {
+        if (response.error) {
+          console.log(response.error);
           const toast = await this.toastController.create({
             message: 'Ocurrió un error al obtener este reporte.',
             duration: 4000,
@@ -108,16 +108,16 @@ export class IssueService {
 
           return;
         }
-
-        this.issue.set(result);
+        console.log(response);
+        this.issue.set(response);
       });
   }
 
   getIssuesByBounds(bounds: Bounds): void {
     this.issues.set({
       status: 'LOADING',
-      data: {
-        items: [],
+      result: {
+        data: [],
         pagination: {
           page: 1,
           amount: 10,
@@ -133,9 +133,9 @@ export class IssueService {
           bounds.south
         }&east=${bounds.east}&west=${bounds.west}&page=${1}&amount=${10}`
       )
-      .subscribe((result) => {
-        console.log(result);
-        this.issues.update(() => result);
+      .subscribe((response) => {
+        console.log(response);
+        this.issues.update(() => response);
       });
   }
 }

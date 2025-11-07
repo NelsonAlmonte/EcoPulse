@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { User, Counters } from '@shared/models/user.model';
 import { UpdateUserDto } from '@shared/dto/user.dto';
 import { Observable } from 'rxjs';
+import { isPaginated } from '@shared/helpers/api.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -14,15 +15,15 @@ export class UserService {
   apiService = inject(ApiService);
   issues = signal<ApiResult<Issue[]>>({
     status: 'LOADING',
-    data: {
-      items: [],
+    result: {
+      data: [],
     },
     error: null,
   });
   user = signal<ApiResult<User>>({
     status: 'LOADING',
-    data: {
-      items: null,
+    result: {
+      data: null,
     },
     error: null,
   });
@@ -36,22 +37,24 @@ export class UserService {
   getUserIssues(id: string, amount?: number): void {
     this.issues.set({
       status: 'LOADING',
-      data: {
-        items: null,
+      result: {
+        data: null,
       },
       error: null,
     });
 
     this.apiService
       .doFetch<Issue[]>(`${this.URL}/${id}/issues?amount=${amount}`)
-      .subscribe((result) => {
-        if (result.data.items) {
-          const updatedData = result.data.items.map((issue) => ({
+      .subscribe((response) => {
+        const result = response.result;
+
+        if (isPaginated(result) && result.data) {
+          const updatedData = result.data.map((issue) => ({
             ...issue,
             photo: `${environment.publicBucketUrl}/${issue.photo}`,
           }));
 
-          this.issues.set({ ...result, data: { items: updatedData } });
+          this.issues.set({ ...response, result: { data: updatedData } });
         }
       });
   }
@@ -59,19 +62,21 @@ export class UserService {
   getUser(id: string): void {
     this.user.set({
       status: 'LOADING',
-      data: {
-        items: null,
+      result: {
+        data: null,
       },
       error: null,
     });
 
-    this.apiService.doFetch<User>(`${this.URL}/${id}`).subscribe((result) => {
-      if (result.data) {
-        this.user.set(result);
+    this.apiService.doFetch<User>(`${this.URL}/${id}`).subscribe((response) => {
+      const result = response.result;
+
+      if (!isPaginated(result) && result) {
+        this.user.set(response);
       }
 
-      if (result.error) {
-        console.log(result.error);
+      if (response.error) {
+        console.log(response.error);
       }
     });
   }
@@ -91,16 +96,20 @@ export class UserService {
 
     this.apiService
       .doFetch<string>(`${this.URL}/${id}/issues/count`)
-      .subscribe((result) => {
-        if (result.error) {
-          console.log(result.error);
+      .subscribe((response) => {
+        if (response.error) {
+          console.log(response.error);
           return;
         }
 
-        this.counters.set({
-          ...this.counters(),
-          issues: Number(result.data),
-        });
+        const result = response.result;
+
+        if (!isPaginated(result) && result) {
+          this.counters.set({
+            ...this.counters(),
+            issues: Number(response.result),
+          });
+        }
       });
   }
 
@@ -109,16 +118,20 @@ export class UserService {
 
     this.apiService
       .doFetch<string>(`${this.URL}/${id}/highlights/given/count`)
-      .subscribe((result) => {
-        if (result.error) {
-          console.log(result.error);
+      .subscribe((response) => {
+        if (response.error) {
+          console.log(response.error);
           return;
         }
 
-        this.counters.set({
-          ...this.counters(),
-          highlightsGiven: Number(result.data),
-        });
+        const result = response.result;
+
+        if (!isPaginated(result) && result) {
+          this.counters.set({
+            ...this.counters(),
+            highlightsGiven: Number(response.result),
+          });
+        }
       });
   }
 
@@ -127,38 +140,44 @@ export class UserService {
 
     this.apiService
       .doFetch<string>(`${this.URL}/${id}/highlights/received/count`)
-      .subscribe((result) => {
-        if (result.error) {
-          console.log(result.error);
+      .subscribe((response) => {
+        if (response.error) {
+          console.log(response.error);
           return;
         }
 
-        this.counters.set({
-          ...this.counters(),
-          highlightsReceived: Number(result.data),
-        });
+        const result = response.result;
+
+        if (!isPaginated(result) && result) {
+          this.counters.set({
+            ...this.counters(),
+            highlightsReceived: Number(response.result),
+          });
+        }
       });
   }
 
   getHighlightsGiven(id: string): void {
     this.issues.set({
       status: 'LOADING',
-      data: {
-        items: null,
+      result: {
+        data: null,
       },
       error: null,
     });
 
     this.apiService
       .doFetch<Issue[]>(`${this.URL}/${id}/highlights/given`)
-      .subscribe((result) => {
-        if (result.data.items) {
-          const updatedData = result.data.items.map((issue) => ({
+      .subscribe((response) => {
+        const result = response.result;
+
+        if (!isPaginated(result) && response.result) {
+          const updatedData = result.map((issue) => ({
             ...issue,
             photo: `${environment.publicBucketUrl}/${issue.photo}`,
           }));
 
-          this.issues.set({ ...result, data: { items: updatedData } });
+          this.issues.set({ ...response, result: { data: updatedData } });
         }
       });
   }

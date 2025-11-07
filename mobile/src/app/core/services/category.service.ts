@@ -11,8 +11,8 @@ export class CategoryService {
   apiService = inject(ApiService);
   categories = signal<ApiResult<Category[]>>({
     status: 'LOADING',
-    data: {
-      items: [],
+    result: {
+      data: [],
     },
     error: null,
   });
@@ -21,8 +21,8 @@ export class CategoryService {
   getCategories(): void {
     this.categories.set({
       status: 'LOADING',
-      data: {
-        items: [],
+      result: {
+        data: [],
       },
       error: null,
     });

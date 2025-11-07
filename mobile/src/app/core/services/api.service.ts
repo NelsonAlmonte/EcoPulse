@@ -11,17 +11,17 @@ export class ApiService {
 
   doFetch<T>(url: string): Observable<ApiResult<T>> {
     return this.http.get<ApiPayload<T>>(url).pipe(
-      map((data) => ({
+      map((response) => ({
         status: 'SUCCESS' as const,
-        data,
+        result: response,
         error: null,
       })),
       catchError((err) => {
         console.log(err);
         return of({
           status: 'ERROR' as const,
-          data: {
-            items: null,
+          result: {
+            data: null,
           },
           error: err.error,
         });
@@ -33,18 +33,18 @@ export class ApiService {
     url: string,
     body: U
   ): Observable<ApiResult<T>> {
-    return this.http.post<T>(url, body).pipe(
-      map((data) => ({
+    return this.http.post<ApiPayload<T>>(url, body).pipe(
+      map((response) => ({
         status: 'SUCCESS' as const,
-        data: { items: data },
+        result: response,
         error: null,
       })),
       catchError((err) => {
         console.log(err);
         return of({
           status: 'ERROR' as const,
-          data: {
-            items: null,
+          result: {
+            data: null,
           },
           error: err.error,
         });
@@ -53,18 +53,18 @@ export class ApiService {
   }
 
   doDelete<T = unknown>(url: string): Observable<ApiResult<T>> {
-    return this.http.delete<T>(url).pipe(
-      map((data) => ({
+    return this.http.delete<ApiPayload<T>>(url).pipe(
+      map((response) => ({
         status: 'SUCCESS' as const,
-        data: { items: data },
+        result: response,
         error: null,
       })),
       catchError((err) => {
         console.log(err);
         return of({
           status: 'ERROR' as const,
-          data: {
-            items: null,
+          result: {
+            data: null,
           },
           error: err.error,
         });
@@ -76,22 +76,26 @@ export class ApiService {
     url: string,
     body: U
   ): Observable<ApiResult<T>> {
-    return this.http.put<T>(url, body).pipe(
-      map((data) => ({
+    return this.http.put<ApiPayload<T>>(url, body).pipe(
+      map((response) => ({
         status: 'SUCCESS' as const,
-        data: { items: data },
+        result: response,
         error: null,
       })),
       catchError((err) => {
         console.log(err);
         return of({
           status: 'ERROR' as const,
-          data: {
-            items: null,
+          result: {
+            data: null,
           },
           error: err.error,
         });
       })
     );
+  }
+
+  isPaginated<T>(data: any): data is ApiPayload<T> {
+    return data && typeof data === 'object' && 'pagination' in data;
   }
 }

@@ -1,11 +1,11 @@
 export interface ApiResult<T> {
   status: 'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR';
-  data: ApiPayload<T>;
+  result: ApiPayload<T> | T;
   error: Error | null;
 }
 
 export interface ApiPayload<T> {
-  items: T | null;
+  data: T | null;
   pagination?: Pagination;
 }
 
