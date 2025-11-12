@@ -13,6 +13,7 @@ import {
 import { ProfileOptionsComponent } from '@features/profile/components/profile-options/profile-options.component';
 import { ProfileCountersComponent } from '@features/profile/components/profile-counters/profile-counters.component';
 import { ProfileDetailLoadingComponent } from '@shared/components/profile-detail-loading/profile-detail-loading.component';
+import { isSingle } from '@shared/helpers/api.helper';
 
 @Component({
   selector: 'app-profile-detail',
@@ -35,6 +36,8 @@ export class ProfileDetailComponent {
   logoutIcon = LogOutIcon;
 
   get userData() {
-    return this.user().data.items!;
+    const result = this.user().result;
+
+    return isSingle(result) ? result : null;
   }
 }

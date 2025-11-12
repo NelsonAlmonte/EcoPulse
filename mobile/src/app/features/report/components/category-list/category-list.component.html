@@ -4,7 +4,7 @@
 <p>Handle error</p>
 } @if (categoryService.categories().status === 'SUCCESS') {
 <div class="grid grid-cols-2 gap-2 ion-margin-bottom ion-margin-top">
-  @for (category of categoryService.categories().result.data; track $index) {
+  @for (category of categoryList; track $index) {
   <div
     class="flex justify-start items-center px-3 py-4 rounded-full category-item"
     (click)="selectCategory(category.id, $event)"

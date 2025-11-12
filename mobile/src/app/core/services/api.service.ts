@@ -1,101 +1,47 @@
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
-import { ApiPayload, ApiResult } from '@core/interfaces/api.interface';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  http = inject(HttpClient);
+  constructor(private http: HttpClient) {}
 
-  doFetch<T>(url: string): Observable<ApiResult<T>> {
-    return this.http.get<ApiPayload<T>>(url).pipe(
-      map((response) => ({
-        status: 'SUCCESS' as const,
-        result: response,
-        error: null,
-      })),
+  doFetch<T>(url: string): Observable<T> {
+    return this.http.get<T>(url).pipe(
       catchError((err) => {
-        console.log(err);
-        return of({
-          status: 'ERROR' as const,
-          result: {
-            data: null,
-          },
-          error: err.error,
-        });
+        console.error('GET error:', err);
+        return throwError(() => err);
       })
     );
   }
 
-  doPost<T = unknown, U = unknown>(
-    url: string,
-    body: U
-  ): Observable<ApiResult<T>> {
-    return this.http.post<ApiPayload<T>>(url, body).pipe(
-      map((response) => ({
-        status: 'SUCCESS' as const,
-        result: response,
-        error: null,
-      })),
+  doPost<T = unknown, U = unknown>(url: string, body: U): Observable<T> {
+    return this.http.post<T>(url, body).pipe(
       catchError((err) => {
-        console.log(err);
-        return of({
-          status: 'ERROR' as const,
-          result: {
-            data: null,
-          },
-          error: err.error,
-        });
+        console.error('POST error:', err);
+        return throwError(() => err);
       })
     );
   }
 
-  doDelete<T = unknown>(url: string): Observable<ApiResult<T>> {
-    return this.http.delete<ApiPayload<T>>(url).pipe(
-      map((response) => ({
-        status: 'SUCCESS' as const,
-        result: response,
-        error: null,
-      })),
+  doPut<T = unknown, U = unknown>(url: string, body: U): Observable<T> {
+    return this.http.put<T>(url, body).pipe(
       catchError((err) => {
-        console.log(err);
-        return of({
-          status: 'ERROR' as const,
-          result: {
-            data: null,
-          },
-          error: err.error,
-        });
+        console.error('PUT error:', err);
+        return throwError(() => err);
       })
     );
   }
 
-  doPut<T = unknown, U = unknown>(
-    url: string,
-    body: U
-  ): Observable<ApiResult<T>> {
-    return this.http.put<ApiPayload<T>>(url, body).pipe(
-      map((response) => ({
-        status: 'SUCCESS' as const,
-        result: response,
-        error: null,
-      })),
+  doDelete<T = unknown>(url: string): Observable<T> {
+    return this.http.delete<T>(url).pipe(
       catchError((err) => {
-        console.log(err);
-        return of({
-          status: 'ERROR' as const,
-          result: {
-            data: null,
-          },
-          error: err.error,
-        });
+        console.error('DELETE error:', err);
+        return throwError(() => err);
       })
     );
-  }
-
-  isPaginated<T>(data: any): data is ApiPayload<T> {
-    return data && typeof data === 'object' && 'pagination' in data;
   }
 }
