@@ -1,5 +1,4 @@
 import { Component, input } from '@angular/core';
-import { ApiResult } from '@core/interfaces/api.interface';
 import { User } from '@shared/models/user.model';
 import {
   CircleUserIcon,
@@ -13,7 +12,6 @@ import {
 import { ProfileOptionsComponent } from '@features/profile/components/profile-options/profile-options.component';
 import { ProfileCountersComponent } from '@features/profile/components/profile-counters/profile-counters.component';
 import { ProfileDetailLoadingComponent } from '@shared/components/profile-detail-loading/profile-detail-loading.component';
-import { isSingle } from '@shared/helpers/api.helper';
 
 @Component({
   selector: 'app-profile-detail',
@@ -27,7 +25,7 @@ import { isSingle } from '@shared/helpers/api.helper';
   ],
 })
 export class ProfileDetailComponent {
-  user = input.required<ApiResult<User>>();
+  user = input<User | null>();
   userIcon = CircleUserIcon;
   editProfileIcon = UserCogIcon;
   issuesIcon = FileSearchIcon;
@@ -36,8 +34,6 @@ export class ProfileDetailComponent {
   logoutIcon = LogOutIcon;
 
   get userData() {
-    const result = this.user().result;
-
-    return isSingle(result) ? result : null;
+    return this.user() ? this.user() : null;
   }
 }

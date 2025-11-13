@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { CategoryService } from '@core/services/category.service';
 import { iconMap } from '@shared/constants/system.constant';
-import { Category } from '@shared/models/category.model';
 import {
   LucideAngularModule,
   LucideIconData,
@@ -28,18 +27,6 @@ export class CategoryListComponent implements OnInit {
 
   ngOnInit(): void {
     this.categoryService.getCategories();
-  }
-
-  get categoryList(): Category[] {
-    const result = this.categoryService.categories().result;
-
-    if (Array.isArray(result)) {
-      return result;
-    } else if (result && Array.isArray(result.data)) {
-      return result.data;
-    } else {
-      return [];
-    }
   }
 
   selectCategory(id: string, event: MouseEvent): void {

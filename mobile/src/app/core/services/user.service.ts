@@ -1,12 +1,10 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { ApiService } from '@core/services/api.service';
-import { ApiResult } from '@core/interfaces/api.interface';
 import { Issue } from '@shared/models/issue.model';
 import { environment } from 'src/environments/environment';
 import { User, Counters } from '@shared/models/user.model';
 import { UpdateUserDto } from '@shared/dto/user.dto';
 import { Observable } from 'rxjs';
-import { isList, isPaginated, isSingle } from '@shared/helpers/api.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -14,14 +12,7 @@ import { isList, isPaginated, isSingle } from '@shared/helpers/api.helper';
 export class UserService {
   apiService = inject(ApiService);
   issues = signal<Issue[]>([]);
-  user = signal<User>({
-    id: '',
-    name: '',
-    last: '',
-    email: '',
-    createdAt: '',
-    isActive: false,
-  });
+  user = signal<User | null>(null);
   counters = signal<Counters>({
     issues: 0,
     highlightsGiven: 0,
@@ -45,14 +36,7 @@ export class UserService {
   }
 
   getUser(id: string): void {
-    this.user.set({
-      id: '',
-      name: '',
-      last: '',
-      email: '',
-      createdAt: '',
-      isActive: false,
-    });
+    this.user.set(null);
 
     this.apiService.doFetch<User>(`${this.URL}/${id}`).subscribe((response) => {
       this.user.set(response);

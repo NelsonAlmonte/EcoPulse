@@ -9,9 +9,7 @@ import {
 } from '@shared/dto/auth.dto';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ApiResult } from '@core/interfaces/api.interface';
 import { ToastController } from '@ionic/angular/standalone';
-import { isPaginated } from '@shared/helpers/api.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -26,26 +24,26 @@ export class AuthService {
     this.apiService
       .doPost<AuthResponseDto, LoginUserDto>(`${this.URL}/login`, loginUserDto)
       .subscribe(async (response) => {
-        if (response.error) {
-          console.log(response.error);
-          const toast = await this.toastController.create({
-            message: response.error.message,
-            duration: 6000,
-            position: 'bottom',
-            animated: true,
-          });
+        // if (response.error) {
+        //   console.log(response.error);
+        //   const toast = await this.toastController.create({
+        //     message: response.error.message,
+        //     duration: 6000,
+        //     position: 'bottom',
+        //     animated: true,
+        //   });
 
-          toast.present();
+        //   toast.present();
 
-          this.router.navigate(['/login']);
+        //   this.router.navigate(['/login']);
 
-          return;
-        }
+        //   return;
+        // }
 
-        if (!isPaginated(response.result)) {
-          localStorage.setItem('auth', JSON.stringify(response.result));
-          this.router.navigate(['/']);
-        }
+        // if (!isPaginated(response.result)) {
+        localStorage.setItem('auth', JSON.stringify(response));
+        this.router.navigate(['/']);
+        // }
       });
   }
 
@@ -56,32 +54,32 @@ export class AuthService {
         signupUserDto
       )
       .subscribe(async (response) => {
-        if (response.error) {
-          console.log(response.error);
-          const toast = await this.toastController.create({
-            message: response.error.message,
-            duration: 6000,
-            position: 'bottom',
-            animated: true,
-          });
+        // if (response.error) {
+        //   console.log(response.error);
+        //   const toast = await this.toastController.create({
+        //     message: response.error.message,
+        //     duration: 6000,
+        //     position: 'bottom',
+        //     animated: true,
+        //   });
 
-          toast.present();
+        //   toast.present();
 
-          this.router.navigate(['/signup']);
+        //   this.router.navigate(['/signup']);
 
-          return;
-        }
+        //   return;
+        // }
 
-        if (!isPaginated(response.result)) {
-          localStorage.setItem('auth', JSON.stringify(response.result));
-          this.router.navigate(['/']);
-        }
+        // if (!isPaginated(response.result)) {
+        localStorage.setItem('auth', JSON.stringify(response));
+        this.router.navigate(['/']);
+        // }
       });
   }
 
   refreshSession(
     refreshToken: RefreshUserSessionDto
-  ): Observable<ApiResult<AuthResponseDto>> {
+  ): Observable<AuthResponseDto> {
     return this.apiService.doPost<AuthResponseDto, RefreshUserSessionDto>(
       `${this.URL}/refresh`,
       refreshToken

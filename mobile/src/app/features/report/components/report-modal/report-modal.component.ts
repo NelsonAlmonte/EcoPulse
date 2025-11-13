@@ -35,7 +35,6 @@ import {
   SendIcon,
 } from 'lucide-angular';
 import { UserService } from '@core/services/user.service';
-import { ApiResult } from '@core/interfaces/api.interface';
 import { Issue } from '@shared/models/issue.model';
 
 @Component({
@@ -155,22 +154,22 @@ export class ReportModalComponent {
       .uploadPhoto(formData)
       .pipe(
         switchMap((response) => {
-          if (response.error) return this.handleError(response.error);
+          if (!response) return this.handleError(response);
 
-          issue.photo = `${response.result.data!.fullPath}`;
+          issue.photo = `${response.fullPath}`;
 
           return this.issueService.createIssue(issue);
         })
       )
       .subscribe((response) => {
-        if (response.error) {
-          from(this.handleError(response.error))
-            .pipe(switchMap(() => throwError(() => response.error)))
+        if (!response) {
+          from(this.handleError(response))
+            .pipe(switchMap(() => throwError(() => response)))
             .subscribe();
           return;
         }
 
-        this.modalController.dismiss(response.result, 'confirm');
+        this.modalController.dismiss(response, 'confirm');
 
         this.userService.issues.update((current) =>
           this.updateUserIssues(current, response)
@@ -179,7 +178,7 @@ export class ReportModalComponent {
         this.issueService.issues.update((current) => ({
           ...current,
           data: {
-            items: [...(current.result.data ?? []), response.result.data!],
+            items: [...(current ?? []), response],
           },
         }));
 
@@ -188,21 +187,13 @@ export class ReportModalComponent {
       });
   }
 
-  updateUserIssues(
-    currentData: ApiResult<Issue[]>,
-    apiResult: ApiResult<Issue>
-  ): ApiResult<Issue[]> {
-    const updatedData = [
-      apiResult.result.data!,
-      ...(currentData.result.data!.length >= 3
-        ? currentData.result.data!.slice(0, -1) ?? []
-        : currentData.result.data!),
+  updateUserIssues(currentData: Issue[], apiResult: Issue): Issue[] {
+    return [
+      apiResult,
+      ...(currentData.length >= 3
+        ? currentData.slice(0, -1) ?? []
+        : currentData),
     ];
-
-    return {
-      ...currentData,
-      result: { data: updatedData },
-    };
   }
 
   dataUrlToFile(input: string, filename: string): File {

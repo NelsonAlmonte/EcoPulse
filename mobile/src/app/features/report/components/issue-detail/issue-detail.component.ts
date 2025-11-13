@@ -31,18 +31,12 @@ import {
 export class IssueDetailComponent {
   issueService = inject(IssueService);
   modalController = inject(ModalController);
-  issue = input.required<Issue>();
+  issue = input.required<Issue | null>();
   DEFAULT_STATUS = DEFAULT_STATUS;
   checkCircle = CheckCircleIcon;
   clockIcon = ClockIcon;
   userIcon = CircleUserIcon;
   viewPhotoIcon = Maximize2Icon;
-
-  get issueData() {
-    return this.issue()?.id
-      ? this.issue()
-      : this.issueService.issue().result.data;
-  }
 
   showIcon(iconName: string): LucideIconData {
     return iconMap[iconName] || TreePineIcon;

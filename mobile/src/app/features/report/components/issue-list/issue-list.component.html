@@ -1,14 +1,11 @@
-@if (userService.issues().status === 'LOADING') {
+@if (!userService.issues()) {
 <div class="flex flex-col space-y-4">
   <app-issue-detail-loading></app-issue-detail-loading>
   <app-issue-detail-loading></app-issue-detail-loading>
   <app-issue-detail-loading></app-issue-detail-loading>
 </div>
-} @if (userService.issues().status === 'ERROR') {
-<p>Handle error</p>
-} @if (userService.issues().status === 'SUCCESS') { @if
-(userService.issues().result.data?.length) { @for (issue of
-userService.issues().result.data; track $index) {
+} @if (userService.issues()) { @if (userService.issues().length) { @for (issue
+of userService.issues(); track $index) {
 <app-issue-detail [issue]="issue"></app-issue-detail>
 } } @else {
 <div

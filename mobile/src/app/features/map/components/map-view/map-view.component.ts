@@ -6,21 +6,17 @@ import {
   ElementRef,
   inject,
   Injector,
-  input,
-  signal,
   ViewChild,
 } from '@angular/core';
 import { GoogleMap, LatLngBounds, Marker } from '@capacitor/google-maps';
 import { Geolocation } from '@capacitor/geolocation';
 import { environment } from 'src/environments/environment';
-import { ApiResult } from '@core/interfaces/api.interface';
 import { Issue } from '@shared/models/issue.model';
 import { ModalController } from '@ionic/angular/standalone';
 import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
 import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
 import { Bounds } from '@shared/models/user.model';
-import { isPaginated } from '@shared/helpers/api.helper';
 
 @Component({
   selector: 'app-map-view',
@@ -102,14 +98,9 @@ export class MapViewComponent implements AfterViewInit {
   async addMarkers() {
     effect(
       async () => {
-        let issues = [] as Issue[];
-        const result = this.issueService.issues().result;
+        const issues = this.issueService.issues();
 
-        if (isPaginated(result)) {
-          if (!result.data) return;
-
-          issues = result.data;
-        }
+        if (!issues) return;
 
         if (this.markerIds.length > 0) {
           await this.map.removeMarkers(this.markerIds);

@@ -54,8 +54,8 @@ export class HighlightButtonComponent {
     this.issue().hasCurrentUserHighlight = true;
 
     this.highlightService.createHighlight(dto).subscribe(async (result) => {
-      if (result.error) {
-        await this.handleError(result.error);
+      if (!result) {
+        await this.handleError(result);
         this.issue().hasCurrentUserHighlight = false;
       }
 
@@ -69,8 +69,8 @@ export class HighlightButtonComponent {
     this.issue().hasCurrentUserHighlight = false;
 
     this.highlightService.deleteHighlight(dto).subscribe(async (result) => {
-      if (result.error) {
-        await this.handleError(result.error);
+      if (!result) {
+        await this.handleError(result);
         this.issue().hasCurrentUserHighlight = true;
       }
 

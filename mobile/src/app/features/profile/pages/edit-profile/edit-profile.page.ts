@@ -78,17 +78,18 @@ export class EditProfilePage implements OnInit {
     this.userService
       .updateUser(loggedUserData.id, updateUserDto)
       .subscribe(async (result) => {
-        if (result.error) {
-          console.log(result.error);
-          toast = await this.toastController.create({
-            message: 'Ocurrió un error al actualizar tu perfil.',
-            duration: 4000,
-            position: 'bottom',
-            animated: true,
-          });
+        //TODO: error handle
+        // if (result.error) {
+        //   console.log(result.error);
+        //   toast = await this.toastController.create({
+        //     message: 'Ocurrió un error al actualizar tu perfil.',
+        //     duration: 4000,
+        //     position: 'bottom',
+        //     animated: true,
+        //   });
 
-          return;
-        }
+        //   return;
+        // }
 
         this.userService.user.set(result);
         toast.present();

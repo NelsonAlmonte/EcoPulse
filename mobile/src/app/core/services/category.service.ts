@@ -1,6 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { ApiService } from '@core/services/api.service';
-import { ApiResult } from '@core/interfaces/api.interface';
 import { Category } from '@shared/models/category.model';
 import { environment } from 'src/environments/environment';
 
@@ -9,23 +8,11 @@ import { environment } from 'src/environments/environment';
 })
 export class CategoryService {
   apiService = inject(ApiService);
-  categories = signal<ApiResult<Category[]>>({
-    status: 'LOADING',
-    result: {
-      data: [],
-    },
-    error: null,
-  });
+  categories = signal<Category[]>([]);
   URL = `${environment.apiUrl}category`;
 
   getCategories(): void {
-    this.categories.set({
-      status: 'LOADING',
-      result: {
-        data: [],
-      },
-      error: null,
-    });
+    this.categories.set([]);
 
     this.apiService
       .doFetch<Category[]>(this.URL)
