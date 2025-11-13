@@ -5,13 +5,21 @@ import { environment } from 'src/environments/environment';
 import { User, Counters } from '@shared/models/user.model';
 import { UpdateUserDto } from '@shared/dto/user.dto';
 import { Observable } from 'rxjs';
+import { List } from '@shared/models/response.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   apiService = inject(ApiService);
-  issues = signal<Issue[]>([]);
+  issueList = signal<List<Issue[]>>({
+    data: [],
+    pagination: {
+      page: 1,
+      amount: 5,
+      total: 5,
+    },
+  });
   user = signal<User | null>(null);
   counters = signal<Counters>({
     issues: 0,
@@ -20,18 +28,24 @@ export class UserService {
   });
   URL = `${environment.apiUrl}user`;
 
-  getUserIssues(id: string, amount?: number): void {
-    this.issues.set([]);
+  getUserIssues(id: string, amount: number = 6): void {
+    this.issueList.set({
+      data: [],
+      pagination: {
+        page: 1,
+        amount: 5,
+        total: 5,
+      },
+    });
 
     this.apiService
-      .doFetch<Issue[]>(`${this.URL}/${id}/issues?amount=${amount}`)
+      .doFetch<List<Issue[]>>(`${this.URL}/${id}/issues?amount=${amount}`)
       .subscribe((response) => {
-        const updatedData = response.map((issue) => ({
-          ...issue,
-          photo: `${environment.publicBucketUrl}/${issue.photo}`,
-        }));
-
-        this.issues.set(updatedData);
+        if (!response.data) {
+          //TODO: Handle error
+          return;
+        }
+        this.issueList.set(response);
       });
   }
 
@@ -90,17 +104,25 @@ export class UserService {
   }
 
   getHighlightsGiven(id: string): void {
-    this.issues.set([]);
+    this.issueList.set({
+      data: [],
+      pagination: {
+        page: 1,
+        amount: 5,
+        total: 5,
+      },
+    });
 
     this.apiService
-      .doFetch<Issue[]>(`${this.URL}/${id}/highlights/given`)
+      .doFetch<List<Issue[]>>(`${this.URL}/${id}/highlights/given`)
       .subscribe((response) => {
-        const updatedData = response.map((issue) => ({
-          ...issue,
-          photo: `${environment.publicBucketUrl}/${issue.photo}`,
-        }));
+        console.log(response);
+        if (!response.data) {
+          //TODO: Handle error
+          return;
+        }
 
-        this.issues.set(updatedData);
+        this.issueList.set(response);
       });
   }
 }

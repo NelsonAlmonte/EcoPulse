@@ -148,8 +148,29 @@ export class UserController {
   @Get(':user/highlights/given')
   async highlightsGiven(
     @Param('user') userId: string,
-  ): Promise<GetIssueDto[] | null> {
-    return await this.userService.getHighlightsGiven(userId);
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('amount', new DefaultValuePipe(6), ParseIntPipe) amount: number,
+  ): Promise<List<GetIssueDto[]> | null> {
+    const highlights = await this.userService.getHighlightsGiven(
+      userId,
+      buildPaginationParams(page, amount),
+    );
+
+    if (!highlights) return null;
+
+    const highlightList: List<GetIssueDto[]> = {
+      data: highlights.map((highlight) => ({
+        ...highlight,
+        photo: `${process.env.PUBLIC_BUCKET_URL}/${highlight.photo}`,
+      })),
+      pagination: {
+        page: page,
+        amount: amount,
+        total: await this.userService.countHighlightsGiven(userId),
+      },
+    };
+
+    return highlightList;
   }
 
   // @UseGuards(SupabaseAuthGuard)

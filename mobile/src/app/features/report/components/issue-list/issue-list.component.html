@@ -1,11 +1,11 @@
-@if (!userService.issues()) {
+@if (!userService.issueList()) {
 <div class="flex flex-col space-y-4">
   <app-issue-detail-loading></app-issue-detail-loading>
   <app-issue-detail-loading></app-issue-detail-loading>
   <app-issue-detail-loading></app-issue-detail-loading>
 </div>
-} @if (userService.issues()) { @if (userService.issues().length) { @for (issue
-of userService.issues(); track $index) {
+} @if (userService.issueList()) { @if (userService.issueList().data.length) {
+@for (issue of userService.issueList().data; track $index) {
 <app-issue-detail [issue]="issue"></app-issue-detail>
 } } @else {
 <div

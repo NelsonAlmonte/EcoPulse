@@ -1,18 +1,18 @@
-@if (!issue()) {
+@if (!issueData) {
 <app-issue-detail-loading></app-issue-detail-loading>
-} @if (issue()) {
+} @if (issueData) {
 <div class="md-surface-container-high rounded-2xl mb-4 issue-detail-card">
   <div class="relative w-full h-50 photo-container">
     <img
       class="rounded-2xl w-full h-full object-cover"
-      src="{{ issue()!.photo }}"
-      alt="{{ issue()!.category.name }}"
+      src="{{ issueData.photo }}"
+      alt="{{ issueData.category.name }}"
     />
     <div class="absolute inset-0 bg-black/40 rounded-2xl"></div>
     <div class="absolute inset-0 flex items-start justify-end p-4">
       <div
         class="rounded-full md-on-primary bg-white/20 p-2 z-50"
-        (click)="viewPhoto(issue()!)"
+        (click)="viewPhoto(issueData)"
       >
         <lucide-angular [img]="viewPhotoIcon" size="22"></lucide-angular>
       </div>
@@ -21,16 +21,16 @@
       <div class="flex items-center justify-start md-on-primary">
         <div class="me-2 p-2 rounded-full bg-white/20">
           <lucide-angular
-            [img]="showIcon(issue()!.category.icon)"
+            [img]="showIcon(issueData.category.icon)"
             size="26"
           ></lucide-angular>
         </div>
         <div>
           <h2 class="text-xl font-semibold my-0!">
-            {{ issue()!.category.name }}
+            {{ issueData.category.name }}
           </h2>
           <span class="opacity-75"
-            >Reporte {{ issue()!.status.toLocaleLowerCase() }}</span
+            >Reporte {{ issueData.status.toLocaleLowerCase() }}</span
           >
         </div>
       </div>
@@ -46,19 +46,19 @@
         ></lucide-angular>
         <div class="flex flex-col">
           <span class="md-on-surface text-md">
-            {{ issue()!.user.name + " " + issue()!.user.last }}
+            {{ issueData.user.name + " " + issueData.user.last }}
           </span>
           <span class="md-on-surface-variant text-sm">
-            {{ issue()!.createdAt | relativeTime : "es-ES" }}
+            {{ issueData.createdAt | relativeTime : "es-ES" }}
           </span>
         </div>
       </div>
-      <app-highlight-button [issue]="issue()!"></app-highlight-button>
+      <app-highlight-button [issue]="issueData"></app-highlight-button>
     </div>
-    @if (issue()!.comment) {
+    @if (issueData.comment) {
     <div class="mt-6">
       <p class="font-normal md-on-surface-variant">
-        {{ issue()!.comment }}
+        {{ issueData.comment }}
       </p>
     </div>
     }

@@ -25,7 +25,6 @@ import { Bounds } from '@shared/models/user.model';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MapViewComponent implements AfterViewInit {
-  // issues = input.required<ApiResult<Issue[]>>();
   injector = inject(Injector);
   modalController = inject(ModalController);
   issueService = inject(IssueService);
@@ -63,11 +62,9 @@ export class MapViewComponent implements AfterViewInit {
       },
     });
 
-    this.map.setOnCameraIdleListener((ev) => {
-      console.log(ev);
-
-      this.issueService.getIssuesByBounds(this.getBounds(ev.bounds));
-    });
+    this.map.setOnCameraIdleListener((ev) =>
+      this.issueService.getIssuesByBounds(this.getBounds(ev.bounds))
+    );
 
     await this.addMarkers();
     await this.viewIssueDetail();
@@ -98,25 +95,27 @@ export class MapViewComponent implements AfterViewInit {
   async addMarkers() {
     effect(
       async () => {
-        const issues = this.issueService.issues();
+        const issues = this.issueService.issueList();
 
-        if (!issues) return;
+        if (!issues.data.length) return;
 
         if (this.markerIds.length > 0) {
           await this.map.removeMarkers(this.markerIds);
         }
 
-        const markers: Marker[] = issues.map(({ latitude, longitude }) => ({
-          coordinate: {
-            lat: Number(latitude),
-            lng: Number(longitude),
-          },
-        }));
+        const markers: Marker[] = issues.data.map(
+          ({ latitude, longitude }) => ({
+            coordinate: {
+              lat: Number(latitude),
+              lng: Number(longitude),
+            },
+          })
+        );
 
         this.markerIds = await this.map.addMarkers(markers);
 
         this.markerIds.forEach((id, index) => {
-          this.markerData.set(id, issues[index]!);
+          this.markerData.set(id, issues.data[index]!);
         });
       },
       { injector: this.injector }

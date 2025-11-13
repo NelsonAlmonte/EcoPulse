@@ -38,6 +38,10 @@ export class IssueDetailComponent {
   userIcon = CircleUserIcon;
   viewPhotoIcon = Maximize2Icon;
 
+  get issueData() {
+    return this.issue()?.id ? this.issue() : this.issueService.issue();
+  }
+
   showIcon(iconName: string): LucideIconData {
     return iconMap[iconName] || TreePineIcon;
   }

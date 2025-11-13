@@ -36,6 +36,7 @@ import {
 } from 'lucide-angular';
 import { UserService } from '@core/services/user.service';
 import { Issue } from '@shared/models/issue.model';
+import { List } from '@shared/models/response.model';
 
 @Component({
   selector: 'app-report-modal',
@@ -171,15 +172,13 @@ export class ReportModalComponent {
 
         this.modalController.dismiss(response, 'confirm');
 
-        this.userService.issues.update((current) =>
+        this.userService.issueList.update((current) =>
           this.updateUserIssues(current, response)
         );
 
         this.issueService.issues.update((current) => ({
           ...current,
-          data: {
-            items: [...(current ?? []), response],
-          },
+          response,
         }));
 
         this.currentStatus = 'default';
@@ -187,13 +186,18 @@ export class ReportModalComponent {
       });
   }
 
-  updateUserIssues(currentData: Issue[], apiResult: Issue): Issue[] {
-    return [
-      apiResult,
-      ...(currentData.length >= 3
-        ? currentData.slice(0, -1) ?? []
-        : currentData),
+  updateUserIssues(currentData: List<Issue[]>, response: Issue) {
+    const updatedData = [
+      response,
+      ...(currentData.data!.length >= 3
+        ? currentData.data!.slice(0, -1) ?? []
+        : currentData.data!),
     ];
+
+    return {
+      ...currentData,
+      data: updatedData,
+    };
   }
 
   dataUrlToFile(input: string, filename: string): File {

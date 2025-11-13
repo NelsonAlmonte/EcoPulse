@@ -85,7 +85,10 @@ export class UserService {
     });
   }
 
-  async getHighlightsGiven(userId: string): Promise<GetIssueDto[] | null> {
+  async getHighlightsGiven(
+    userId: string,
+    pagination: PaginationParams,
+  ): Promise<GetIssueDto[] | null> {
     const highlights = await this.prisma.highlight.findMany({
       where: {
         userId,
@@ -117,6 +120,8 @@ export class UserService {
           },
         },
       },
+      skip: pagination.skip,
+      take: pagination.take,
       orderBy: {
         createdAt: 'desc',
       },

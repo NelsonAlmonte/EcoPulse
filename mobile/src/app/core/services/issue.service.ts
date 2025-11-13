@@ -6,6 +6,7 @@ import { Issue, SupaBaseUploadFileResponse } from '@shared/models/issue.model';
 import { environment } from 'src/environments/environment';
 import { ToastController } from '@ionic/angular/standalone';
 import { Bounds } from '@shared/models/user.model';
+import { List } from '@shared/models/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,14 @@ export class IssueService {
   toastController = inject(ToastController);
   issues = signal<Issue[]>([]);
   issue = signal<Issue | null>(null);
+  issueList = signal<List<Issue[]>>({
+    data: [],
+    pagination: {
+      page: 1,
+      amount: 5,
+      total: 5,
+    },
+  });
   URL = `${environment.apiUrl}issue`;
 
   createIssue(issue: CreateIssueDto): Observable<Issue> {
@@ -61,17 +70,24 @@ export class IssueService {
   }
 
   getIssuesByBounds(bounds: Bounds): void {
-    this.issues.set([]);
+    this.issueList.set({
+      data: [],
+      pagination: {
+        page: 1,
+        amount: 5,
+        total: 5,
+      },
+    });
 
     this.apiService
-      .doFetch<Issue[]>(
+      .doFetch<List<Issue[]>>(
         `${this.URL}/in-bound?north=${bounds.north}&south=${
           bounds.south
         }&east=${bounds.east}&west=${bounds.west}&page=${1}&amount=${10}`
       )
       .subscribe((response) => {
         console.log(response);
-        this.issues.update(() => response);
+        this.issueList.update(() => response);
       });
   }
 }
