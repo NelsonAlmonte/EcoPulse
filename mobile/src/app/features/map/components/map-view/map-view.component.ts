@@ -17,6 +17,7 @@ import { IssueDetailComponent } from '@features/report/components/issue-detail/i
 import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
 import { Bounds } from '@shared/models/user.model';
+import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 
 @Component({
   selector: 'app-map-view',
@@ -29,108 +30,128 @@ export class MapViewComponent implements AfterViewInit {
   modalController = inject(ModalController);
   issueService = inject(IssueService);
   authService = inject(AuthService);
-  @ViewChild('map') mapRef!: ElementRef<HTMLElement>;
-  map!: GoogleMap;
-  markerIds: string[] = [];
-  markerData = new Map<string, Issue>();
-
-  constructor() {}
+  @ViewChild('map') mapRef!: ElementRef<Element>;
+  map!: google.maps.Map;
+  markers: google.maps.marker.AdvancedMarkerElement[] = [];
 
   async ngAfterViewInit() {
     await this.initMap();
   }
 
   async initMap() {
+    setOptions({ key: environment.googleMapsApiKey });
+
+    const { Map } = await importLibrary('maps');
+    const mapElement = this.mapRef.nativeElement as google.maps.MapElement;
     const position = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
     });
 
-    this.map = await GoogleMap.create({
-      id: 'my-cool-map',
-      element: this.mapRef.nativeElement,
-      apiKey: environment.googleMapsApiKey,
-      config: {
-        center: {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        },
-        zoom: 10,
-        streetViewControl: false,
-        mapTypeControl: false,
-        fullscreenControl: false,
-        cameraControl: false,
+    this.map = new Map(mapElement, {
+      mapId: 'issues-maps',
+      center: {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
       },
+      zoom: 10,
+      streetViewControl: false,
+      mapTypeControl: false,
+      fullscreenControl: false,
+      cameraControl: false,
     });
 
-    this.map.setOnCameraIdleListener((ev) =>
-      this.issueService.getIssuesByBounds(this.getBounds(ev.bounds))
-    );
+    this.map.addListener('idle', () => {
+      const bounds = this.getBounds(this.map);
 
-    await this.addMarkers();
-    await this.viewIssueDetail();
-  }
+      if (!bounds) return;
 
-  async viewIssueDetail() {
-    await this.map.setOnMarkerClickListener(async (marker) => {
-      const issue = this.markerData.get(marker.markerId)!;
-      const userId = this.authService.loggedUserData()!.id;
-      const modal = await this.modalController.create({
-        component: IssueDetailComponent,
-        cssClass: 'issue-detail-modal',
-        initialBreakpoint: 0.38,
-        // breakpoints: [0, 0.47],
-        componentProps: {
-          issue: {},
-        },
-      });
-
-      if (issue.comment) modal.initialBreakpoint = 0.45;
-
-      modal.present();
-
-      this.issueService.getIssue(issue.id, userId);
+      this.issueService.getIssuesByBounds(bounds);
     });
+
+    this.addMarkers();
   }
+
+  // async viewIssueDetail() {
+  //   await this.map.setOnMarkerClickListener(async (marker) => {
+  //     const issue = this.markerData.get(marker.markerId)!;
+  //     const userId = this.authService.loggedUserData()!.id;
+  //     const modal = await this.modalController.create({
+  //       component: IssueDetailComponent,
+  //       cssClass: 'issue-detail-modal',
+  //       initialBreakpoint: 0.38,
+  //       // breakpoints: [0, 0.47],
+  //       componentProps: {
+  //         issue: {},
+  //       },
+  //     });
+
+  //     if (issue.comment) modal.initialBreakpoint = 0.45;
+
+  //     modal.present();
+
+  //     this.issueService.getIssue(issue.id, userId);
+  //   });
+  // }
 
   async addMarkers() {
     effect(
       async () => {
-        const issues = this.issueService.issueList();
+        const issues = this.issueService.issueList().data;
 
-        if (!issues.data.length) return;
+        if (!issues.length) return;
 
-        if (this.markerIds.length > 0) {
-          await this.map.removeMarkers(this.markerIds);
+        if (this.markers.length > 0) {
+          this.removeMarkers();
         }
 
-        const markers: Marker[] = issues.data.map(
-          ({ latitude, longitude }) => ({
-            coordinate: {
-              lat: Number(latitude),
-              lng: Number(longitude),
+        const { AdvancedMarkerElement } = await importLibrary('marker');
+
+        for (const issue of issues) {
+          const marker = new AdvancedMarkerElement({
+            map: this.map,
+            position: {
+              lat: issue.latitude,
+              lng: issue.longitude,
             },
-          })
-        );
+            gmpClickable: true,
+          });
 
-        this.markerIds = await this.map.addMarkers(markers);
+          this.markers.push(marker);
 
-        this.markerIds.forEach((id, index) => {
-          this.markerData.set(id, issues.data[index]!);
-        });
+          //TODO: Finish this
+          marker.addEventListener('click', (e) => {
+            console.log(e);
+          });
+        }
       },
       { injector: this.injector }
     );
   }
 
-  getBounds(bounds: LatLngBounds): Bounds {
-    const ne = bounds.northeast;
-    const sw = bounds.southwest;
+  getBounds(map: google.maps.Map): Bounds | undefined {
+    const bounds = map.getBounds();
+
+    if (!bounds) {
+      //TODO: Handle error
+      console.log('error');
+      return;
+    }
+
+    const ne = bounds.getNorthEast();
+    const sw = bounds.getSouthWest();
 
     return {
-      north: ne.lat,
-      south: sw.lat,
-      east: ne.lng,
-      west: sw.lng,
+      north: ne.lat(),
+      south: sw.lat(),
+      east: ne.lng(),
+      west: sw.lng(),
     };
+  }
+
+  removeMarkers(): void {
+    for (const marker of this.markers) {
+      marker.map = null;
+    }
+    this.markers = [];
   }
 }

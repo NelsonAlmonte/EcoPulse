@@ -1,4 +1,10 @@
-capacitor-google-map {
+/* capacitor-google-map {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+} */
+
+.map {
   display: inline-block;
   width: 100%;
   height: 100%;
