@@ -5,6 +5,7 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -169,41 +170,6 @@ export class IssueController {
     return issueList;
   }
 
-  @Get('coords')
-  async issuesCoordinates(
-    @Query('status') status?: string,
-    @Query('defined_date') defined_date?: string,
-    @Query('start_date') start_date?: string,
-    @Query('end_date') end_date?: string,
-    @Query('categories') categories?: string,
-    @Query('all') all?: string,
-  ): Promise<List<Pick<Issue, 'latitude' | 'longitude'>[]> | null> {
-    const DEFAULT_PAGE = 1;
-    const DEFAULT_AMOUNT = 5;
-    const where = buildFilterParams(
-      status,
-      defined_date,
-      start_date,
-      end_date,
-      categories,
-      all,
-    );
-    const issues = await this.issueService.getIssuesCoordinates(where);
-
-    if (!issues) return null;
-
-    const issueList: List<Pick<Issue, 'latitude' | 'longitude'>[]> = {
-      data: issues,
-      pagination: {
-        page: DEFAULT_PAGE,
-        amount: DEFAULT_AMOUNT,
-        total: await this.issueService.countIssues(where),
-      },
-    };
-
-    return issueList;
-  }
-
   // @UseGuards(SupabaseAuthGuard)
   @Get('count')
   async countIssues(@Query('status') status?: Status): Promise<number | null> {
@@ -219,8 +185,12 @@ export class IssueController {
   async issue(
     @Param('issueId') issueId: string,
     @Param('userId') userId: string,
-  ): Promise<GetIssueDto | null> {
+  ): Promise<GetIssueDto> {
     const issue = await this.issueService.getIssue(issueId, userId);
+
+    if (!issue) {
+      throw new NotFoundException(`Esta incidencia no pudo ser encontrada.`);
+    }
 
     return {
       ...issue,

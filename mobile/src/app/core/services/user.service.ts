@@ -41,10 +41,6 @@ export class UserService {
     this.apiService
       .doFetch<List<Issue[]>>(`${this.URL}/${id}/issues?amount=${amount}`)
       .subscribe((response) => {
-        if (!response.data) {
-          //TODO: Handle error
-          return;
-        }
         this.issueList.set(response);
       });
   }
@@ -116,12 +112,6 @@ export class UserService {
     this.apiService
       .doFetch<List<Issue[]>>(`${this.URL}/${id}/highlights/given`)
       .subscribe((response) => {
-        console.log(response);
-        if (!response.data) {
-          //TODO: Handle error
-          return;
-        }
-
         this.issueList.set(response);
       });
   }

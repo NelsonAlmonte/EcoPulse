@@ -150,13 +150,11 @@ export class UserController {
     @Param('user') userId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('amount', new DefaultValuePipe(6), ParseIntPipe) amount: number,
-  ): Promise<List<GetIssueDto[]> | null> {
+  ): Promise<List<GetIssueDto[]>> {
     const highlights = await this.userService.getHighlightsGiven(
       userId,
       buildPaginationParams(page, amount),
     );
-
-    if (!highlights) return null;
 
     const highlightList: List<GetIssueDto[]> = {
       data: highlights.map((highlight) => ({

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Issue, Prisma } from '@prisma/client';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
@@ -117,7 +121,7 @@ export class IssueService {
   }
 
   async getIssue(issueId: string, userId: string): Promise<GetIssueDto | null> {
-    const issue = await this.prisma.issue.findUnique({
+    const issue = await this.prisma.issue.findFirst({
       where: {
         id: issueId,
       },
@@ -145,6 +149,11 @@ export class IssueService {
         },
       },
     });
+
+    if (!issue) {
+      throw new NotFoundException(`No existe un issue con ID ${issueId}`);
+    }
+
     const transformedIssue = {
       ...issue,
       highlights: issue._count.highlights ? issue._count.highlights : 0,

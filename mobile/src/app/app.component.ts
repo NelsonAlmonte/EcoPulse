@@ -20,7 +20,6 @@ export class AppComponent {
         newElement.hasAttribute('href') &&
         newElement.getAttribute('href')?.includes('fonts.googleapis')
       ) {
-        console.info('Prevented Roboto from loading!');
         return newElement;
       }
 

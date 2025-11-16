@@ -38,7 +38,9 @@ export class AuthService {
     });
 
     if (error) {
-      throw new UnauthorizedException('Credenciales invalidas');
+      throw new UnauthorizedException(
+        'Credenciales invalidas. Intentelo nuevamente.',
+      );
     }
 
     const reponse: AuthResponseDto = {

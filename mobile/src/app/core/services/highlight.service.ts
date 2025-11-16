@@ -19,8 +19,8 @@ export class HighlightService {
   }
 
   deleteHighlight(highlightDto: HighlightDto): Observable<GetHighlightDto> {
-    const endpointUrl = `${this.URL}/${highlightDto.issueId}/${highlightDto.userId}`;
-
-    return this.apiService.doDelete<GetHighlightDto>(endpointUrl);
+    return this.apiService.doDelete<GetHighlightDto>(
+      `${this.URL}/${highlightDto.issueId}/${highlightDto.userId}`
+    );
   }
 }

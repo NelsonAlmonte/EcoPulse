@@ -30,14 +30,6 @@ export class IssueService {
     return this.apiService.doPost<Issue, CreateIssueDto>(this.URL, issue);
   }
 
-  getIssues(): void {
-    this.issues.set([]);
-
-    this.apiService
-      .doFetch<Issue[]>(this.URL)
-      .subscribe((response) => this.issues.set(response));
-  }
-
   uploadPhoto(formData: FormData): Observable<SupaBaseUploadFileResponse> {
     return this.apiService.doPost<SupaBaseUploadFileResponse, FormData>(
       `${this.URL}/upload`,
@@ -50,22 +42,21 @@ export class IssueService {
 
     this.apiService
       .doFetch<Issue>(`${this.URL}/${issueId}/${userId}`)
-      .subscribe(async (response) => {
-        // if (response.error) {
-        //   console.log(response.error);
-        //   const toast = await this.toastController.create({
-        //     message: 'Ocurrió un error al obtener este reporte.',
-        //     duration: 4000,
-        //     position: 'bottom',
-        //     animated: true,
-        //   });
+      .subscribe({
+        next: (response) => {
+          this.issue.set(response);
+        },
+        error: async (err) => {
+          console.log(err);
 
-        //   toast.present();
+          const toast = await this.toastController.create({
+            message: 'Ocurrió un error al obtener este reporte.',
+            duration: 4000,
+            position: 'bottom',
+          });
 
-        //   return;
-        // }
-        console.log(response);
-        this.issue.set(response);
+          toast.present();
+        },
       });
   }
 
@@ -86,7 +77,6 @@ export class IssueService {
         }&east=${bounds.east}&west=${bounds.west}&page=${1}&amount=${10}`
       )
       .subscribe((response) => {
-        console.log(response);
         this.issueList.update(() => response);
       });
   }

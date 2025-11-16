@@ -10,6 +10,7 @@ import {
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ToastController } from '@ionic/angular/standalone';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -23,27 +24,21 @@ export class AuthService {
   login(loginUserDto: LoginUserDto): void {
     this.apiService
       .doPost<AuthResponseDto, LoginUserDto>(`${this.URL}/login`, loginUserDto)
-      .subscribe(async (response) => {
-        // if (response.error) {
-        //   console.log(response.error);
-        //   const toast = await this.toastController.create({
-        //     message: response.error.message,
-        //     duration: 6000,
-        //     position: 'bottom',
-        //     animated: true,
-        //   });
+      .subscribe({
+        next: (response) => {
+          localStorage.setItem('auth', JSON.stringify(response));
+          this.router.navigate(['/']);
+        },
+        error: async (err: HttpErrorResponse) => {
+          const toast = await this.toastController.create({
+            message: err.error.message,
+            duration: 6000,
+            position: 'bottom',
+            animated: true,
+          });
 
-        //   toast.present();
-
-        //   this.router.navigate(['/login']);
-
-        //   return;
-        // }
-
-        // if (!isPaginated(response.result)) {
-        localStorage.setItem('auth', JSON.stringify(response));
-        this.router.navigate(['/']);
-        // }
+          await toast.present();
+        },
       });
   }
 
@@ -53,27 +48,21 @@ export class AuthService {
         `${this.URL}/signup`,
         signupUserDto
       )
-      .subscribe(async (response) => {
-        // if (response.error) {
-        //   console.log(response.error);
-        //   const toast = await this.toastController.create({
-        //     message: response.error.message,
-        //     duration: 6000,
-        //     position: 'bottom',
-        //     animated: true,
-        //   });
+      .subscribe({
+        next: (response) => {
+          localStorage.setItem('auth', JSON.stringify(response));
+          this.router.navigate(['/']);
+        },
+        error: async (err) => {
+          const toast = await this.toastController.create({
+            message: err.error.message,
+            duration: 6000,
+            position: 'bottom',
+            animated: true,
+          });
 
-        //   toast.present();
-
-        //   this.router.navigate(['/signup']);
-
-        //   return;
-        // }
-
-        // if (!isPaginated(response.result)) {
-        localStorage.setItem('auth', JSON.stringify(response));
-        this.router.navigate(['/']);
-        // }
+          await toast.present();
+        },
       });
   }
 

@@ -8,11 +8,10 @@ import {
   Injector,
   ViewChild,
 } from '@angular/core';
-import { GoogleMap, LatLngBounds, Marker } from '@capacitor/google-maps';
 import { Geolocation } from '@capacitor/geolocation';
 import { environment } from 'src/environments/environment';
 import { Issue } from '@shared/models/issue.model';
-import { ModalController } from '@ionic/angular/standalone';
+import { ModalController, ToastController } from '@ionic/angular/standalone';
 import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
 import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
@@ -28,11 +27,12 @@ import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 export class MapViewComponent implements AfterViewInit {
   injector = inject(Injector);
   modalController = inject(ModalController);
+  toastController = inject(ToastController);
   issueService = inject(IssueService);
   authService = inject(AuthService);
   @ViewChild('map') mapRef!: ElementRef<Element>;
   map!: google.maps.Map;
-  markers: google.maps.marker.AdvancedMarkerElement[] = [];
+  markers = new Map<google.maps.marker.AdvancedMarkerElement, Issue>();
 
   async ngAfterViewInit() {
     await this.initMap();
@@ -60,8 +60,8 @@ export class MapViewComponent implements AfterViewInit {
       cameraControl: false,
     });
 
-    this.map.addListener('idle', () => {
-      const bounds = this.getBounds(this.map);
+    this.map.addListener('idle', async () => {
+      const bounds = await this.getBounds(this.map);
 
       if (!bounds) return;
 
@@ -71,28 +71,6 @@ export class MapViewComponent implements AfterViewInit {
     this.addMarkers();
   }
 
-  // async viewIssueDetail() {
-  //   await this.map.setOnMarkerClickListener(async (marker) => {
-  //     const issue = this.markerData.get(marker.markerId)!;
-  //     const userId = this.authService.loggedUserData()!.id;
-  //     const modal = await this.modalController.create({
-  //       component: IssueDetailComponent,
-  //       cssClass: 'issue-detail-modal',
-  //       initialBreakpoint: 0.38,
-  //       // breakpoints: [0, 0.47],
-  //       componentProps: {
-  //         issue: {},
-  //       },
-  //     });
-
-  //     if (issue.comment) modal.initialBreakpoint = 0.45;
-
-  //     modal.present();
-
-  //     this.issueService.getIssue(issue.id, userId);
-  //   });
-  // }
-
   async addMarkers() {
     effect(
       async () => {
@@ -100,7 +78,7 @@ export class MapViewComponent implements AfterViewInit {
 
         if (!issues.length) return;
 
-        if (this.markers.length > 0) {
+        if (this.markers.size > 0) {
           this.removeMarkers();
         }
 
@@ -116,11 +94,10 @@ export class MapViewComponent implements AfterViewInit {
             gmpClickable: true,
           });
 
-          this.markers.push(marker);
+          this.markers.set(marker, issue);
 
-          //TODO: Finish this
-          marker.addEventListener('click', (e) => {
-            console.log(e);
+          marker.addEventListener('click', async () => {
+            await this.viewIssueDetail(this.markers.get(marker));
           });
         }
       },
@@ -128,12 +105,72 @@ export class MapViewComponent implements AfterViewInit {
     );
   }
 
-  getBounds(map: google.maps.Map): Bounds | undefined {
+  async viewIssueDetail(issue?: Issue): Promise<void> {
+    if (!issue) {
+      const toast = await this.toastController.create({
+        message:
+          'Ocurrio un error al ver este reporte, intentelo de nuevo mas tarde.',
+        duration: 4000,
+        position: 'bottom',
+        animated: true,
+      });
+
+      toast.present();
+      return;
+    }
+
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
+    const userId = this.authService.loggedUserData()!.id;
+    const modal = await this.modalController.create({
+      component: IssueDetailComponent,
+      cssClass: 'issue-detail-modal',
+      initialBreakpoint: 0.38,
+      // breakpoints: [0, 0.47],
+      componentProps: {
+        issue: {},
+      },
+      backdropDismiss: true,
+      focusTrap: false,
+    });
+
+    if (issue!.comment) modal.initialBreakpoint = 0.45;
+
+    await modal.present();
+
+    modal.onDidDismiss().then(() => this.issueService.issue.set(null));
+
+    modal.onWillDismiss().then(() => {
+      (document.activeElement as HTMLElement | null)?.blur();
+
+      setTimeout(() => {
+        if (
+          previouslyFocused &&
+          typeof previouslyFocused.focus === 'function'
+        ) {
+          previouslyFocused.focus();
+        } else {
+          document.body.focus();
+        }
+      }, 20);
+    });
+
+    this.issueService.getIssue(issue!.id, userId);
+  }
+
+  async getBounds(map: google.maps.Map): Promise<Bounds | undefined> {
     const bounds = map.getBounds();
 
     if (!bounds) {
-      //TODO: Handle error
-      console.log('error');
+      const toast = await this.toastController.create({
+        message:
+          'Ocurrio un error al obtener los reportes, intentelo de nuevo mas tarde.',
+        duration: 4000,
+        position: 'bottom',
+        animated: true,
+      });
+
+      toast.present();
       return;
     }
 
@@ -149,9 +186,9 @@ export class MapViewComponent implements AfterViewInit {
   }
 
   removeMarkers(): void {
-    for (const marker of this.markers) {
+    for (const marker of this.markers.keys()) {
       marker.map = null;
     }
-    this.markers = [];
+    this.markers.clear();
   }
 }

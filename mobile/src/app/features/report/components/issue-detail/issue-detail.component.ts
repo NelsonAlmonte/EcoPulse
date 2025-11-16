@@ -55,6 +55,6 @@ export class IssueDetailComponent {
       },
     });
 
-    modal.present();
+    await modal.present();
   }
 }
