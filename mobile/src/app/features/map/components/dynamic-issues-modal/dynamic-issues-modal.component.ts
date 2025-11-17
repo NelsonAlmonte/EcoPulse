@@ -1,38 +1,28 @@
-import { Component } from '@angular/core';
-import {
-  IonAvatar,
-  IonContent,
-  IonImg,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonModal,
-  IonSearchbar,
-} from '@ionic/angular/standalone';
+import { Component, inject } from '@angular/core';
+import { IssueService } from '@core/services/issue.service';
+import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
+import { IonContent, ModalController } from '@ionic/angular/standalone';
+import { LucideAngularModule, MapIcon, XIcon } from 'lucide-angular';
 
 @Component({
   selector: 'app-dynamic-issues-modal',
   templateUrl: './dynamic-issues-modal.component.html',
   styleUrls: ['./dynamic-issues-modal.component.css'],
-  imports: [
-    IonAvatar,
-    IonContent,
-    IonImg,
-    IonItem,
-    IonLabel,
-    IonList,
-    IonModal,
-    IonSearchbar,
-  ],
+  imports: [IonContent, IssueListComponent, LucideAngularModule],
 })
 export class DynamicIssuesModalComponent {
-  count = 0;
+  issueService = inject(IssueService);
+  modalController = inject(ModalController);
+  mapIcon = MapIcon;
+  xIcon = XIcon;
 
-  increment() {
-    this.count++;
+  async close() {
+    const modal = await this.modalController.getTop();
+    modal?.dismiss();
   }
 
-  decrement() {
-    this.count--;
+  async setBreakpoint(breakpoint: number) {
+    const modal = await this.modalController.getTop();
+    modal?.setCurrentBreakpoint(breakpoint);
   }
 }

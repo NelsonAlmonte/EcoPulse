@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,7 +12,6 @@ import { MapViewComponent } from '@features/map/components/map-view/map-view.com
 import { IssueService } from '@core/services/issue.service';
 import { DynamicIssuesModalComponent } from '@features/map/components/dynamic-issues-modal/dynamic-issues-modal.component';
 import { ChevronUpIcon, LucideAngularModule } from 'lucide-angular';
-import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
 
 @Component({
   selector: 'app-map',
@@ -26,29 +25,24 @@ import { IssueListComponent } from '@features/report/components/issue-list/issue
     CommonModule,
     FormsModule,
     MapViewComponent,
-    DynamicIssuesModalComponent,
     LucideAngularModule,
   ],
 })
-export class MapPage implements OnInit {
+export class MapPage {
   issueService = inject(IssueService);
   modalController = inject(ModalController);
   chevronUpIcon = ChevronUpIcon;
 
-  constructor() {}
-
-  ngOnInit() {
-    // this.issueService.getIssues();
-  }
-
   async openDynamicIssuesModal(): Promise<void> {
     const modal = await this.modalController.create({
-      component: IssueListComponent,
-      initialBreakpoint: 0.25,
-      breakpoints: [0.25, 0.5, 0.75],
+      component: DynamicIssuesModalComponent,
+      initialBreakpoint: 0.5,
+      breakpoints: [0, 0.5, 1],
       backdropDismiss: false,
-      backdropBreakpoint: 0.5,
+      backdropBreakpoint: 0.75,
+      expandToScroll: true,
     });
-    await modal.present();
+
+    modal.present();
   }
 }

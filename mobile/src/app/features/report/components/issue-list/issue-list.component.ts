@@ -1,9 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
 import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
 import { IssueDetailLoadingComponent } from '@shared/components/issue-detail-loading/issue-detail-loading.component';
 import { DEFAULT_STATUS } from '@shared/constants/system.constant';
+import { Issue } from '@shared/models/issue.model';
+import { List } from '@shared/models/response.model';
 import {
   CheckCircleIcon,
   CircleUserIcon,
@@ -23,9 +25,10 @@ import {
     LucideAngularModule,
   ],
 })
-export class IssueListComponent implements OnInit {
+export class IssueListComponent {
   userService = inject(UserService);
   authService = inject(AuthService);
+  issueList = input<List<Issue[]>>();
   DEFAULT_STATUS = DEFAULT_STATUS;
   checkCircle = CheckCircleIcon;
   clockIcon = ClockIcon;
@@ -33,7 +36,9 @@ export class IssueListComponent implements OnInit {
   userIcon = CircleUserIcon;
   emptyIcon = FolderOpenIcon;
 
-  ngOnInit() {
-    // this.userService.getUserIssues(this.authService.loggedUserData()!.id);
+  get issueListData() {
+    return this.issueList()?.data.length
+      ? this.issueList()
+      : this.userService.issueList();
   }
 }
