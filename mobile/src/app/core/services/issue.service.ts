@@ -60,24 +60,11 @@ export class IssueService {
       });
   }
 
-  getIssuesByBounds(bounds: Bounds): void {
-    this.issueList.set({
-      data: [],
-      pagination: {
-        page: 1,
-        amount: 5,
-        total: 5,
-      },
-    });
-
-    this.apiService
-      .doFetch<List<Issue[]>>(
-        `${this.URL}/in-bound?north=${bounds.north}&south=${
-          bounds.south
-        }&east=${bounds.east}&west=${bounds.west}&page=${1}&amount=${10}`
-      )
-      .subscribe((response) => {
-        this.issueList.update(() => response);
-      });
+  getIssuesByBounds(bounds: Bounds, page: number = 1) {
+    return this.apiService.doFetch<List<Issue[]>>(
+      `${this.URL}/in-bound?north=${bounds.north}&south=${bounds.south}&east=${
+        bounds.east
+      }&west=${bounds.west}&page=${page}&amount=${10}`
+    );
   }
 }

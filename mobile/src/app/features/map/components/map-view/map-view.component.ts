@@ -9,14 +9,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
-import { environment } from 'src/environments/environment';
 import { Issue } from '@shared/models/issue.model';
 import { ModalController, ToastController } from '@ionic/angular/standalone';
 import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
 import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
 import { Bounds } from '@shared/models/user.model';
-import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
+import { importLibrary } from '@googlemaps/js-api-loader';
+import { MapService } from '@core/services/map.service';
 
 @Component({
   selector: 'app-map-view',
@@ -26,6 +26,7 @@ import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 })
 export class MapViewComponent implements AfterViewInit {
   injector = inject(Injector);
+  mapService = inject(MapService);
   modalController = inject(ModalController);
   toastController = inject(ToastController);
   issueService = inject(IssueService);
@@ -39,16 +40,12 @@ export class MapViewComponent implements AfterViewInit {
   }
 
   async initMap() {
-    setOptions({ key: environment.googleMapsApiKey });
-
-    const { Map } = await importLibrary('maps');
     const mapElement = this.mapRef.nativeElement as google.maps.MapElement;
     const position = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
     });
-
-    this.map = new Map(mapElement, {
-      mapId: 'issues-maps',
+    const options = {
+      mapId: 'explore-map',
       center: {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
@@ -58,14 +55,31 @@ export class MapViewComponent implements AfterViewInit {
       mapTypeControl: false,
       fullscreenControl: false,
       cameraControl: false,
-    });
+    } as google.maps.MapOptions;
+
+    this.map = await this.mapService.createMap(mapElement, options);
 
     this.map.addListener('idle', async () => {
-      const bounds = await this.getBounds(this.map);
+      await this.getBounds(this.map);
+      const bounds = this.mapService.bounds();
 
       if (!bounds) return;
 
-      this.issueService.getIssuesByBounds(bounds);
+      this.issueService.getIssuesByBounds(bounds).subscribe({
+        next: (response) => {
+          this.issueService.issueList.update(() => response);
+        },
+        error: async (err) => {
+          console.log(err);
+          const toast = await this.toastController.create({
+            message: 'Ocurrió un error al obtener los reportes.',
+            duration: 4000,
+            position: 'bottom',
+          });
+
+          toast.present();
+        },
+      });
     });
 
     this.addMarkers();
@@ -158,7 +172,7 @@ export class MapViewComponent implements AfterViewInit {
     this.issueService.getIssue(issue!.id, userId);
   }
 
-  async getBounds(map: google.maps.Map): Promise<Bounds | undefined> {
+  async getBounds(map: google.maps.Map): Promise<void> {
     const bounds = map.getBounds();
 
     if (!bounds) {
@@ -177,12 +191,12 @@ export class MapViewComponent implements AfterViewInit {
     const ne = bounds.getNorthEast();
     const sw = bounds.getSouthWest();
 
-    return {
+    this.mapService.bounds.update(() => ({
       north: ne.lat(),
       south: sw.lat(),
       east: ne.lng(),
       west: sw.lng(),
-    };
+    }));
   }
 
   removeMarkers(): void {
