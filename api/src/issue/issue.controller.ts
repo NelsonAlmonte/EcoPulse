@@ -112,6 +112,7 @@ export class IssueController {
     @Query('categories') categories?: string,
     @Query('order') order?: string,
     @Query('all') all?: string,
+    @Query('userId') userId?: string,
   ): Promise<List<GetIssueListDto[]> | null> {
     const bounds: Bounds = {
       north: Number(north),
@@ -132,7 +133,10 @@ export class IssueController {
         gte: bounds.west,
         lte: bounds.east,
       },
+      userId,
     };
+
+    if (userId) where.userId = userId;
 
     Object.assign(
       where,

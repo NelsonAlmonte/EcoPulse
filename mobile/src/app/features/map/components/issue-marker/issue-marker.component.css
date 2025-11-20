@@ -1,0 +1,5 @@
+
+::ng-deep .highlighted lucide-angular svg {
+  stroke: var(--md-sys-color-primary);
+  fill: var(--md-sys-color-primary);
+}

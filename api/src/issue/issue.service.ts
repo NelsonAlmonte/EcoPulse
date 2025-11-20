@@ -70,34 +70,55 @@ export class IssueService {
     where: Prisma.IssueWhereInput,
     order: Prisma.IssueOrderByWithRelationInput,
   ): Promise<GetIssueListDto[] | null> {
-    const issues = await this.prisma.issue.findMany({
-      skip: pagination.skip,
-      take: pagination.take,
-      include: {
-        category: true,
-        user: {
-          omit: {
-            password: true,
-            role: true,
-          },
-        },
-        _count: {
-          select: {
-            highlights: true,
-          },
+    const include: Prisma.IssueInclude = {
+      category: true,
+      user: {
+        omit: {
+          password: true,
+          role: true,
         },
       },
+      _count: {
+        select: {
+          highlights: true,
+        },
+      },
+    };
+
+    if (where.userId) {
+      include.highlights = {
+        where: {
+          userId: where.userId.toString(),
+        },
+        select: {
+          createdAt: true,
+        },
+        take: 1,
+      };
+
+      delete where.userId;
+    }
+
+    const args: Prisma.IssueFindManyArgs = {
+      skip: pagination.skip,
+      take: pagination.take,
+      include,
       where,
       orderBy: order,
-    });
-    const transformedIssues = issues.map((issue) => {
-      const highlightCount = issue._count.highlights;
+    };
 
-      delete issue._count;
+    const issues = await this.prisma.issue.findMany(args);
+    const transformedIssues = issues.map((issue) => {
+      const i = issue as Prisma.IssueGetPayload<{
+        include: typeof include;
+      }>;
+
+      const highlightCount = i._count.highlights;
 
       return {
-        ...issue,
+        ...i,
         highlights: highlightCount ? highlightCount : 0,
+        hasCurrentUserHighlight: i.highlights?.length ? true : false,
       };
     });
 

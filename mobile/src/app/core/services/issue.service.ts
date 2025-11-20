@@ -7,12 +7,14 @@ import { environment } from 'src/environments/environment';
 import { ToastController } from '@ionic/angular/standalone';
 import { Bounds } from '@shared/models/user.model';
 import { List } from '@shared/models/response.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IssueService {
   apiService = inject(ApiService);
+  authService = inject(AuthService);
   toastController = inject(ToastController);
   issues = signal<Issue[]>([]);
   issue = signal<Issue | null>(null);
@@ -61,10 +63,12 @@ export class IssueService {
   }
 
   getIssuesByBounds(bounds: Bounds, page: number = 1) {
+    const loggedUser = this.authService.loggedUserData();
+
     return this.apiService.doFetch<List<Issue[]>>(
       `${this.URL}/in-bound?north=${bounds.north}&south=${bounds.south}&east=${
         bounds.east
-      }&west=${bounds.west}&page=${page}&amount=${10}`
+      }&west=${bounds.west}&page=${page}&amount=${10}&userId=${loggedUser!.id}`
     );
   }
 }

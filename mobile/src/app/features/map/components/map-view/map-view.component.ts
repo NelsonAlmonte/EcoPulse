@@ -1,20 +1,23 @@
 import {
   AfterViewInit,
   Component,
+  createComponent,
   CUSTOM_ELEMENTS_SCHEMA,
   effect,
   ElementRef,
+  EnvironmentInjector,
   inject,
   Injector,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { Issue } from '@shared/models/issue.model';
 import { ModalController, ToastController } from '@ionic/angular/standalone';
 import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
+import { IssueMarkerComponent } from '@features/map/components/issue-marker/issue-marker.component';
 import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
-import { Bounds } from '@shared/models/user.model';
 import { importLibrary } from '@googlemaps/js-api-loader';
 import { MapService } from '@core/services/map.service';
 
@@ -26,11 +29,13 @@ import { MapService } from '@core/services/map.service';
 })
 export class MapViewComponent implements AfterViewInit {
   injector = inject(Injector);
+  environmentInjector = inject(EnvironmentInjector);
   mapService = inject(MapService);
   modalController = inject(ModalController);
   toastController = inject(ToastController);
   issueService = inject(IssueService);
   authService = inject(AuthService);
+  renderer = inject(Renderer2);
   @ViewChild('map') mapRef!: ElementRef<Element>;
   map!: google.maps.Map;
   markers = new Map<google.maps.marker.AdvancedMarkerElement, Issue>();
@@ -99,6 +104,15 @@ export class MapViewComponent implements AfterViewInit {
         const { AdvancedMarkerElement } = await importLibrary('marker');
 
         for (const issue of issues) {
+          const container = this.renderer.createElement('div');
+          const component = createComponent(IssueMarkerComponent, {
+            hostElement: container,
+            environmentInjector: this.environmentInjector,
+          });
+
+          component.setInput('issue', issue);
+          component.changeDetectorRef.detectChanges();
+
           const marker = new AdvancedMarkerElement({
             map: this.map,
             position: {
@@ -106,6 +120,7 @@ export class MapViewComponent implements AfterViewInit {
               lng: issue.longitude,
             },
             gmpClickable: true,
+            content: container,
           });
 
           this.markers.set(marker, issue);
