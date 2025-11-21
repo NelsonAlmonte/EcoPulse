@@ -57,18 +57,27 @@ export class IssueService {
             position: 'bottom',
           });
 
-          toast.present();
+          await toast.present();
         },
       });
   }
 
-  getIssuesByBounds(bounds: Bounds, page: number = 1) {
+  getIssuesByBounds(
+    bounds: Bounds,
+    page: number = 1
+  ): Observable<List<Issue[]>> {
     const loggedUser = this.authService.loggedUserData();
 
     return this.apiService.doFetch<List<Issue[]>>(
       `${this.URL}/in-bound?north=${bounds.north}&south=${bounds.south}&east=${
         bounds.east
-      }&west=${bounds.west}&page=${page}&amount=${10}&userId=${loggedUser!.id}`
+      }&west=${bounds.west}&page=${page}&amount=${10}&userId=${
+        loggedUser!.id
+      }&order=highlights:desc`
     );
+  }
+
+  deleteIssue(id: string) {
+    return this.apiService.doDelete<Issue>(`${this.URL}/${id}`);
   }
 }

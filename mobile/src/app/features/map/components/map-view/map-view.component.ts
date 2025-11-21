@@ -60,6 +60,7 @@ export class MapViewComponent implements AfterViewInit {
       mapTypeControl: false,
       fullscreenControl: false,
       cameraControl: false,
+      clickableIcons: false,
     } as google.maps.MapOptions;
 
     this.map = await this.mapService.createMap(mapElement, options);

@@ -10,12 +10,12 @@
     />
     <div class="absolute inset-0 bg-black/40 rounded-2xl"></div>
     <div class="absolute inset-0 flex items-start justify-end p-4">
-      <div
+      <button
+        id="open-options-{{ issueData.id }}"
         class="rounded-full md-on-primary bg-white/20 p-2 z-50"
-        (click)="viewPhoto(issueData)"
       >
-        <lucide-angular [img]="viewPhotoIcon" size="22"></lucide-angular>
-      </div>
+        <lucide-angular [img]="optionsIcon" size="22"></lucide-angular>
+      </button>
     </div>
     <div class="absolute inset-0 flex items-end justify-start p-4">
       <div class="flex items-center justify-start md-on-primary">
@@ -64,4 +64,10 @@
     }
   </div>
 </div>
+<ion-action-sheet
+  trigger="open-options-{{ issueData.id }}"
+  header="Acciones"
+  [buttons]="actionSheetButtons"
+  (willDismiss)="handleOptions($event)"
+></ion-action-sheet>
 }

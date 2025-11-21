@@ -39,7 +39,9 @@ export class UserService {
     });
 
     this.apiService
-      .doFetch<List<Issue[]>>(`${this.URL}/${id}/issues?amount=${amount}`)
+      .doFetch<List<Issue[]>>(
+        `${this.URL}/${id}/issues?amount=${amount}&order=createdAt:desc`
+      )
       .subscribe((response) => {
         this.issueList.set(response);
       });
