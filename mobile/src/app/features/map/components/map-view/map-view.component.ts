@@ -155,7 +155,7 @@ export class MapViewComponent implements AfterViewInit {
     const modal = await this.modalController.create({
       component: IssueDetailComponent,
       cssClass: 'issue-detail-modal',
-      initialBreakpoint: 0.38,
+      initialBreakpoint: 0.45,
       // breakpoints: [0, 0.47],
       componentProps: {
         issue: {},
@@ -164,7 +164,7 @@ export class MapViewComponent implements AfterViewInit {
       focusTrap: false,
     });
 
-    if (issue!.comment) modal.initialBreakpoint = 0.45;
+    if (issue!.comment) modal.initialBreakpoint = 0.55;
 
     await modal.present();
 

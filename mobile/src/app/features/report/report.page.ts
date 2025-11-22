@@ -69,7 +69,8 @@ export class ReportPage implements OnInit {
 
   async takePicture(): Promise<void> {
     const image = await Camera.getPhoto({
-      quality: 90,
+      quality: 60,
+      width: 1280,
       allowEditing: false,
       resultType: CameraResultType.DataUrl,
       saveToGallery: false,

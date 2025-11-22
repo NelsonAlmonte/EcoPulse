@@ -148,7 +148,7 @@ export class ReportModalComponent {
 
     formData.append(
       'photo',
-      this.dataUrlToFile(this.photo.toString(), `issue-${uuidv4()}.jpg`)
+      this.dataUrlToFile(this.photo().toString(), `issue-${uuidv4()}.jpg`)
     );
 
     this.issueService
@@ -200,18 +200,14 @@ export class ReportModalComponent {
     };
   }
 
-  dataUrlToFile(input: string, filename: string): File {
-    const match = input.match(/\[Input Signal:\s*(.*?)\s*\]/);
-
-    if (!match || !match[1]) {
-      throw new Error(
-        'Base64 inválido o no encontrado en el formato esperado.'
-      );
+  dataUrlToFile(dataUrl: string, filename: string): File {
+    if (!dataUrl.startsWith('data:')) {
+      throw new Error('El string proporcionado no es un DataURL válido.');
     }
 
-    const dataUrl = match[1];
     const [metadata, base64] = dataUrl.split(',');
-    const mime = metadata.match(/:(.*?);/)![1];
+    const mime = metadata.split(':')[1].split(';')[0];
+
     const binary = atob(base64);
     const array = new Uint8Array(binary.length);
 
