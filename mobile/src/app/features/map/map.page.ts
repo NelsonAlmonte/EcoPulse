@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
-  IonProgressBar,
   IonTitle,
   IonToolbar,
   ModalController,
@@ -23,7 +22,6 @@ import { ChevronUpIcon, LucideAngularModule } from 'lucide-angular';
     IonHeader,
     IonTitle,
     IonToolbar,
-    IonProgressBar,
     CommonModule,
     FormsModule,
     MapViewComponent,

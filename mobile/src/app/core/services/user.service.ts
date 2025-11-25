@@ -29,21 +29,12 @@ export class UserService {
   URL = `${environment.apiUrl}user`;
 
   getUserIssues(id: string, amount: number = 6): void {
-    this.issueList.set({
-      data: [],
-      pagination: {
-        page: 1,
-        amount: 5,
-        total: 5,
-      },
-    });
-
     this.apiService
       .doFetch<List<Issue[]>>(
         `${this.URL}/${id}/issues?amount=${amount}&order=createdAt:desc`
       )
       .subscribe((response) => {
-        this.issueList.set(response);
+        this.issueList.update(() => response);
       });
   }
 

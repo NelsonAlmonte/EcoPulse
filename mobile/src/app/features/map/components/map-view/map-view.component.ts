@@ -9,11 +9,16 @@ import {
   inject,
   Injector,
   Renderer2,
+  signal,
   ViewChild,
 } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { Issue } from '@shared/models/issue.model';
-import { ModalController, ToastController } from '@ionic/angular/standalone';
+import {
+  IonProgressBar,
+  ModalController,
+  ToastController,
+} from '@ionic/angular/standalone';
 import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
 import { IssueMarkerComponent } from '@features/map/components/issue-marker/issue-marker.component';
 import { IssueService } from '@core/services/issue.service';
@@ -26,6 +31,7 @@ import { MapService } from '@core/services/map.service';
   templateUrl: './map-view.component.html',
   styleUrls: ['./map-view.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [IonProgressBar],
 })
 export class MapViewComponent implements AfterViewInit {
   injector = inject(Injector);
@@ -39,6 +45,7 @@ export class MapViewComponent implements AfterViewInit {
   @ViewChild('map') mapRef!: ElementRef<Element>;
   map!: google.maps.Map;
   markers = new Map<google.maps.marker.AdvancedMarkerElement, Issue>();
+  isLoading = signal(false);
 
   async ngAfterViewInit() {
     await this.initMap();
@@ -65,6 +72,8 @@ export class MapViewComponent implements AfterViewInit {
 
     this.map = await this.mapService.createMap(mapElement, options);
 
+    this.map.addListener('bounds_changed', () => this.isLoading.set(true));
+
     this.map.addListener('idle', async () => {
       await this.getBounds(this.map);
       const bounds = this.mapService.bounds();
@@ -84,6 +93,9 @@ export class MapViewComponent implements AfterViewInit {
           });
 
           toast.present();
+        },
+        complete: () => {
+          this.isLoading.set(false);
         },
       });
     });

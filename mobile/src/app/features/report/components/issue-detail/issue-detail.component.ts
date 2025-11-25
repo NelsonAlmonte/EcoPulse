@@ -87,9 +87,13 @@ export class IssueDetailComponent {
   }
 
   async handleOptions(event: CustomEvent<OverlayEventDetail>) {
-    const selectedOption = event.detail.data.action;
+    const selectedOption = event.detail.data;
 
-    switch (selectedOption) {
+    if (!selectedOption) return;
+
+    const selectedOptionAction = selectedOption.action;
+
+    switch (selectedOptionAction) {
       case 'view':
         await this.viewPhoto(this.issueData!);
         break;
@@ -145,21 +149,16 @@ export class IssueDetailComponent {
               duration: 4000,
               position: 'bottom',
             });
-
-            //TODO: Actualizar los signals. Verificar si es el signal de issueList de user o del issue
+            const modal = await this.modalController.getTop();
 
             await loading.dismiss();
             await toast.present();
+            modal?.dismiss();
 
-            if (this.issue()) {
-              const modal = await this.modalController.getTop();
-              modal?.dismiss();
-            } else {
-              this.userService.getUserIssues(
-                this.authService.loggedUserData()!.id,
-                this.AMOUNT_OF_ISSUES
-              );
-            }
+            this.userService.getUserIssues(
+              this.authService.loggedUserData()!.id,
+              this.AMOUNT_OF_ISSUES
+            );
           },
           error: async (err) => {
             console.log(err);
