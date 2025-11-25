@@ -161,8 +161,6 @@ export class MapViewComponent implements AfterViewInit {
       return;
     }
 
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-
     const userId = this.authService.loggedUserData()!.id;
     const modal = await this.modalController.create({
       component: IssueDetailComponent,
@@ -181,21 +179,6 @@ export class MapViewComponent implements AfterViewInit {
     await modal.present();
 
     modal.onDidDismiss().then(() => this.issueService.issue.set(null));
-
-    modal.onWillDismiss().then(() => {
-      (document.activeElement as HTMLElement | null)?.blur();
-
-      setTimeout(() => {
-        if (
-          previouslyFocused &&
-          typeof previouslyFocused.focus === 'function'
-        ) {
-          previouslyFocused.focus();
-        } else {
-          document.body.focus();
-        }
-      }, 20);
-    });
 
     this.issueService.getIssue(issue!.id, userId);
   }

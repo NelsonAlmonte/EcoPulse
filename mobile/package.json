@@ -31,7 +31,7 @@
     "@capacitor/keyboard": "7.0.1",
     "@capacitor/status-bar": "7.0.1",
     "@googlemaps/js-api-loader": "^2.0.2",
-    "@ionic/angular": "^8.0.0",
+    "@ionic/angular": "^8.7.10",
     "@ionic/pwa-elements": "^3.3.0",
     "@tailwindcss/postcss": "^4.1.11",
     "ionicons": "^7.0.0",
