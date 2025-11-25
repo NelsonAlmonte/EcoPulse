@@ -3,6 +3,7 @@ import { IssueService } from '@core/services/issue.service';
 import {
   ActionSheetController,
   IonActionSheet,
+  LoadingController,
   ModalController,
   ToastController,
 } from '@ionic/angular/standalone';
@@ -23,6 +24,8 @@ import {
   TreePineIcon,
 } from 'lucide-angular';
 import type { OverlayEventDetail } from '@ionic/core';
+import { UserService } from '@core/services/user.service';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-issue-detail',
@@ -38,9 +41,12 @@ import type { OverlayEventDetail } from '@ionic/core';
 })
 export class IssueDetailComponent {
   issueService = inject(IssueService);
+  userService = inject(UserService);
+  authService = inject(AuthService);
   modalController = inject(ModalController);
   actionSheetController = inject(ActionSheetController);
   toastController = inject(ToastController);
+  loadingController = inject(LoadingController);
   issue = input.required<Issue | null>();
   DEFAULT_STATUS = DEFAULT_STATUS;
   checkCircle = CheckCircleIcon;
@@ -70,6 +76,7 @@ export class IssueDetailComponent {
       },
     },
   ];
+  AMOUNT_OF_ISSUES = 3;
 
   get issueData() {
     return this.issue()?.id ? this.issue() : this.issueService.issue();
@@ -119,10 +126,17 @@ export class IssueDetailComponent {
 
     actionSheet.addEventListener(
       'didDismiss',
-      (event: CustomEvent<OverlayEventDetail>) => {
+      async (event: CustomEvent<OverlayEventDetail>) => {
         const selectedOption = event.detail.data.action;
 
         if (selectedOption !== 'delete') return;
+
+        const loading = await this.loadingController.create({
+          message: 'Eliminando este reporte...',
+          cssClass: 'delete-loading',
+        });
+
+        await loading.present();
 
         this.issueService.deleteIssue(id).subscribe({
           next: async (response) => {
@@ -132,10 +146,20 @@ export class IssueDetailComponent {
               position: 'bottom',
             });
 
-            //TODO: Cerrar el modal si se elimina por el modal del mapa
             //TODO: Actualizar los signals. Verificar si es el signal de issueList de user o del issue
 
+            await loading.dismiss();
             await toast.present();
+
+            if (this.issue()) {
+              const modal = await this.modalController.getTop();
+              modal?.dismiss();
+            } else {
+              this.userService.getUserIssues(
+                this.authService.loggedUserData()!.id,
+                this.AMOUNT_OF_ISSUES
+              );
+            }
           },
           error: async (err) => {
             console.log(err);

@@ -3,3 +3,11 @@
   overflow: hidden; */
   touch-action: none;
 }
+
+ion-progress-bar::part(track) {
+  background: var(--md-sys-color-secondary-container);
+}
+
+ion-progress-bar::part(progress) {
+  background: var(--md-sys-color-primary);
+}
