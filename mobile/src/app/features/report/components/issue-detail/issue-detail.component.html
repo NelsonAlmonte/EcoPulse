@@ -13,6 +13,7 @@
       <button
         id="open-options-{{ issueData.id }}"
         class="rounded-full md-on-primary bg-white/20 p-2 z-50"
+        (click)="openOptions()"
       >
         <lucide-angular [img]="optionsIcon" size="22"></lucide-angular>
       </button>
@@ -64,10 +65,10 @@
     }
   </div>
 </div>
-<ion-action-sheet
+<!-- <ion-action-sheet
   trigger="open-options-{{ issueData.id }}"
   header="Acciones"
   [buttons]="actionSheetButtons"
   (willDismiss)="handleOptions($event)"
-></ion-action-sheet>
+></ion-action-sheet> -->
 }

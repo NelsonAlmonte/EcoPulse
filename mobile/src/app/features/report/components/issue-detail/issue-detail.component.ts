@@ -2,7 +2,6 @@ import { Component, inject, input } from '@angular/core';
 import { IssueService } from '@core/services/issue.service';
 import {
   ActionSheetController,
-  IonActionSheet,
   LoadingController,
   ModalController,
   ToastController,
@@ -32,7 +31,6 @@ import { AuthService } from '@core/services/auth.service';
   templateUrl: './issue-detail.component.html',
   styleUrls: ['./issue-detail.component.css'],
   imports: [
-    IonActionSheet,
     LucideAngularModule,
     HighlightButtonComponent,
     IssueDetailLoadingComponent,
@@ -84,6 +82,21 @@ export class IssueDetailComponent {
 
   showIcon(iconName: string): LucideIconData {
     return iconMap[iconName] || TreePineIcon;
+  }
+
+  async openOptions(): Promise<void> {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Acciones',
+      buttons: this.actionSheetButtons,
+    });
+
+    await actionSheet.present();
+
+    actionSheet.addEventListener(
+      'willDismiss',
+      async (event: CustomEvent<OverlayEventDetail>) =>
+        await this.handleOptions(event)
+    );
   }
 
   async handleOptions(event: CustomEvent<OverlayEventDetail>) {
@@ -159,6 +172,13 @@ export class IssueDetailComponent {
               this.authService.loggedUserData()!.id,
               this.AMOUNT_OF_ISSUES
             );
+
+            this.issueService.issueList.update((current) => {
+              return {
+                data: current.data.filter((issue) => issue.id !== id),
+                pagination: current.pagination,
+              };
+            });
           },
           error: async (err) => {
             console.log(err);
