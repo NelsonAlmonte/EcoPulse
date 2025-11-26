@@ -95,6 +95,7 @@ export class MapViewComponent implements AfterViewInit {
           toast.present();
         },
         complete: () => {
+          this.issueService.isLoading.set(false);
           this.isLoading.set(false);
         },
       });

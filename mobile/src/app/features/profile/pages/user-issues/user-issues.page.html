@@ -8,5 +8,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <app-issue-list></app-issue-list>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshUserIssues($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <app-issue-list [issueList]="this.userService.issueList()"></app-issue-list>
+
+  @if (canGetMore()) {
+  <ion-infinite-scroll (ionInfinite)="getMoreIssues($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  }
 </ion-content>

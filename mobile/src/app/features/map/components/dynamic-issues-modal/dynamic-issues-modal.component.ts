@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { IssueService } from '@core/services/issue.service';
 import { MapService } from '@core/services/map.service';
 import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
@@ -24,13 +24,18 @@ import { LucideAngularModule, MapIcon, XIcon } from 'lucide-angular';
     IonInfiniteScrollContent,
   ],
 })
-export class DynamicIssuesModalComponent {
+export class DynamicIssuesModalComponent implements OnInit {
   issueService = inject(IssueService);
   mapService = inject(MapService);
   modalController = inject(ModalController);
   toastController = inject(ToastController);
+  canGetMore = signal(true);
   mapIcon = MapIcon;
   xIcon = XIcon;
+
+  ngOnInit(): void {
+    this.canGetMore.set(true);
+  }
 
   async close() {
     const modal = await this.modalController.getTop();
@@ -42,7 +47,7 @@ export class DynamicIssuesModalComponent {
     modal?.setCurrentBreakpoint(breakpoint);
   }
 
-  getIssues(event: InfiniteScrollCustomEvent) {
+  getMoreIssues(event: InfiniteScrollCustomEvent) {
     const bounds = this.mapService.bounds();
 
     if (!bounds) return;
@@ -57,7 +62,8 @@ export class DynamicIssuesModalComponent {
             pagination: response.pagination,
           };
         });
-        event.target.complete();
+
+        if (!response.data.length) this.canGetMore.set(false);
       },
       error: async (err) => {
         console.log(err);
@@ -69,6 +75,11 @@ export class DynamicIssuesModalComponent {
 
         toast.present();
       },
+      complete: () => this.issueService.isLoading.set(false),
     });
+
+    setTimeout(() => {
+      event.target.complete();
+    }, 1500);
   }
 }

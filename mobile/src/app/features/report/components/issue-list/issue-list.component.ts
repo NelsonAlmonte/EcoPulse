@@ -1,5 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
+import { IssueService } from '@core/services/issue.service';
 import { UserService } from '@core/services/user.service';
 import { IssueDetailComponent } from '@features/report/components/issue-detail/issue-detail.component';
 import { IssueDetailLoadingComponent } from '@shared/components/issue-detail-loading/issue-detail-loading.component';
@@ -27,6 +28,7 @@ import {
 })
 export class IssueListComponent {
   userService = inject(UserService);
+  issueService = inject(IssueService);
   authService = inject(AuthService);
   issueList = input<List<Issue[]>>();
   DEFAULT_STATUS = DEFAULT_STATUS;
@@ -35,10 +37,4 @@ export class IssueListComponent {
   headsUpIcon = MegaphoneIcon;
   userIcon = CircleUserIcon;
   emptyIcon = FolderOpenIcon;
-
-  get issueListData() {
-    return this.issueList()?.data.length
-      ? this.issueList()
-      : this.userService.issueList();
-  }
 }

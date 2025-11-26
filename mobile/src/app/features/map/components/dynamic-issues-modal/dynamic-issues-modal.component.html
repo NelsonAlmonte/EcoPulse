@@ -12,7 +12,10 @@
     </button>
   </div>
   <app-issue-list [issueList]="issueService.issueList()"></app-issue-list>
-  <ion-infinite-scroll (ionInfinite)="getIssues($event)">
+
+  @if (canGetMore()) {
+  <ion-infinite-scroll (ionInfinite)="getMoreIssues($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
+  }
 </ion-content>

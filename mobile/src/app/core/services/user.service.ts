@@ -26,16 +26,15 @@ export class UserService {
     highlightsGiven: 0,
     highlightsReceived: 0,
   });
+  isLoading = signal(false);
   URL = `${environment.apiUrl}user`;
 
-  getUserIssues(id: string, amount: number = 6): void {
-    this.apiService
-      .doFetch<List<Issue[]>>(
-        `${this.URL}/${id}/issues?amount=${amount}&order=createdAt:desc`
-      )
-      .subscribe((response) => {
-        this.issueList.update(() => response);
-      });
+  getUserIssues(id: string, amount: number = 5, page: number = 1) {
+    this.isLoading.set(true);
+
+    return this.apiService.doFetch<List<Issue[]>>(
+      `${this.URL}/${id}/issues?amount=${amount}&page=${page}&order=createdAt:desc`
+    );
   }
 
   getUser(id: string): void {
@@ -92,20 +91,11 @@ export class UserService {
       });
   }
 
-  getHighlightsGiven(id: string): void {
-    this.issueList.set({
-      data: [],
-      pagination: {
-        page: 1,
-        amount: 5,
-        total: 5,
-      },
-    });
+  getHighlightsGiven(id: string, amount: number = 5, page: number = 1) {
+    this.isLoading.set(true);
 
-    this.apiService
-      .doFetch<List<Issue[]>>(`${this.URL}/${id}/highlights/given`)
-      .subscribe((response) => {
-        this.issueList.set(response);
-      });
+    return this.apiService.doFetch<List<Issue[]>>(
+      `${this.URL}/${id}/highlights/given?amount=${amount}&page=${page}&order=createdAt:desc`
+    );
   }
 }

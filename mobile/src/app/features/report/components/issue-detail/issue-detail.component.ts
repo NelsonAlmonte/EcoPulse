@@ -25,6 +25,7 @@ import {
 import type { OverlayEventDetail } from '@ionic/core';
 import { UserService } from '@core/services/user.service';
 import { AuthService } from '@core/services/auth.service';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-issue-detail',
@@ -155,42 +156,49 @@ export class IssueDetailComponent {
 
         await loading.present();
 
-        this.issueService.deleteIssue(id).subscribe({
-          next: async (response) => {
-            const toast = await this.toastController.create({
-              message: 'Reporte eliminado exitosamente.',
-              duration: 4000,
-              position: 'bottom',
-            });
-            const modal = await this.modalController.getTop();
+        this.issueService
+          .deleteIssue(id)
+          .pipe(
+            tap(async () => {
+              const toast = await this.toastController.create({
+                message: 'Reporte eliminado exitosamente.',
+                duration: 4000,
+                position: 'bottom',
+              });
 
-            await loading.dismiss();
-            await toast.present();
-            modal?.dismiss();
+              const modal = await this.modalController.getTop();
 
-            this.userService.getUserIssues(
-              this.authService.loggedUserData()!.id,
-              this.AMOUNT_OF_ISSUES
-            );
+              await loading.dismiss();
+              await toast.present();
+              modal?.dismiss();
 
-            this.issueService.issueList.update((current) => {
-              return {
+              this.issueService.issueList.update((current) => ({
                 data: current.data.filter((issue) => issue.id !== id),
                 pagination: current.pagination,
-              };
-            });
-          },
-          error: async (err) => {
-            console.log(err);
-            const toast = await this.toastController.create({
-              message: 'Ocurrió un error al eliminar este reporte.',
-              duration: 4000,
-              position: 'bottom',
-            });
+              }));
+            }),
+            switchMap(() =>
+              this.userService.getUserIssues(
+                this.authService.loggedUserData()!.id,
+                this.AMOUNT_OF_ISSUES
+              )
+            )
+          )
+          .subscribe({
+            next: (response) => this.userService.issueList.set(response),
+            error: async (err) => {
+              console.log(err);
 
-            await toast.present();
-          },
-        });
+              const toast = await this.toastController.create({
+                message: 'Ocurrió un error al eliminar este reporte.',
+                duration: 4000,
+                position: 'bottom',
+              });
+
+              await toast.present();
+            },
+            complete: () => this.userService.isLoading.set(false),
+          });
       }
     );
 

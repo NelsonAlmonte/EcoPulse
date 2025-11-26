@@ -12,6 +12,7 @@ import {
   IonToolbar,
   ModalController,
   RefresherCustomEvent,
+  ToastController,
 } from '@ionic/angular/standalone';
 import { ReportModalComponent } from '@features/report/components/report-modal/report-modal.component';
 import { LocationPreviewComponent } from '@features/report/components/location-preview/location-preview.component';
@@ -44,15 +45,21 @@ export class ReportPage implements OnInit {
   authService = inject(AuthService);
   userService = inject(UserService);
   modalController = inject(ModalController);
+  toastController = inject(ToastController);
   router = inject(Router);
   cameraIcon = CameraIcon;
   AMOUNT_OF_ISSUES = 3;
 
   ngOnInit(): void {
-    this.userService.getUserIssues(
-      this.authService.loggedUserData()!.id,
-      this.AMOUNT_OF_ISSUES
-    );
+    this.userService
+      .getUserIssues(
+        this.authService.loggedUserData()!.id,
+        this.AMOUNT_OF_ISSUES
+      )
+      .subscribe((response) => {
+        this.userService.isLoading.set(false);
+        this.userService.issueList.update(() => response);
+      });
     // this.router.events
     //   .pipe(filter((event) => event instanceof NavigationEnd))
     //   .subscribe((event: NavigationEnd) => {
@@ -96,13 +103,27 @@ export class ReportPage implements OnInit {
   }
 
   refreshLatestIssues(event: RefresherCustomEvent): void {
-    this.userService.getUserIssues(
-      this.authService.loggedUserData()!.id,
-      this.AMOUNT_OF_ISSUES
-    );
+    this.userService
+      .getUserIssues(
+        this.authService.loggedUserData()!.id,
+        this.AMOUNT_OF_ISSUES
+      )
+      .subscribe({
+        next: (response) => this.userService.issueList.update(() => response),
+        error: async (err) => {
+          console.log(err);
+          const toast = await this.toastController.create({
+            message: 'Ocurrió un error al obtener los reportes.',
+            duration: 4000,
+            position: 'bottom',
+          });
 
-    setTimeout(() => {
-      event.target.complete();
-    }, 1500);
+          toast.present();
+        },
+        complete: () => {
+          event.target.complete();
+          this.userService.isLoading.set(false);
+        },
+      });
   }
 }
