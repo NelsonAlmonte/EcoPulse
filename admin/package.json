@@ -46,6 +46,7 @@
 		"@googlemaps/js-api-loader": "^1.16.10",
 		"@lucide/svelte": "^0.540.0",
 		"@supabase/ssr": "^0.7.0",
-		"@supabase/supabase-js": "^2.75.0"
+		"@supabase/supabase-js": "^2.75.0",
+		"lucide-static": "^0.555.0"
 	}
 }

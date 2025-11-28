@@ -13,6 +13,7 @@
   <app-location-preview></app-location-preview>
 
   <h4>Tus últimos reportes</h4>
+  <div class="h-6 w-6" [innerHTML]="lucideIcons[icon]"></div>
   <div class="mb-20">
     <app-issue-list [issueList]="userService.issueList()"></app-issue-list>
   </div>

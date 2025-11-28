@@ -1,15 +1,10 @@
 <script lang="ts">
-	import { type Icon as IconType } from '@lucide/svelte';
 	import type { AlertProps } from '$lib/types/ui.type';
 	import type { OperationTypes } from '$lib/types/system.type';
 	import { Button, Input, Label, Modal, Popover, Spinner, Tooltip } from 'flowbite-svelte';
 	import Alert from '$lib/components/ui/Alert.svelte';
-	import * as lucide from '@lucide/svelte/icons';
+	import * as lucideIconsRaw from 'lucide-static';
 
-	type LucideIcon = {
-		name: string;
-		icon: typeof IconType;
-	};
 	let {
 		isModalOpen,
 		isLoading,
@@ -29,13 +24,12 @@
 	} = $props();
 	let categoryName = $state(initialName);
 	let iconToSearch = $state(initialIcon);
-	let icons: LucideIcon[] = $derived.by(() => {
+	let lucideIcons = lucideIconsRaw as Record<string, string>;
+	let allIconNames = Object.keys(lucideIcons);
+	let icons = $derived.by(() => {
 		const term = iconToSearch.toLowerCase().trim();
-		return Object.entries(lucide)
-			.filter(([name]) => name.endsWith('Icon'))
-			.filter(([name]) => !term || name.toLowerCase().includes(term))
-			.map(([name, icon]) => ({ name, icon: icon as typeof IconType }))
-			.slice(0, 32);
+
+		return allIconNames.filter((name) => name.toLowerCase().includes(term)).slice(0, 32);
 	});
 	const alertProps: AlertProps = {
 		title: 'Sin resultados',
@@ -86,15 +80,16 @@
 		>
 			{#if icons.length}
 				<div class="grid grid-cols-8 gap-2">
-					{#each icons as icon (icon.name)}
-						{@const Icon = icon.icon}
+					{#each icons as icon (icon)}
 						<button
 							class="flex cursor-pointer justify-center rounded-lg bg-gray-50 p-3 hover:bg-gray-100 dark:bg-gray-700"
 							type="button"
-							onclick={() => (iconToSearch = icon.name)}
+							onclick={() => (iconToSearch = icon)}
 						>
-							<Tooltip>{icon.name}</Tooltip>
-							<Icon size="24" />
+							<Tooltip>{icon}</Tooltip>
+							<div class="h-6 w-6">
+								{@html lucideIcons[icon]}
+							</div>
 						</button>
 					{/each}
 				</div>
