@@ -24,6 +24,7 @@
 	} = $props();
 	let categoryName = $state(initialName);
 	let iconToSearch = $state(initialIcon);
+	let iconToSave = $state('');
 	let lucideIcons = lucideIconsRaw as Record<string, string>;
 	let allIconNames = Object.keys(lucideIcons);
 	let icons = $derived.by(() => {
@@ -84,7 +85,10 @@
 						<button
 							class="flex cursor-pointer justify-center rounded-lg bg-gray-50 p-3 hover:bg-gray-100 dark:bg-gray-700"
 							type="button"
-							onclick={() => (iconToSearch = icon)}
+							onclick={() => {
+								iconToSearch = icon;
+								iconToSave = lucideIcons[icon];
+							}}
 						>
 							<Tooltip>{icon}</Tooltip>
 							<div class="h-6 w-6">
@@ -99,7 +103,7 @@
 		</Popover>
 		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
 			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>
-			<Button color="emerald" onclick={() => onOperation(categoryName, iconToSearch)}>
+			<Button color="emerald" onclick={() => onOperation(categoryName, iconToSave)}>
 				{#if isLoading}
 					<Spinner class="me-3" size="4" />
 					Cargando...

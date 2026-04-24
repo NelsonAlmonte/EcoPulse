@@ -5,6 +5,10 @@
   svg.category-icon {
     stroke: var(--md-sys-color-on-secondary-container);
   }
+  
+  .category-icon svg {
+    width: 22px;
+  }
 
   &.selected {
     background-color: var(--md-sys-color-secondary);

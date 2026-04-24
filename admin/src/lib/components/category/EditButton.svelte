@@ -48,7 +48,7 @@
 <CategoryModal
 	{isModalOpen}
 	{isLoading}
-	type={'UPDATE'}
+	type="UPDATE"
 	initialName={name}
 	initialIcon={icon}
 	onOperation={(name, icon) => updateCategory(name, icon)}

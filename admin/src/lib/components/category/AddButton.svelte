@@ -51,7 +51,7 @@
 <CategoryModal
 	{isModalOpen}
 	{isLoading}
-	type={'CREATE'}
+	type="CREATE"
 	onOperation={(name, icon) => saveCategory(name, icon)}
 	onClose={() => (isModalOpen = false)}
 />

@@ -9,13 +9,8 @@
         (click)="selectCategory(category.id, $event)"
       >
         <div class="me-2">
-          <!-- <lucide-angular
-        [img]="showIcon(category.icon)"
-        size="18"
-        class="category-icon"
-      ></lucide-angular> -->
           <div
-            class="h-6 w-6"
+            class="category-icon"
             [innerHTML]="sanitizer.bypassSecurityTrustHtml(category.icon)"
           ></div>
         </div>
