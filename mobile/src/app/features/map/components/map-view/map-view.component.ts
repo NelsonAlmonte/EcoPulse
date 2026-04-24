@@ -139,12 +139,12 @@ export class MapViewComponent implements AfterViewInit {
 
           this.markers.set(marker, issue);
 
-          marker.addEventListener('click', async () => {
+          marker.addEventListener('gmp-click', async () => {
             await this.viewIssueDetail(this.markers.get(marker));
           });
         }
       },
-      { injector: this.injector }
+      { injector: this.injector },
     );
   }
 

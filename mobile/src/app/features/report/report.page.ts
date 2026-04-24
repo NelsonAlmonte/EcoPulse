@@ -6,7 +6,6 @@ import { Camera, CameraResultType } from '@capacitor/camera';
 import {
   IonContent,
   IonHeader,
-  IonIcon,
   IonRefresher,
   IonRefresherContent,
   IonTitle,
@@ -22,8 +21,6 @@ import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
 import { CameraIcon, LucideAngularModule } from 'lucide-angular';
 import { filter } from 'rxjs';
-import * as lucideIconsRaw from 'lucide-static';
-import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-report',
@@ -42,7 +39,6 @@ import { addIcons } from 'ionicons';
     LocationPreviewComponent,
     IssueListComponent,
     LucideAngularModule,
-    IonIcon,
   ],
 })
 export class ReportPage implements OnInit {
@@ -53,18 +49,12 @@ export class ReportPage implements OnInit {
   router = inject(Router);
   cameraIcon = CameraIcon;
   AMOUNT_OF_ISSUES = 3;
-  lucideIcons = lucideIconsRaw as Record<string, string>;
-  icon = 'Skull';
-
-  constructor() {
-    addIcons(this.lucideIcons);
-  }
 
   ngOnInit(): void {
     this.userService
       .getUserIssues(
         this.authService.loggedUserData()!.id,
-        this.AMOUNT_OF_ISSUES
+        this.AMOUNT_OF_ISSUES,
       )
       .subscribe((response) => {
         this.userService.isLoading.set(false);
@@ -116,7 +106,7 @@ export class ReportPage implements OnInit {
     this.userService
       .getUserIssues(
         this.authService.loggedUserData()!.id,
-        this.AMOUNT_OF_ISSUES
+        this.AMOUNT_OF_ISSUES,
       )
       .subscribe({
         next: (response) => this.userService.issueList.update(() => response),

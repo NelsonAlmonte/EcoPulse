@@ -5,6 +5,7 @@ import {
   output,
   ViewEncapsulation,
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { CategoryService } from '@core/services/category.service';
 import { iconMap } from '@shared/constants/system.constant';
 import {
@@ -22,6 +23,7 @@ import {
 })
 export class CategoryListComponent implements OnInit {
   categoryService = inject(CategoryService);
+  sanitizer = inject(DomSanitizer);
   selectedCategory = output<string>();
   selectedElement: HTMLDivElement | null = null;
 

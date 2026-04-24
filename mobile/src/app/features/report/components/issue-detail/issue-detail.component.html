@@ -1,71 +1,78 @@
 @if (!issueData) {
-<app-issue-detail-loading></app-issue-detail-loading>
-} @if (issueData) {
-<div class="md-surface-container-high rounded-2xl mb-4 issue-detail-card">
-  <div class="relative w-full h-50 photo-container">
-    <img
-      class="rounded-2xl w-full h-full object-cover"
-      src="{{ issueData.photo }}"
-      alt="{{ issueData.category.name }}"
-    />
-    <div class="absolute inset-0 bg-black/40 rounded-2xl"></div>
-    <div class="absolute inset-0 flex items-start justify-end p-4">
-      <button
-        id="open-options-{{ issueData.id }}"
-        class="rounded-full md-on-primary bg-white/20 p-2 z-50"
-        (click)="openOptions()"
-      >
-        <lucide-angular [img]="optionsIcon" size="22"></lucide-angular>
-      </button>
+  <app-issue-detail-loading></app-issue-detail-loading>
+}
+@if (issueData) {
+  <div class="md-surface-container-high rounded-2xl mb-4 issue-detail-card">
+    <div class="relative w-full h-50 photo-container">
+      <img
+        class="rounded-2xl w-full h-full object-cover"
+        src="{{ issueData.photo }}"
+        alt="{{ issueData.category.name }}"
+      />
+      <div class="absolute inset-0 bg-black/40 rounded-2xl"></div>
+      <div class="absolute inset-0 flex items-start justify-end p-4">
+        <button
+          id="open-options-{{ issueData.id }}"
+          class="rounded-full md-on-primary bg-white/20 p-2 z-50"
+          (click)="openOptions()"
+        >
+          <lucide-angular [img]="optionsIcon" size="22"></lucide-angular>
+        </button>
+      </div>
+      <div class="absolute inset-0 flex items-end justify-start p-4">
+        <div class="flex items-center justify-start md-on-primary">
+          <div class="me-2 p-2 rounded-full bg-white/20">
+            <!-- <lucide-angular
+              [img]="showIcon(issueData.category.icon)"
+              size="26"
+            ></lucide-angular> -->
+            <div
+              class="h-6 w-6"
+              [innerHTML]="
+                sanitizer.bypassSecurityTrustHtml(issueData.category.icon)
+              "
+            ></div>
+          </div>
+          <div>
+            <h2 class="text-xl font-semibold my-0!">
+              {{ issueData.category.name }}
+            </h2>
+            <span class="opacity-75"
+              >Reporte {{ issueData.status.toLocaleLowerCase() }}</span
+            >
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="absolute inset-0 flex items-end justify-start p-4">
-      <div class="flex items-center justify-start md-on-primary">
-        <div class="me-2 p-2 rounded-full bg-white/20">
+    <div class="px-4 py-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center justify-start">
           <lucide-angular
-            [img]="showIcon(issueData.category.icon)"
-            size="26"
+            class="me-1 md-on-surface-variant"
+            [img]="userIcon"
+            size="36"
           ></lucide-angular>
+          <div class="flex flex-col">
+            <span class="md-on-surface text-md">
+              {{ issueData.user.name + " " + issueData.user.last }}
+            </span>
+            <span class="md-on-surface-variant text-sm">
+              {{ issueData.createdAt | relativeTime: "es-ES" }}
+            </span>
+          </div>
         </div>
-        <div>
-          <h2 class="text-xl font-semibold my-0!">
-            {{ issueData.category.name }}
-          </h2>
-          <span class="opacity-75"
-            >Reporte {{ issueData.status.toLocaleLowerCase() }}</span
-          >
-        </div>
+        <app-highlight-button [issue]="issueData"></app-highlight-button>
       </div>
+      @if (issueData.comment) {
+        <div class="mt-6">
+          <p class="font-normal md-on-surface-variant">
+            {{ issueData.comment }}
+          </p>
+        </div>
+      }
     </div>
   </div>
-  <div class="px-4 py-6">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center justify-start">
-        <lucide-angular
-          class="me-1 md-on-surface-variant"
-          [img]="userIcon"
-          size="36"
-        ></lucide-angular>
-        <div class="flex flex-col">
-          <span class="md-on-surface text-md">
-            {{ issueData.user.name + " " + issueData.user.last }}
-          </span>
-          <span class="md-on-surface-variant text-sm">
-            {{ issueData.createdAt | relativeTime : "es-ES" }}
-          </span>
-        </div>
-      </div>
-      <app-highlight-button [issue]="issueData"></app-highlight-button>
-    </div>
-    @if (issueData.comment) {
-    <div class="mt-6">
-      <p class="font-normal md-on-surface-variant">
-        {{ issueData.comment }}
-      </p>
-    </div>
-    }
-  </div>
-</div>
-<!-- <ion-action-sheet
+  <!-- <ion-action-sheet
   trigger="open-options-{{ issueData.id }}"
   header="Acciones"
   [buttons]="actionSheetButtons"

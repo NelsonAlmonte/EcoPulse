@@ -26,6 +26,7 @@ import type { OverlayEventDetail } from '@ionic/core';
 import { UserService } from '@core/services/user.service';
 import { AuthService } from '@core/services/auth.service';
 import { switchMap, tap } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-issue-detail',
@@ -46,6 +47,7 @@ export class IssueDetailComponent {
   actionSheetController = inject(ActionSheetController);
   toastController = inject(ToastController);
   loadingController = inject(LoadingController);
+  sanitizer = inject(DomSanitizer);
   issue = input.required<Issue | null>();
   DEFAULT_STATUS = DEFAULT_STATUS;
   checkCircle = CheckCircleIcon;
@@ -96,7 +98,7 @@ export class IssueDetailComponent {
     actionSheet.addEventListener(
       'willDismiss',
       async (event: CustomEvent<OverlayEventDetail>) =>
-        await this.handleOptions(event)
+        await this.handleOptions(event),
     );
   }
 
@@ -180,9 +182,9 @@ export class IssueDetailComponent {
             switchMap(() =>
               this.userService.getUserIssues(
                 this.authService.loggedUserData()!.id,
-                this.AMOUNT_OF_ISSUES
-              )
-            )
+                this.AMOUNT_OF_ISSUES,
+              ),
+            ),
           )
           .subscribe({
             next: (response) => this.userService.issueList.set(response),
@@ -199,7 +201,7 @@ export class IssueDetailComponent {
             },
             complete: () => this.userService.isLoading.set(false),
           });
-      }
+      },
     );
 
     await actionSheet.present();
