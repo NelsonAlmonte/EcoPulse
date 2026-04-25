@@ -63,13 +63,6 @@ export class IssueDetailComponent {
       },
     },
     {
-      text: 'Eliminar reporte',
-      role: 'destructive',
-      data: {
-        action: 'delete',
-      },
-    },
-    {
       text: 'Cerrar',
       role: 'cancel',
       data: {
@@ -83,11 +76,27 @@ export class IssueDetailComponent {
     return this.issue()?.id ? this.issue() : this.issueService.issue();
   }
 
-  showIcon(iconName: string): LucideIconData {
-    return iconMap[iconName] || TreePineIcon;
+  private _validateIssueOwnershipt(): boolean {
+    const userData = this.authService.loggedUserData();
+
+    if (!userData) {
+      this.authService.logout();
+    }
+
+    return userData!.id === this.issueData!.user.id;
   }
 
   async openOptions(): Promise<void> {
+    if (this._validateIssueOwnershipt()) {
+      this.actionSheetButtons.push({
+        text: 'Eliminar reporte',
+        role: 'destructive',
+        data: {
+          action: 'delete',
+        },
+      });
+    }
+
     const actionSheet = await this.actionSheetController.create({
       header: 'Acciones',
       buttons: this.actionSheetButtons,
