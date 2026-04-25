@@ -4,10 +4,10 @@
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { pageHeaderState, toastState } from '$lib/store/ui.svelte';
-	import { Deck } from '@deck.gl/core';
 	import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 	import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 	import { DOMINICAN_REPUBLIC_COORDINATES } from '$lib/constants/system.constant';
+	import { mapService } from '$lib/services/map.service';
 
 	let { issues }: { issues: Pick<Issue, 'latitude' | 'longitude'>[] } = $props();
 	let map: google.maps.Map;
@@ -44,14 +44,8 @@
 	});
 
 	async function initMap() {
-		const { Loader } = await import('@googlemaps/js-api-loader');
-		const loader = new Loader({
-			apiKey: 'AIzaSyCNsKl8JuAYqzyMkcWy2Nspr9IPvg_jSNA',
-			version: 'weekly'
-		});
-
-		loader.importLibrary('maps').then(async (googlemaps) => {
-			const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+		mapService.loadLibrary('maps').then(async (googlemaps) => {
+			const { AdvancedMarkerElement } = (await mapService.loadLibrary(
 				'marker'
 			)) as google.maps.MarkerLibrary;
 			const { lat, lng } = DOMINICAN_REPUBLIC_COORDINATES;

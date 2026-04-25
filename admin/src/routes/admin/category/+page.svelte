@@ -87,7 +87,7 @@
 						</th>
 						<td class="px-6 py-4"> {category.name} </td>
 						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800">
-							{category.icon}
+							{@html category.icon}
 						</td>
 						<td class="px-6 py-4">
 							{new Date(category.createdAt).toLocaleDateString('es-ES', {

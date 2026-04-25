@@ -5,6 +5,7 @@
 	import Marker from '$lib/components/issue/Marker.svelte';
 	import { DOMINICAN_REPUBLIC_COORDINATES } from '$lib/constants/system.constant';
 	import { getBounds } from '$lib/utils/map';
+	import { mapService } from '$lib/services/map.service';
 
 	let { lat, lng, zoom }: { lat: string; lng: string; zoom: string } = $props();
 	let mapElement: HTMLDivElement;
@@ -23,26 +24,17 @@
 	});
 
 	async function initMap(): Promise<void> {
-		const { Loader } = await import('@googlemaps/js-api-loader');
-
-		const loader = new Loader({
-			apiKey: 'AIzaSyCNsKl8JuAYqzyMkcWy2Nspr9IPvg_jSNA',
-			version: 'weekly'
-		});
-
-		await loader.load();
-
-		const { Map } = (await google.maps.importLibrary('maps')) as google.maps.MapsLibrary;
-
-		map = new Map(mapElement, {
+		const options = {
+			mapId: 'issues-map',
 			center: {
 				lat: lat !== '' ? Number(lat) : DOMINICAN_REPUBLIC_COORDINATES.lat,
 				lng: lng !== '' ? Number(lng) : DOMINICAN_REPUBLIC_COORDINATES.lng
 			},
 			zoom: zoom !== '' ? Number(zoom) : 8,
-			mapId: 'issues-map',
 			streetViewControl: false
-		});
+		} as google.maps.MapOptions;
+
+		map = await mapService.createMap(mapElement, options);
 
 		map.addListener('idle', () => {
 			getIssues();
@@ -70,7 +62,7 @@
 	}
 
 	async function addMarkers(): Promise<void> {
-		const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+		const { AdvancedMarkerElement } = (await mapService.loadLibrary(
 			'marker'
 		)) as google.maps.MarkerLibrary;
 
@@ -84,7 +76,7 @@
 				}
 			});
 
-			const AdvancedMarkerElement = new google.maps.marker.AdvancedMarkerElement({
+			const marker = new AdvancedMarkerElement({
 				map,
 				position: {
 					lat: issue.latitude,
@@ -93,7 +85,7 @@
 				content: container
 			});
 
-			markers.push(AdvancedMarkerElement);
+			markers.push(marker);
 		}
 	}
 

@@ -3,28 +3,17 @@
 	import { goto } from '$app/navigation';
 	import { DOMINICAN_REPUBLIC_COORDINATES } from '$lib/constants/system.constant';
 	import { getBounds } from '$lib/utils/map';
+	import { mapService } from '$lib/services/map.service';
 
 	let mapElement: HTMLDivElement;
 	let map: google.maps.Map;
-	let isMapLoaded = $state(false);
 
 	onMount(async () => {
 		await initMap();
 	});
 
 	async function initMap(): Promise<void> {
-		const { Loader } = await import('@googlemaps/js-api-loader');
-
-		const loader = new Loader({
-			apiKey: 'AIzaSyCNsKl8JuAYqzyMkcWy2Nspr9IPvg_jSNA',
-			version: 'weekly'
-		});
-
-		await loader.load();
-
-		const { Map } = (await google.maps.importLibrary('maps')) as google.maps.MapsLibrary;
-
-		map = new Map(mapElement, {
+		const options = {
 			center: {
 				lat: DOMINICAN_REPUBLIC_COORDINATES.lat,
 				lng: DOMINICAN_REPUBLIC_COORDINATES.lng
@@ -32,13 +21,13 @@
 			zoom: 8,
 			mapId: 'analytics-map',
 			streetViewControl: false
-		});
+		} as google.maps.MapOptions;
+
+		map = await mapService.createMap(mapElement, options);
 
 		map.addListener('idle', () => {
 			setUrlBounds();
 		});
-
-		isMapLoaded = true;
 	}
 
 	function setUrlBounds(): void {

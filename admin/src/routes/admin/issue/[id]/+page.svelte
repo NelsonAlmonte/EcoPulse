@@ -70,7 +70,7 @@
 			</div>
 		</div>
 		<div>
-			<Button class="p-2! cursor-pointer" size="lg" color="light">
+			<Button class="cursor-pointer p-2!" size="lg" color="light">
 				<EllipsisVertical size="20" />
 			</Button>
 			<Dropdown simple class="cursor-pointer px-2 font-medium">
@@ -81,24 +81,24 @@
 				<Dropdown simple placement="right-start" class="px-2">
 					<ChangeStatus
 						id={data.issue.id}
-						status={'DESCARTADO'}
+						status="DESCARTADO"
 						children={dropdownItem}
 						onChanged={() => invalidateAll()}
 					/>
 					<ChangeStatus
 						id={data.issue.id}
-						status={'RESUELTO'}
+						status="RESUELTO"
 						children={dropdownItem}
 						onChanged={() => invalidateAll()}
 					/>
 					<ChangeStatus
 						id={data.issue.id}
-						status={'PENDIENTE'}
+						status="PENDIENTE"
 						children={dropdownItem}
 						onChanged={() => invalidateAll()}
 					/>
 				</Dropdown>
-				<DeleteButton endpoint={'issue'} id={data.issue.id} onDeleted={() => goto('/issue')}>
+				<DeleteButton endpoint="issue" id={data.issue.id} onDeleted={() => goto('/issue')}>
 					<DropdownItem class="rounded-lg text-base hover:bg-red-100 hover:text-red-700"
 						>Eliminar</DropdownItem
 					>
@@ -109,9 +109,9 @@
 </div>
 <div class="flex flex-col space-y-8 xl:flex-row xl:space-x-8">
 	<div class="relative">
-		<img class="w-100 h-150 rounded-xl object-cover" src={data.issue.photo} alt="Foto" />
+		<img class="h-150 w-100 rounded-xl object-cover" src={data.issue.photo} alt="Foto" />
 		<Button
-			class="p-2! absolute start-0 top-0 m-4 cursor-pointer"
+			class="absolute start-0 top-0 m-4 cursor-pointer p-2!"
 			size="lg"
 			color="light"
 			onclick={() => (isModalOpen = true)}
@@ -124,11 +124,11 @@
 			<IssueMap issue={data.issue} />
 			<div class="flex-1">
 				<dl>
-					{#each data.issueInfoItems as item}
+					{#each data.issueInfoItems as item (item.value)}
 						{#if item.value !== ''}
-							<div class="border-b-1 mb-4 border-b-gray-300 pb-2">
+							<div class="mb-4 border-b-1 border-b-gray-300 pb-2">
 								<dt class="mb-2 text-lg font-medium text-gray-900">{item.label}</dt>
-								<dd class="font-medium capitalize text-gray-500">{item.value}</dd>
+								<dd class="font-medium text-gray-500 capitalize">{item.value}</dd>
 							</div>
 						{/if}
 					{/each}
