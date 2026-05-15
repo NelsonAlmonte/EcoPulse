@@ -68,7 +68,7 @@ const supabase: Handle = async ({ event, resolve }) => {
 
 const authGuard: Handle = async ({ event, resolve }) => {
 	const { session, user } = await event.locals.safeGetSession();
-	const publicRoutes = ['/auth/login'];
+	const publicRoutes = ['/auth/login', '/auth/reset-password', '/auth/update-password'];
 	const currentPath = event.url.pathname;
 
 	event.locals.session = session;
