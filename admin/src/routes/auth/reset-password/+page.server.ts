@@ -7,7 +7,7 @@ export const actions: Actions = {
 		const email = formData.get('email') as string;
 		console.log(email);
 		const foo = await supabase.auth.resetPasswordForEmail(email, {
-			redirectTo: '/auth/change-password'
+			redirectTo: 'http://localhost:5173/auth/update-password'
 		});
 		console.log(foo);
 		// if (error) {
