@@ -10,7 +10,6 @@ export const actions: Actions = {
 		const { error } = await supabase.auth.signInWithPassword({ email, password });
 
 		if (error) {
-			console.error(error);
 			return fail(400, { email, error: 'Hubo un error al iniciar sesión' });
 		} else {
 			redirect(303, '/admin');

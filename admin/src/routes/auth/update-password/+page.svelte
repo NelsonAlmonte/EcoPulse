@@ -1,63 +1,98 @@
 <script lang="ts">
-	import { Alert, Button, Input, Label } from 'flowbite-svelte';
+	import type { FlowbiteColor } from '$lib/types/ui.type.js';
+	import { ShieldAlert } from '@lucide/svelte';
+	import { Alert, Button, Helper, Input, Label } from 'flowbite-svelte';
 
 	let { form } = $props();
+	let newPassword = $state('');
+	let confirmPassword = $state('');
+	let canResetPassword = $state(false);
+	let messages = $state({
+		new_password: {
+			message: 'Debe tener al menos 8 caracteres.',
+			color: 'default'
+		},
+		confirm_password: {
+			message: '',
+			color: 'default'
+		}
+	});
 </script>
 
 <div class="login-background min-h-screen">
-	<header
-		class="fixed top-0 flex w-full items-center justify-between bg-transparent p-4 shadow-none"
-	>
-		<div class="flex items-center">
-			<span class="flex items-center space-x-2 text-lg font-bold text-white">
-				<img src="/img/logo.png" alt="Flowbite Svelte" class="h-6 w-6 rounded-full" />
-				<span>EcoPulse</span>
-			</span>
-		</div>
-	</header>
-
-	<div class="flex h-screen items-center justify-start">
-		<div class="mx-4 w-1/2 max-w-lg">
+	<div class="flex h-screen items-center justify-center">
+		<div class="mx-4 max-w-lg rounded-2xl bg-white p-8 shadow">
 			<div class="py-4">
-				<h1 class="mb-4 text-4xl font-bold text-white">
-					<!-- Bienvenido a <span class="text-emerald-500">EcoPulse</span> -->
-					Elige tu nueva contraseña
+				<h1 class="mb-4 text-4xl font-bold text-gray-800">
+					Elige tu nueva <span class="text-emerald-700">contraseña</span>
 				</h1>
-				<!-- <span class="mb-4 font-bold text-white"
-					>Resetea tu Contraseña manin pero primero mete tu email ahi pa saber si de velda velda ere
-					tu</span -->
-				>
+				<span class="mb-4 font-bold text-gray-800">Introduce tu nueva contraseña</span>
 			</div>
+			{#if form?.alert}
+				<Alert class="mb-6" color={form.alert.color as FlowbiteColor}>
+					{#snippet icon()}<ShieldAlert class="h-5 w-5" />{/snippet}
+					{form.alert.message}
+				</Alert>
+			{/if}
 			<form class="space-y-6" method="POST">
-				<!-- <Label class="space-y-2 text-white">
-					<span>Contraseña vieja</span>
-					<Input
-						type="text"
-						name="old_password"
-						placeholder="Contraseña vieja"
-						autocomplete="off"
-						value={form?.old_password ?? ''}
-						required
-					/>
-				</Label> -->
-
-				<Label class="space-y-2 text-white">
+				<Label class="space-y-2" color={messages.new_password.color as FlowbiteColor}>
 					<span>Nueva contraseña</span>
 					<Input
-						type="text"
+						type="password"
 						name="new_password"
 						placeholder="Nueva contraseña"
 						autocomplete="off"
-						value={form?.new_password ?? ''}
+						color={messages.new_password.color as FlowbiteColor}
+						bind:value={newPassword}
+						onblur={() => {
+							if (newPassword.length >= 8) {
+								messages.new_password.color = 'emerald';
+								messages.new_password.message = 'Contraseña aceptada.';
+							} else {
+								messages.new_password.color = 'red';
+								messages.new_password.message = 'La contraseña debe tener al menos 8 caracteres.';
+							}
+						}}
 						required
 					/>
+					<Helper class="mt-2" color={messages.new_password.color as FlowbiteColor}
+						>{messages.new_password.message}</Helper
+					>
+				</Label>
+
+				<Label class="space-y-2" color={messages.confirm_password.color as FlowbiteColor}>
+					<span>Confirmar contraseña</span>
+					<Input
+						type="password"
+						name="confirm_password"
+						placeholder="Confirmar contraseña"
+						autocomplete="off"
+						color={messages.confirm_password.color as FlowbiteColor}
+						bind:value={confirmPassword}
+						onblur={() => {
+							if (confirmPassword === newPassword && newPassword.length >= 8) {
+								messages.confirm_password.color = 'emerald';
+								messages.confirm_password.message = 'Contraseña confirmada.';
+								canResetPassword = true;
+							} else {
+								messages.confirm_password.color = 'red';
+								messages.confirm_password.message = 'Las contraseñas deben ser iguales.';
+								canResetPassword = false;
+							}
+						}}
+						required
+					/>
+					<Helper class="mt-2" color={messages.confirm_password.color as FlowbiteColor}
+						>{messages.confirm_password.message}</Helper
+					>
 				</Label>
 
 				<Button
 					type="submit"
 					class="w-full py-4 text-base font-medium transition"
 					color="emerald"
-					pill>Actualizar contraseña</Button
+					disabled={!canResetPassword}
+					pill>Confirmar contraseña</Button
 				>
 			</form>
 		</div>
@@ -66,16 +101,7 @@
 
 <style>
 	.login-background {
-		background: rgb(34, 40, 49);
-		background-image:
-			linear-gradient(
-				90deg,
-				oklch(30.066% 0.06039 159.662 / 0.911) 0%,
-				oklch(39.971% 0.09139 159.063 / 0.76) 25%,
-				oklch(55.294% 0.12539 159.872 / 0.308) 50%,
-				oklch(70.192% 0.15767 160.464 / 0.034) 100%
-			),
-			url('/img/login-bg.jpg');
+		background-image: url('/img/foo.jpg');
 		background-size: cover;
 		background-position: center;
 	}

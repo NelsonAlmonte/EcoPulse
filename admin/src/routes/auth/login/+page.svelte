@@ -17,13 +17,13 @@
 		</div>
 	</header>
 
-	<div class="flex h-screen items-center justify-start">
-		<div class="mx-4 w-1/2 max-w-lg">
+	<div class="flex h-screen items-center justify-center">
+		<div class="mx-4 max-w-lg rounded-2xl bg-white p-8 shadow">
 			<div class="py-4">
-				<h1 class="mb-4 text-4xl font-bold text-white">
-					Bienvenido a <span class="text-emerald-500">EcoPulse</span>
+				<h1 class="mb-4 text-4xl font-bold text-gray-800">
+					Bienvenido a <span class="text-emerald-700">EcoPulse</span>
 				</h1>
-				<span class="mb-4 font-bold text-white"
+				<span class="mb-4 font-bold text-gray-800"
 					>Usa las credenciales asignadas por tu administrador</span
 				>
 			</div>
@@ -35,7 +35,7 @@
 				</Alert>
 			{/if}
 			<form class="space-y-6" method="POST" action="?/login">
-				<Label class="space-y-2 text-white">
+				<Label class="space-y-2  text-gray-800">
 					<span>Correo</span>
 					<Input
 						type="email"
@@ -47,7 +47,7 @@
 					/>
 				</Label>
 
-				<Label class="space-y-2 text-white">
+				<Label class="space-y-2  text-gray-800">
 					<span>Contraseña</span>
 					<Input
 						type="password"
@@ -71,16 +71,7 @@
 
 <style>
 	.login-background {
-		background: rgb(34, 40, 49);
-		background-image:
-			linear-gradient(
-				90deg,
-				oklch(30.066% 0.06039 159.662 / 0.911) 0%,
-				oklch(39.971% 0.09139 159.063 / 0.76) 25%,
-				oklch(55.294% 0.12539 159.872 / 0.308) 50%,
-				oklch(70.192% 0.15767 160.464 / 0.034) 100%
-			),
-			url('/img/login-bg.jpg');
+		background-image: url('/img/foo.jpg');
 		background-size: cover;
 		background-position: center;
 	}
