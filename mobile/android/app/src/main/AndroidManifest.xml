@@ -12,7 +12,7 @@
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCNsKl8JuAYqzyMkcWy2Nspr9IPvg_jSNA"/>
 
         <activity
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarLaunch"

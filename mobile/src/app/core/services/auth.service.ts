@@ -44,10 +44,10 @@ export class AuthService {
 
   signup(signupUserDto: SignupUserDto): void {
     this.apiService
-      .doPost<AuthResponseDto, SignupUserDto>(
-        `${this.URL}/signup`,
-        signupUserDto
-      )
+      .doPost<
+        AuthResponseDto,
+        SignupUserDto
+      >(`${this.URL}/signup`, signupUserDto)
       .subscribe({
         next: (response) => {
           localStorage.setItem('auth', JSON.stringify(response));
@@ -67,17 +67,17 @@ export class AuthService {
   }
 
   refreshSession(
-    refreshToken: RefreshUserSessionDto
+    refreshToken: RefreshUserSessionDto,
   ): Observable<AuthResponseDto> {
     return this.apiService.doPost<AuthResponseDto, RefreshUserSessionDto>(
       `${this.URL}/refresh`,
-      refreshToken
+      refreshToken,
     );
   }
 
   logout(): void {
     localStorage.removeItem('auth');
-    this.router.navigate(['/welcome']);
+    this.router.navigate(['/login']);
   }
 
   loggedUserData(): AuthResponseDto | null {

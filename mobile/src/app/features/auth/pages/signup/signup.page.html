@@ -1,88 +1,89 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>Registrate</ion-title>
-  </ion-toolbar>
-</ion-header>
 <ion-content [fullscreen]="true">
-  <div class="flex flex-col justify-between items-center h-full">
-    <div class="w-48 text-center mt-18">
-      <img
-        class="w-full mb-4 rounded-full"
-        src="assets/img/logo.png"
-        alt="logo"
-      />
-      <div>
-        <span
-          class="md-on-primary-container pointer-events-none absolute start-0 end-0 mt-2 text-center text-3xl font-bold tracking-widest capitalize opacity-20 select-none"
+  <div
+    class="login-background"
+    style="background-image: url(&quot;assets/img/auth-background.jpg&quot;)"
+  >
+    <div class="flex h-screen items-center justify-center">
+      <div class="mx-4 rounded-2xl md-surface-container p-8 shadow">
+        <p class="mb-4 text-center text-4xl font-bold md-on-container">
+          Bienvenido a <span class="md-on-primary-container">EcoPulse</span>
+        </p>
+        <p class="mb-4 md-on-surface-variant text-center text-sm">
+          Para crear tu cuenta completa los siguientes datos
+        </p>
+        <form [formGroup]="signupForm" (ngSubmit)="signup()">
+          <div class="mb-5">
+            <ion-input
+              label="Nombre"
+              label-placement="floating"
+              fill="outline"
+              placeholder="Ingresa tu nombre"
+              type="text"
+              name="name"
+              formControlName="name"
+            ></ion-input>
+          </div>
+          <div class="mb-5">
+            <ion-input
+              label="Apellido"
+              label-placement="floating"
+              fill="outline"
+              placeholder="Ingresa tu apellido"
+              type="text"
+              name="last"
+              formControlName="last"
+            ></ion-input>
+          </div>
+          <div class="mb-5">
+            <ion-input
+              label="Correo electrónico"
+              label-placement="floating"
+              fill="outline"
+              placeholder="Ingresa tu correo electrónico"
+              type="email"
+              name="email"
+              formControlName="email"
+            ></ion-input>
+          </div>
+          <div class="mb-5">
+            <ion-input
+              label="Contraseña"
+              label-placement="floating"
+              fill="outline"
+              placeholder="Ingresa tu contraseña"
+              type="password"
+              name="password"
+              formControlName="password"
+            ></ion-input>
+          </div>
+          <button
+            type="submit"
+            class="focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full"
+            [ngClass]="{
+              'md-primary md-on-primary': signupForm.valid,
+              'md-tertiary md-on-tertiary': !signupForm.valid
+            }"
+            [disabled]="!signupForm.valid"
+          >
+            Crear cuenta
+          </button>
+        </form>
+        <div class="relative text-center my-4">
+          <span class="md-surface-container text-sm px-4 relative z-10"
+            >¿Ya tienes una cuenta?</span
+          >
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-400"></div>
+          </div>
+        </div>
+        <a
+          type="button"
+          class="md-secondary md-on-secondary focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full"
+          [routerLink]="['/login']"
         >
-          Registrate
-        </span>
-        <span class="md-on-surface text-3xl relative text-center capitalize"
-          >Registrate</span
-        >
+          Ingresa a tu cuenta
+        </a>
       </div>
-    </div>
-    <div class="rounded-t-4xl px-10 py-10 md-surface-container w-full">
-      <form [formGroup]="signupForm" (ngSubmit)="signup()">
-        <div class="mb-5">
-          <ion-input
-            label="Nombre"
-            label-placement="floating"
-            fill="outline"
-            placeholder="Ingresa tu nombre"
-            type="text"
-            name="name"
-            formControlName="name"
-          ></ion-input>
-        </div>
-        <div class="mb-5">
-          <ion-input
-            label="Apellido"
-            label-placement="floating"
-            fill="outline"
-            placeholder="Ingresa tu apellido"
-            type="text"
-            name="last"
-            formControlName="last"
-          ></ion-input>
-        </div>
-        <div class="mb-5">
-          <ion-input
-            label="Correo electrónico"
-            label-placement="floating"
-            fill="outline"
-            placeholder="Ingresa tu correo electrónico"
-            type="email"
-            name="email"
-            formControlName="email"
-          ></ion-input>
-        </div>
-        <div class="mb-5">
-          <ion-input
-            label="Contraseña"
-            label-placement="floating"
-            fill="outline"
-            placeholder="Ingresa tu contraseña"
-            type="password"
-            name="password"
-            formControlName="password"
-          ></ion-input>
-        </div>
-        <button
-          type="submit"
-          class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full"
-        >
-          <lucide-angular
-            class="me-1"
-            [img]="completeSignupIcon"
-            size="18"
-          ></lucide-angular>
-          Completar registro
-        </button>
-      </form>
     </div>
   </div>
 </ion-content>

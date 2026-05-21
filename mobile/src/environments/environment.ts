@@ -8,6 +8,7 @@ export const environment = {
   apiUrl: 'http://localhost:3000/',
   publicBucketUrl:
     'https://ypuxysyaytkaaxfumcpl.supabase.co/storage/v1/object/public/',
+  forgotPasswordUrl: 'http://localhost:5173/auth/reset-password',
 };
 
 /*
