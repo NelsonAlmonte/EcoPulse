@@ -1,8 +1,9 @@
-<div class="flex flex-col md-surface-container-high rounded-2xl p-2">
+<div class="flex flex-col md-surface-container-high rounded-2xl">
   <div
-    class="flex items-center justify-start m-2 mb-6"
+    class="flex items-center justify-start p-4 ion-activatable relative overflow-hidden"
     (click)="navigate('/edit-profile')"
   >
+    <ion-ripple-effect></ion-ripple-effect>
     <div class="me-4">
       <lucide-angular
         [img]="editProfileIcon"
@@ -19,9 +20,10 @@
   </div>
 
   <div
-    class="flex items-center justify-start m-2 mb-6"
+    class="flex items-center justify-start p-4 ion-activatable relative overflow-hidden"
     (click)="navigate('/user-issues')"
   >
+    <ion-ripple-effect></ion-ripple-effect>
     <div class="me-4">
       <lucide-angular
         [img]="issuesIcon"
@@ -38,9 +40,10 @@
   </div>
 
   <div
-    class="flex items-center justify-start m-2 mb-6"
+    class="flex items-center justify-start p-4 ion-activatable relative overflow-hidden"
     (click)="navigate('/highlights-given')"
   >
+    <ion-ripple-effect></ion-ripple-effect>
     <div class="me-4">
       <lucide-angular
         [img]="highlightedIcon"
@@ -54,7 +57,11 @@
     </div>
   </div>
 
-  <div class="flex items-center justify-start m-2" (click)="logout()">
+  <div
+    class="flex items-center justify-start p-4 ion-activatable relative overflow-hidden"
+    (click)="logout()"
+  >
+    <ion-ripple-effect></ion-ripple-effect>
     <div class="me-4">
       <lucide-angular
         [img]="logoutIcon"

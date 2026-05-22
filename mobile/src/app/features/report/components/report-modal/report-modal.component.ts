@@ -5,6 +5,7 @@ import {
   IonFooter,
   IonHeader,
   IonLabel,
+  IonRippleEffect,
   IonSegment,
   IonSegmentButton,
   IonSegmentContent,
@@ -53,6 +54,7 @@ import { List } from '@shared/models/response.model';
     IonSegmentContent,
     IonTextarea,
     IonFooter,
+    IonRippleEffect,
     CategoryListComponent,
     LocationPreviewComponent,
     FormsModule,
@@ -148,7 +150,7 @@ export class ReportModalComponent {
 
     formData.append(
       'photo',
-      this.dataUrlToFile(this.photo().toString(), `issue-${uuidv4()}.jpg`)
+      this.dataUrlToFile(this.photo().toString(), `issue-${uuidv4()}.jpg`),
     );
 
     this.issueService
@@ -160,7 +162,7 @@ export class ReportModalComponent {
           issue.photo = `${response.fullPath}`;
 
           return this.issueService.createIssue(issue);
-        })
+        }),
       )
       .subscribe((response) => {
         if (!response) {
@@ -173,7 +175,7 @@ export class ReportModalComponent {
         this.modalController.dismiss(response, 'confirm');
 
         this.userService.issueList.update((current) =>
-          this.updateUserIssues(current, response)
+          this.updateUserIssues(current, response),
         );
 
         this.issueService.issues.update((current) => ({
@@ -190,7 +192,7 @@ export class ReportModalComponent {
     const updatedData = [
       response,
       ...(currentData.data!.length >= 3
-        ? currentData.data!.slice(0, -1) ?? []
+        ? (currentData.data!.slice(0, -1) ?? [])
         : currentData.data!),
     ];
 
@@ -259,7 +261,7 @@ export class ReportModalComponent {
             },
           ],
         })
-        .then((toast) => toast.present())
+        .then((toast) => toast.present()),
     ).pipe(switchMap(() => throwError(() => error)));
   }
 }

@@ -58,14 +58,16 @@
           </div>
           <button
             type="submit"
-            class="focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full"
+            class="focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full ion-activatable relative overflow-hidden"
             [ngClass]="{
               'md-primary md-on-primary': signupForm.valid,
               'md-tertiary md-on-tertiary': !signupForm.valid
             }"
             [disabled]="!signupForm.valid"
           >
-            Crear cuenta
+            @if (signupForm.valid) {
+            <ion-ripple-effect></ion-ripple-effect>
+            } Crear cuenta
           </button>
         </form>
         <div class="relative text-center my-4">
@@ -78,9 +80,10 @@
         </div>
         <a
           type="button"
-          class="md-secondary md-on-secondary focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full"
+          class="md-secondary md-on-secondary focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full ion-activatable relative overflow-hidden"
           [routerLink]="['/login']"
         >
+          <ion-ripple-effect></ion-ripple-effect>
           Ingresa a tu cuenta
         </a>
       </div>

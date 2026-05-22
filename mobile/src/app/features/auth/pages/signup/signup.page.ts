@@ -7,7 +7,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { IonContent, IonInput } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonInput,
+  IonRippleEffect,
+} from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 
@@ -19,6 +23,7 @@ import { AuthService } from '@core/services/auth.service';
   imports: [
     IonInput,
     IonContent,
+    IonRippleEffect,
     CommonModule,
     FormsModule,
     RouterModule,

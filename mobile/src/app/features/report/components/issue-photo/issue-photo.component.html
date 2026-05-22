@@ -1,9 +1,10 @@
 <div class="flex flex-col items-center justify-center h-full">
   <div class="absolute inset-0 flex items-start justify-end p-4">
     <div
-      class="rounded-full md-on-primary bg-white/20 p-2 z-50"
+      class="rounded-full md-on-primary bg-white/20 p-2 z-50 ion-activatable relative overflow-hidden"
       (click)="close()"
     >
+      <ion-ripple-effect></ion-ripple-effect>
       <lucide-angular [img]="closeIcon" size="22"></lucide-angular>
     </div>
   </div>

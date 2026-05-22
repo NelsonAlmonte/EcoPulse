@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import {
+  IonButton,
   IonContent,
   IonHeader,
   IonRefresher,
   IonRefresherContent,
+  IonRippleEffect,
   IonTitle,
   IonToolbar,
   ModalController,
@@ -38,6 +40,7 @@ import { filter } from 'rxjs';
     FormsModule,
     LocationPreviewComponent,
     IssueListComponent,
+    IonRippleEffect,
     LucideAngularModule,
   ],
 })
@@ -60,18 +63,6 @@ export class ReportPage implements OnInit {
         this.userService.isLoading.set(false);
         this.userService.issueList.update(() => response);
       });
-    // this.router.events
-    //   .pipe(filter((event) => event instanceof NavigationEnd))
-    //   .subscribe((event: NavigationEnd) => {
-    //     if (event.urlAfterRedirects.includes('/report')) {
-    //       this.userService.getUserIssues(
-    //         this.authService.loggedUserData().id,
-    //         this.AMOUNT_OF_ISSUES
-    //       );
-    //     }
-    //   });
-    // const image = `https://ionicframework.com/docs/img/demos/card-media.png`;
-    // this.openReportModal(image);
   }
 
   async takePicture(): Promise<void> {

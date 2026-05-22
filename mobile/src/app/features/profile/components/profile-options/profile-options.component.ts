@@ -1,6 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
+import { IonRippleEffect } from '@ionic/angular/standalone';
 import {
   CircleUserIcon,
   FileSearchIcon,
@@ -15,9 +16,9 @@ import {
   selector: 'app-profile-options',
   templateUrl: './profile-options.component.html',
   styleUrls: ['./profile-options.component.css'],
-  imports: [LucideAngularModule],
+  imports: [IonRippleEffect, LucideAngularModule],
 })
-export class ProfileOptionsComponent implements OnInit {
+export class ProfileOptionsComponent {
   router = inject(Router);
   authService = inject(AuthService);
   userIcon = CircleUserIcon;
@@ -26,10 +27,6 @@ export class ProfileOptionsComponent implements OnInit {
   highlightedIcon = StarIcon;
   changePasswordIcon = KeyRoundIcon;
   logoutIcon = LogOutIcon;
-
-  constructor() {}
-
-  ngOnInit() {}
 
   navigate(route: string): void {
     this.router.navigate([route]);

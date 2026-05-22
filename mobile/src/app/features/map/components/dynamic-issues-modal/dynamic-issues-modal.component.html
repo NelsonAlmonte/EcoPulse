@@ -4,9 +4,10 @@
   >
     <button
       type="button"
-      class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center"
+      class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center ion-activatable relative overflow-hidden"
       (click)="close()"
     >
+      <ion-ripple-effect></ion-ripple-effect>
       <lucide-angular class="me-0.5" [img]="mapIcon" size="18"></lucide-angular>
       Mapa
     </button>
@@ -14,8 +15,8 @@
   <app-issue-list [issueList]="issueService.issueList()"></app-issue-list>
 
   @if (canGetMore()) {
-  <ion-infinite-scroll (ionInfinite)="getMoreIssues($event)">
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+    <ion-infinite-scroll (ionInfinite)="getMoreIssues($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   }
 </ion-content>

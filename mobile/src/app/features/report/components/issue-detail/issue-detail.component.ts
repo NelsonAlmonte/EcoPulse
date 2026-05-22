@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { IssueService } from '@core/services/issue.service';
 import {
   ActionSheetController,
+  IonRippleEffect,
   LoadingController,
   ModalController,
   ToastController,
@@ -33,6 +34,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   templateUrl: './issue-detail.component.html',
   styleUrls: ['./issue-detail.component.css'],
   imports: [
+    IonRippleEffect,
     LucideAngularModule,
     HighlightButtonComponent,
     IssueDetailLoadingComponent,
@@ -76,19 +78,22 @@ export class IssueDetailComponent {
     return this.issue()?.id ? this.issue() : this.issueService.issue();
   }
 
-  private _validateIssueOwnershipt(): boolean {
+  private _hasIssueOwnership(): boolean {
     const userData = this.authService.loggedUserData();
 
     if (!userData) {
       this.authService.logout();
+      return false;
     }
 
     return userData!.id === this.issueData!.user.id;
   }
 
   async openOptions(): Promise<void> {
-    if (this._validateIssueOwnershipt()) {
-      this.actionSheetButtons.push({
+    const buttons = [...this.actionSheetButtons];
+
+    if (this._hasIssueOwnership()) {
+      buttons.unshift({
         text: 'Eliminar reporte',
         role: 'destructive',
         data: {
@@ -99,7 +104,7 @@ export class IssueDetailComponent {
 
     const actionSheet = await this.actionSheetController.create({
       header: 'Acciones',
-      buttons: this.actionSheetButtons,
+      buttons,
     });
 
     await actionSheet.present();

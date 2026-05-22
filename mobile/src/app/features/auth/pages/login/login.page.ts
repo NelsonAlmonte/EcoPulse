@@ -8,7 +8,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { IonContent, IonInput } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonInput,
+  IonRippleEffect,
+} from '@ionic/angular/standalone';
 import { AuthService } from '@core/services/auth.service';
 import { RouterModule } from '@angular/router';
 import { environment } from 'src/environments/environment';
@@ -20,6 +24,7 @@ import { environment } from 'src/environments/environment';
   imports: [
     IonContent,
     IonInput,
+    IonRippleEffect,
     CommonModule,
     FormsModule,
     RouterModule,

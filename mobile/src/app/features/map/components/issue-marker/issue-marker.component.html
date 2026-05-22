@@ -1,7 +1,8 @@
 <button
-  class="md-surface-container-high highlight-button inline-flex cursor-pointer items-center rounded-lg px-4 py-1.5 shadow-lg"
+  class="md-surface-container-high highlight-button inline-flex cursor-pointer items-center rounded-lg px-4 py-1.5 shadow-lg ion-activatable relative overflow-hidden"
   [class.highlighted]="issue().hasCurrentUserHighlight"
 >
+  <ion-ripple-effect></ion-ripple-effect>
   <lucide-angular [img]="highlightIcon" size="18"></lucide-angular>
   <span class="ms-0.5 text-sm font-bold text-gray-900">{{
     issue().highlights

@@ -1,12 +1,12 @@
 import { Component, inject, input } from '@angular/core';
-import { ModalController } from '@ionic/angular/standalone';
+import { IonRippleEffect, ModalController } from '@ionic/angular/standalone';
 import { LucideAngularModule, XIcon } from 'lucide-angular';
 
 @Component({
   selector: 'app-issue-photo',
   templateUrl: './issue-photo.component.html',
   styleUrls: ['./issue-photo.component.css'],
-  imports: [LucideAngularModule],
+  imports: [IonRippleEffect, LucideAngularModule],
 })
 export class IssuePhotoComponent {
   photo = input.required<string>();

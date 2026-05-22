@@ -5,13 +5,16 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import {
   IonBackButton,
   IonButtons,
   IonContent,
+  IonFooter,
   IonHeader,
   IonInput,
+  IonRippleEffect,
   IonTitle,
   IonToolbar,
   ToastController,
@@ -38,6 +41,8 @@ import {
     IonButtons,
     IonBackButton,
     IonInput,
+    IonFooter,
+    IonRippleEffect,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -55,9 +60,9 @@ export class EditProfilePage implements OnInit {
   completeEditProfileIcon = CheckCircleIcon;
 
   ngOnInit(): void {
-    this.userForm = this.fb.group<UpdateUserDto>({
-      name: '',
-      last: '',
+    this.userForm = this.fb.group({
+      name: ['', Validators.required],
+      last: ['', Validators.required],
     });
   }
 

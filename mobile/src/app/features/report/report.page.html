@@ -20,9 +20,10 @@
   <div class="fixed bottom-6 right-0 z-50 ion-padding-end">
     <button
       type="button"
-      class="md-primary md-on-primary focus:outline-none font-bold rounded-2xl text-sm p-4 text-center inline-flex items-center shadow-xl"
+      class="md-primary md-on-primary focus:outline-none font-bold rounded-2xl text-sm p-4 text-center inline-flex items-center shadow-xl ion-activatable relative overflow-hidden"
       (click)="takePicture()"
     >
+      <ion-ripple-effect></ion-ripple-effect>
       <lucide-angular
         class="me-1"
         [img]="cameraIcon"

@@ -7,6 +7,7 @@ import {
   IonContent,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonRippleEffect,
   ModalController,
   ToastController,
 } from '@ionic/angular/standalone';
@@ -22,6 +23,7 @@ import { LucideAngularModule, MapIcon, XIcon } from 'lucide-angular';
     LucideAngularModule,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
+    IonRippleEffect,
   ],
 })
 export class DynamicIssuesModalComponent implements OnInit {

@@ -73,9 +73,10 @@
       @if (currentSegment === "photo") {
         <button
           type="button"
-          class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center"
+          class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center ion-activatable relative overflow-hidden"
           (click)="cancel()"
         >
+          <ion-ripple-effect></ion-ripple-effect>
           <lucide-angular
             class="me-0.5"
             [img]="cancelIcon"
@@ -86,9 +87,10 @@
       } @else {
         <button
           type="button"
-          class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center"
+          class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center ion-activatable relative overflow-hidden"
           (click)="back()"
         >
+          <ion-ripple-effect></ion-ripple-effect>
           <lucide-angular
             class="me-0.5"
             [img]="prevIcon"
@@ -100,10 +102,11 @@
       @if (currentSegment === "categories") {
         <button
           type="button"
-          class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center send-report-button"
+          class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center send-report-button ion-activatable relative overflow-hidden"
           [disabled]="buttonStatus.isDisabled"
           (click)="sendReport()"
         >
+          <ion-ripple-effect></ion-ripple-effect>
           <lucide-angular
             class="me-0.5"
             [class.hidden]="buttonStatus.isDisabled"
@@ -133,9 +136,10 @@
       } @else {
         <button
           type="button"
-          class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center"
+          class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center ion-activatable relative overflow-hidden"
           (click)="next()"
         >
+          <ion-ripple-effect></ion-ripple-effect>
           Siguiente
           <lucide-angular
             class="ms-0.5"

@@ -36,20 +36,23 @@
           </div>
           <button
             type="submit"
-            class="focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full diabled:bd-gray-300"
+            class="focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full diabled:bd-gray-300 ion-activatable relative overflow-hidden"
             [ngClass]="{
               'md-primary md-on-primary': loginForm.valid,
               'md-tertiary md-on-tertiary': !loginForm.valid
             }"
             [disabled]="!loginForm.valid"
           >
-            Iniciar sesión
+            @if (loginForm.valid) {
+            <ion-ripple-effect></ion-ripple-effect>
+            } Iniciar sesión
           </button>
         </form>
         <button
-          class="md-on-primary-container focus:outline-none font-medium rounded-3xl text-base mt-4 px-6 py-3.5 text-center inline-flex items-center justify-center w-full"
+          class="md-on-primary-container focus:outline-none font-medium rounded-3xl text-base mt-4 px-6 py-3.5 text-center inline-flex items-center justify-center w-full ion-activatable relative overflow-hidden"
           (click)="forgotPassword()"
         >
+          <ion-ripple-effect></ion-ripple-effect>
           ¿Olvidaste tu contraseña?
         </button>
         <div class="relative text-center my-4">
@@ -62,9 +65,10 @@
         </div>
         <a
           type="button"
-          class="md-secondary md-on-secondary focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full"
+          class="md-secondary md-on-secondary focus:outline-none font-medium rounded-3xl text-base px-6 py-3.5 text-center inline-flex items-center justify-center w-full ion-activatable relative overflow-hidden"
           [routerLink]="['/signup']"
         >
+          <ion-ripple-effect></ion-ripple-effect>
           Crear una cuenta
         </a>
       </div>
