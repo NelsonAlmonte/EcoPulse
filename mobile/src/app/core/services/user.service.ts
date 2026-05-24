@@ -28,12 +28,13 @@ export class UserService {
   });
   isLoading = signal(false);
   URL = `${environment.apiUrl}user`;
+  AMOUNT_OF_ISSUES_IN_REPORT_PAGE = 3;
 
   getUserIssues(id: string, amount: number = 5, page: number = 1) {
     this.isLoading.set(true);
 
     return this.apiService.doFetch<List<Issue[]>>(
-      `${this.URL}/${id}/issues?amount=${amount}&page=${page}&order=createdAt:desc`
+      `${this.URL}/${id}/issues?amount=${amount}&page=${page}&order=createdAt:desc`,
     );
   }
 
@@ -48,7 +49,7 @@ export class UserService {
   updateUser(id: string, updateUserDto: UpdateUserDto): Observable<User> {
     return this.apiService.doPut<User, UpdateUserDto>(
       `${this.URL}/${id}`,
-      updateUserDto
+      updateUserDto,
     );
   }
 
@@ -95,7 +96,7 @@ export class UserService {
     this.isLoading.set(true);
 
     return this.apiService.doFetch<List<Issue[]>>(
-      `${this.URL}/${id}/highlights/given?amount=${amount}&page=${page}&order=createdAt:desc`
+      `${this.URL}/${id}/highlights/given?amount=${amount}&page=${page}&order=createdAt:desc`,
     );
   }
 }

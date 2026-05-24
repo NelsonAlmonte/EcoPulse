@@ -1,6 +1,6 @@
 <ion-content [fullscreen]="true">
   <div
-    class="login-background"
+    class="auth-background"
     style="background-image: url(&quot;assets/img/auth-background.jpg&quot;)"
   >
     <div class="flex h-screen items-center justify-center">
@@ -11,7 +11,7 @@
         <p class="mb-4 text-center text-4xl font-bold md-on-container">
           Bienvenido a <span class="md-on-primary-container">EcoPulse</span>
         </p>
-        <p class="mb-4 md-on-surface-variant text-center text-sm">
+        <p class="mb-4 md-on-surface-variant text-center text-sm font-medium">
           Para crear tu cuenta completa los siguientes datos
         </p>
         <form [formGroup]="signupForm" (ngSubmit)="signup()">

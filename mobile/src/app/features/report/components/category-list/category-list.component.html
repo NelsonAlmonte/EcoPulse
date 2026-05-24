@@ -6,7 +6,7 @@
     @for (category of categoryService.categories(); track $index) {
       <button
         type="button"
-        class="flex justify-start items-center px-3 py-4 rounded-full category-item ion-activatable relative overflow-hidden"
+        class="flex justify-start items-center px-3 py-4 rounded-full font-medium category-item ion-activatable relative overflow-hidden"
         [class.selected]="selectedCategoryId === category.id"
         (click)="selectCategory(category.id)"
       >

@@ -7,7 +7,7 @@
     >
       <ion-segment-button class="opacity-100" value="photo" content-id="photo">
         <lucide-angular [img]="photoIcon" size="18"></lucide-angular>
-        <ion-label class="capitalize font-bold">Foto</ion-label>
+        <ion-label class="capitalize font-semibold">Foto</ion-label>
       </ion-segment-button>
       <ion-segment-button
         class="opacity-100"
@@ -16,7 +16,7 @@
       >
         <lucide-angular [img]="placeIcon" size="18"></lucide-angular>
 
-        <ion-label class="capitalize font-bold">Lugar</ion-label>
+        <ion-label class="capitalize font-semibold">Lugar</ion-label>
       </ion-segment-button>
       <ion-segment-button
         class="opacity-100"
@@ -25,7 +25,7 @@
       >
         <lucide-angular [img]="issueIcon" size="18"></lucide-angular>
 
-        <ion-label class="capitalize font-bold">Incidencia</ion-label>
+        <ion-label class="capitalize font-semibold">Incidencia</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -34,25 +34,27 @@
   <ion-segment-view>
     <ion-segment-content class="ion-padding" id="photo">
       <div class="flex justify-center my-4">
-        <h4 class="text-2xl!">Foto de la incidencia</h4>
+        <h4 class="text-2xl! font-semibold!">Foto de la incidencia</h4>
       </div>
       <img class="rounded-2xl" src="{{ photo() }}" alt="Issue photo" />
     </ion-segment-content>
     <ion-segment-content class="ion-padding" id="location">
       <div class="flex justify-center my-4">
-        <h4 class="text-2xl!">Lugar de la incidencia</h4>
+        <h4 class="text-2xl! font-semibold!">Lugar de la incidencia</h4>
       </div>
       <app-location-preview></app-location-preview>
     </ion-segment-content>
     <ion-segment-content class="ion-padding" id="categories">
       <div class="flex justify-center my-4">
-        <h4 class="text-2xl!">Tipo de incidencia</h4>
+        <h4 class="text-2xl! font-semibold!">Tipo de incidencia</h4>
       </div>
       <app-category-list
         (selectedCategory)="selectedCategory = $event"
       ></app-category-list>
       <div class="flex justify-center my-4">
-        <h4 class="text-2xl!">Dejanos tu comentario</h4>
+        <h4 class="text-xl! text-center! font-semibold!">
+          Comentario sobre esta incidencia
+        </h4>
       </div>
       <ion-textarea
         label="Comentario (opcional)"

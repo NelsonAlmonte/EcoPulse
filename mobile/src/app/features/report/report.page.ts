@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Camera, CameraResultType } from '@capacitor/camera';
+import { Camera, CameraDirection } from '@capacitor/camera';
 import {
   IonContent,
   IonRefresher,
@@ -44,13 +44,12 @@ export class ReportPage implements OnInit {
   router = inject(Router);
   cameraIcon = CameraIcon;
   arrowRight = ArrowRight;
-  AMOUNT_OF_ISSUES = 3;
 
   ngOnInit(): void {
     this.userService
       .getUserIssues(
         this.authService.loggedUserData()!.id,
-        this.AMOUNT_OF_ISSUES,
+        this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE,
       )
       .subscribe((response) => {
         this.userService.isLoading.set(false);
@@ -59,15 +58,30 @@ export class ReportPage implements OnInit {
   }
 
   async takePicture(): Promise<void> {
-    const image = await Camera.getPhoto({
-      quality: 60,
-      width: 1280,
-      allowEditing: false,
-      resultType: CameraResultType.DataUrl,
-      saveToGallery: false,
-    });
+    try {
+      const image = await Camera.takePhoto({
+        quality: 60,
+        targetWidth: 1280,
+        targetHeight: 720,
+        includeMetadata: true,
+        editable: 'no',
+        saveToGallery: false,
+        cameraDirection: CameraDirection.Rear,
+      });
+      const dataUrl = `data:image/${image.metadata!.format};base64,${image.thumbnail}`;
 
-    this.openReportModal(image.dataUrl!);
+      this.openReportModal(dataUrl);
+    } catch (error) {
+      const toast = await this.toastController.create({
+        message: 'Ocurrio un error al abrir la cámara. Intentalo de nuevo.',
+        duration: 4000,
+        position: 'bottom',
+        animated: true,
+      });
+
+      toast.present();
+      console.log(error);
+    }
   }
 
   async openReportModal(photo: string): Promise<void> {
@@ -90,7 +104,7 @@ export class ReportPage implements OnInit {
     this.userService
       .getUserIssues(
         this.authService.loggedUserData()!.id,
-        this.AMOUNT_OF_ISSUES,
+        this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE,
       )
       .subscribe({
         next: (response) => this.userService.issueList.update(() => response),

@@ -16,7 +16,7 @@ export class IssueService {
   apiService = inject(ApiService);
   authService = inject(AuthService);
   toastController = inject(ToastController);
-  issues = signal<Issue[]>([]);
+  // issues = signal<Issue[]>([]);
   issue = signal<Issue | null>(null);
   issueList = signal<List<Issue[]>>({
     data: [],
@@ -36,7 +36,7 @@ export class IssueService {
   uploadPhoto(formData: FormData): Observable<SupaBaseUploadFileResponse> {
     return this.apiService.doPost<SupaBaseUploadFileResponse, FormData>(
       `${this.URL}/upload`,
-      formData
+      formData,
     );
   }
 
@@ -65,7 +65,7 @@ export class IssueService {
 
   getIssuesByBounds(
     bounds: Bounds,
-    page: number = 1
+    page: number = 1,
   ): Observable<List<Issue[]>> {
     const loggedUser = this.authService.loggedUserData();
 
@@ -76,7 +76,7 @@ export class IssueService {
         bounds.east
       }&west=${bounds.west}&page=${page}&amount=${10}&userId=${
         loggedUser!.id
-      }&order=highlights:desc`
+      }&order=highlights:desc`,
     );
   }
 

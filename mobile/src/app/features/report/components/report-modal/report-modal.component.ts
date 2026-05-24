@@ -178,10 +178,10 @@ export class ReportModalComponent {
           this.updateUserIssues(current, response),
         );
 
-        this.issueService.issues.update((current) => ({
-          ...current,
-          response,
-        }));
+        // this.issueService.issues.update((current) => ({
+        //   ...current,
+        //   response,
+        // }));
 
         this.currentStatus = 'default';
         toast.present();

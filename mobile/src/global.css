@@ -41,6 +41,7 @@
 /* Color theme */
 
 :root {
+  --ion-font-family: 'Manrope', sans-serif;
   --md-sys-color-primary: rgb(24 107 83);
   --md-sys-color-surface-tint: rgb(24 107 83);
   --md-sys-color-on-primary: rgb(255 255 255);
@@ -265,6 +266,37 @@
 }
 .md-surface-container-lowest {
   background-color: var(--md-sys-color-surface-container-lowest);
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('/assets/fonts/Manrope-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('/assets/fonts/Manrope-Medium.ttf') format('truetype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('/assets/fonts/Manrope-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('/assets/fonts/Manrope-Bold.ttf') format('truetype');
+  font-weight: 700;
+}
+
+html,
+body,
+ion-app,
+ion-content {
+  font-family: 'Manrope', sans-serif;
 }
 
 .issue-detail-modal {

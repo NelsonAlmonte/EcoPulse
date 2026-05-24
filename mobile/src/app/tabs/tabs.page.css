@@ -19,6 +19,7 @@ ion-tab-button {
   }
 
   ion-label {
+    font-weight: 600;
     transition: font-weight 180ms ease;
   }
 
@@ -34,7 +35,7 @@ ion-tab-button.tab-selected {
   }
 
   ion-label {
-    font-weight: 700;
+    font-weight: 800;
   }
 
 }
