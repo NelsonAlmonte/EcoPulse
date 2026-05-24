@@ -7,7 +7,7 @@
     >
       <ion-segment-button class="opacity-100" value="photo" content-id="photo">
         <lucide-angular [img]="photoIcon" size="18"></lucide-angular>
-        <ion-label class="capitalize">Foto</ion-label>
+        <ion-label class="capitalize font-bold">Foto</ion-label>
       </ion-segment-button>
       <ion-segment-button
         class="opacity-100"
@@ -16,7 +16,7 @@
       >
         <lucide-angular [img]="placeIcon" size="18"></lucide-angular>
 
-        <ion-label class="capitalize">Lugar</ion-label>
+        <ion-label class="capitalize font-bold">Lugar</ion-label>
       </ion-segment-button>
       <ion-segment-button
         class="opacity-100"
@@ -25,7 +25,7 @@
       >
         <lucide-angular [img]="issueIcon" size="18"></lucide-angular>
 
-        <ion-label class="capitalize">Incidencia</ion-label>
+        <ion-label class="capitalize font-bold">Incidencia</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -103,10 +103,12 @@
         <button
           type="button"
           class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center send-report-button ion-activatable relative overflow-hidden"
-          [disabled]="buttonStatus.isDisabled"
+          [disabled]="buttonStatus.isDisabled || !selectedCategory"
           (click)="sendReport()"
         >
-          <ion-ripple-effect></ion-ripple-effect>
+          @if (selectedCategory) {
+            <ion-ripple-effect></ion-ripple-effect>
+          }
           <lucide-angular
             class="me-0.5"
             [class.hidden]="buttonStatus.isDisabled"

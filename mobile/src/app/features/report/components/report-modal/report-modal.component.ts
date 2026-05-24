@@ -69,7 +69,7 @@ export class ReportModalComponent {
   toastController = inject(ToastController);
   photo = input.required<string>();
   comment: string = '';
-  selectedCategory: string = '';
+  selectedCategory: string | null = null;
   currentSegment: string = 'photo';
   segments: string[] = ['photo', 'location', 'categories'];
   nextIcon = ArrowRightIcon;
@@ -137,7 +137,7 @@ export class ReportModalComponent {
       // latitude: coordinates.coords.latitude,
       // longitude: coordinates.coords.longitude,
       comment: this.comment,
-      category: this.selectedCategory,
+      category: this.selectedCategory!,
       user: this.authService.loggedUserData()!.id,
     };
     const formData = new FormData();

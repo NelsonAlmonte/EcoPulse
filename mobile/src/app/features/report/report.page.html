@@ -1,23 +1,32 @@
-<ion-content [fullscreen]="true" class="ion-padding md-surface md-on-surface">
+<ion-content [fullscreen]="true" class="md-surface md-on-surface">
   <ion-refresher slot="fixed" (ionRefresh)="refreshLatestIssues($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Reportes</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <h4 class="mt-0!">Ubicación actual</h4>
+  <p class="text-lg font-bold ion-padding-horizontal my-6">Ubicación actual</p>
   <app-location-preview></app-location-preview>
 
-  <h4>Tus últimos reportes</h4>
-  <div class="mb-20">
+  <div
+    class="flex justify-between items-center py-2 my-2 ion-activatable relative overflow-hidden ion-padding-horizontal"
+    (click)="navigate('/user-issues')"
+  >
+    <span class="text-lg font-bold">Tus últimos reportes</span>
+    <ion-ripple-effect></ion-ripple-effect>
+    <button
+      type="button"
+      class="md-surface-container md-on-surface focus:outline-none rounded-2xl p-2 ion-activatable relative overflow-hidden"
+      (click)="navigate('/user-issues')"
+    >
+      <ion-ripple-effect></ion-ripple-effect>
+      <lucide-angular [img]="arrowRight" size="18"></lucide-angular>
+    </button>
+  </div>
+
+  <div class="mb-20 ion-padding-horizontal">
     <app-issue-list [issueList]="userService.issueList()"></app-issue-list>
   </div>
 
-  <div class="fixed bottom-6 right-0 z-50 ion-padding-end">
+  <div class="fixed bottom-22 right-0 z-50 ion-padding-end">
     <button
       type="button"
       class="md-primary md-on-primary focus:outline-none font-bold rounded-2xl text-sm p-4 text-center inline-flex items-center shadow-xl ion-activatable relative overflow-hidden"

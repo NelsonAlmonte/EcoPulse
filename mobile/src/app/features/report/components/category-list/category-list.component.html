@@ -4,10 +4,13 @@
 @if (categoryService.categories()) {
   <div class="grid grid-cols-2 gap-2 ion-margin-bottom ion-margin-top">
     @for (category of categoryService.categories(); track $index) {
-      <div
-        class="flex justify-start items-center px-3 py-4 rounded-full category-item"
-        (click)="selectCategory(category.id, $event)"
+      <button
+        type="button"
+        class="flex justify-start items-center px-3 py-4 rounded-full category-item ion-activatable relative overflow-hidden"
+        [class.selected]="selectedCategoryId === category.id"
+        (click)="selectCategory(category.id)"
       >
+        <ion-ripple-effect></ion-ripple-effect>
         <div class="me-2">
           <div
             class="category-icon"
@@ -15,7 +18,7 @@
           ></div>
         </div>
         <span class="text-sm">{{ category.name }}</span>
-      </div>
+      </button>
     }
   </div>
 }

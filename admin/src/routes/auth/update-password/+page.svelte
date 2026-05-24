@@ -101,7 +101,7 @@
 
 <style>
 	.login-background {
-		background-image: url('/img/foo.jpg');
+		background-image: url('/img/login-bg.jpg');
 		background-size: cover;
 		background-position: center;
 	}

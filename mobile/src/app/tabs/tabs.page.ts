@@ -1,4 +1,9 @@
-import { Component, EnvironmentInjector, inject } from '@angular/core';
+import {
+  Component,
+  EnvironmentInjector,
+  inject,
+  ViewChild,
+} from '@angular/core';
 import {
   IonTabs,
   IonTabBar,
@@ -7,7 +12,14 @@ import {
   IonLabel,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { mapOutline, cameraOutline, personOutline } from 'ionicons/icons';
+import {
+  mapOutline,
+  cameraOutline,
+  personOutline,
+  map,
+  camera,
+  person,
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-tabs',
@@ -17,8 +29,14 @@ import { mapOutline, cameraOutline, personOutline } from 'ionicons/icons';
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
+  @ViewChild('tabs') tabs!: IonTabs;
+  selectedTab: string | undefined = 'map';
 
   constructor() {
-    addIcons({ mapOutline, cameraOutline, personOutline });
+    addIcons({ mapOutline, cameraOutline, personOutline, map, camera, person });
+  }
+
+  getSelectedTab() {
+    this.selectedTab = this.tabs.getSelected();
   }
 }

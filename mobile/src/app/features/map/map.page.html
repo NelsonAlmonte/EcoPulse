@@ -4,7 +4,7 @@
       <ion-title size="large">Mapa</ion-title>
     </ion-toolbar>
   </ion-header>
-  <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+  <div class="fixed bottom-22 left-1/2 -translate-x-1/2 z-50">
     <button
       type="button"
       class="md-primary md-on-primary focus:outline-none font-bold rounded-2xl text-sm p-4 text-center inline-flex items-center shadow-xl ion-activatable relative overflow-hidden"
@@ -19,5 +19,14 @@
       <span>{{this.issueService.issueList().pagination.total}} Reportes</span>
     </button>
   </div>
+  <!-- <div class="flex justify-center items-center h-full">
+    <div
+      class="md-surface-container-high md-on-surface-variant flex flex-col items-center justify-center space-y-3 rounded-2xl p-6 text-center ion-margin-horizontal"
+    >
+      <ion-spinner></ion-spinner>
+      <span class="text-xl">Cargando el mapa...</span>
+      <span class="text-md">Espera un momento mientras se carga el mapa.</span>
+    </div>
+  </div> -->
   <app-map-view></app-map-view>
 </ion-content>

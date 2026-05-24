@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CategoryService } from '@core/services/category.service';
+import { IonRippleEffect } from '@ionic/angular/standalone';
 import { iconMap } from '@shared/constants/system.constant';
 import {
   LucideAngularModule,
@@ -18,7 +19,7 @@ import {
   selector: 'app-category-list',
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.css'],
-  imports: [LucideAngularModule],
+  imports: [IonRippleEffect, LucideAngularModule],
   encapsulation: ViewEncapsulation.None,
 })
 export class CategoryListComponent implements OnInit {
@@ -26,19 +27,14 @@ export class CategoryListComponent implements OnInit {
   sanitizer = inject(DomSanitizer);
   selectedCategory = output<string>();
   selectedElement: HTMLDivElement | null = null;
+  selectedCategoryId: string | null = null;
 
   ngOnInit(): void {
     this.categoryService.getCategories();
   }
 
-  selectCategory(id: string, event: MouseEvent): void {
-    const element = event.currentTarget as HTMLDivElement;
-
-    if (this.selectedElement) this.selectedElement.classList.remove('selected');
-
-    element.classList.add('selected');
-    this.selectedElement = element;
-
+  selectCategory(id: string): void {
+    this.selectedCategoryId = id;
     this.selectedCategory.emit(id);
   }
 

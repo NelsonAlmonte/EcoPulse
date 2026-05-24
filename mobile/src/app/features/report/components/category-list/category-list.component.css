@@ -1,22 +1,47 @@
 .category-item {
+
   background-color: var(--md-sys-color-secondary-container);
   color: var(--md-sys-color-on-secondary-container);
 
+  border-radius: 999px;
+
+  transition:
+    background-color 320ms cubic-bezier(.2,.8,.2,1),
+    color 320ms cubic-bezier(.2,.8,.2,1),
+    border-radius 420ms cubic-bezier(.2,.8,.2,1),
+    transform 420ms cubic-bezier(.2,.8,.2,1);
+
   svg.category-icon {
     stroke: var(--md-sys-color-on-secondary-container);
+
+    transition:
+      stroke 320ms cubic-bezier(.2,.8,.2,1);
   }
-  
+
   .category-icon svg {
     width: 22px;
+
+    transition:
+      transform 500ms cubic-bezier(.34,1.56,.64,1);
   }
 
   &.selected {
+
     background-color: var(--md-sys-color-secondary);
     color: var(--md-sys-color-on-secondary);
-    border-radius: 16px;
-    
+
+    border-radius: 18px;
+
+    transform: scale(.992);
+
     svg.category-icon {
       stroke: var(--md-sys-color-on-secondary);
     }
+
+    .category-icon svg {
+      transform: scale(1.045);
+    }
+
   }
+
 }

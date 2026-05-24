@@ -6,20 +6,12 @@
 </script>
 
 <div class="login-background min-h-screen">
-	<header
-		class="fixed top-0 flex w-full items-center justify-between bg-transparent p-4 shadow-none"
-	>
-		<div class="flex items-center">
-			<span class="flex items-center space-x-2 text-lg font-bold text-white">
-				<img src="/img/logo.png" alt="Flowbite Svelte" class="h-6 w-6 rounded-full" />
-				<span>EcoPulse</span>
-			</span>
-		</div>
-	</header>
-
 	<div class="flex h-screen items-center justify-center">
 		<div class="mx-4 max-w-lg rounded-2xl bg-white p-8 shadow">
 			<div class="py-4">
+				<div class="mb-5 flex items-center justify-center">
+					<img src="/img/logo.png" alt="EcoPulse logo" width="80" />
+				</div>
 				<h1 class="mb-4 text-4xl font-bold text-gray-800">
 					Bienvenido a <span class="text-emerald-700">EcoPulse</span>
 				</h1>
@@ -71,7 +63,7 @@
 
 <style>
 	.login-background {
-		background-image: url('/img/foo.jpg');
+		background-image: url('/img/login-bg.jpg');
 		background-size: cover;
 		background-position: center;
 	}

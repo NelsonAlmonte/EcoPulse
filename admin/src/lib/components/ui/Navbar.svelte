@@ -16,7 +16,7 @@
 <Navbar class="shadow-sm" navContainerClass="container mx-auto">
 	<div class="flex">
 		<Button
-			class="p-2! me-4 cursor-pointer"
+			class="me-4 cursor-pointer p-2!"
 			size="lg"
 			color="light"
 			onclick={() => (sidebarState.canShow = true)}
@@ -24,8 +24,8 @@
 			<Menu size="40" class="h-4 w-4 text-gray-950" />
 		</Button>
 		<NavBrand href="/admin">
-			<img src="/img/logo.png" alt="Flowbite Svelte" class="h-6 w-6 rounded-full" />
-			<span class="ml-2 self-center whitespace-nowrap text-xl font-semibold dark:text-white"
+			<img src="/img/logo.png" alt="Flowbite Svelte" class="h-6 w-6" />
+			<span class="ml-2 self-center text-xl font-semibold whitespace-nowrap dark:text-white"
 				>EcoPulse</span
 			>
 		</NavBrand>

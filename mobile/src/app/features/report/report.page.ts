@@ -1,17 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import {
-  IonButton,
   IonContent,
-  IonHeader,
   IonRefresher,
   IonRefresherContent,
   IonRippleEffect,
-  IonTitle,
-  IonToolbar,
   ModalController,
   RefresherCustomEvent,
   ToastController,
@@ -21,8 +17,7 @@ import { LocationPreviewComponent } from '@features/report/components/location-p
 import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
 import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
-import { CameraIcon, LucideAngularModule } from 'lucide-angular';
-import { filter } from 'rxjs';
+import { ArrowRight, CameraIcon, LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-report',
@@ -31,9 +26,6 @@ import { filter } from 'rxjs';
   standalone: true,
   imports: [
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
     IonRefresher,
     IonRefresherContent,
     CommonModule,
@@ -51,6 +43,7 @@ export class ReportPage implements OnInit {
   toastController = inject(ToastController);
   router = inject(Router);
   cameraIcon = CameraIcon;
+  arrowRight = ArrowRight;
   AMOUNT_OF_ISSUES = 3;
 
   ngOnInit(): void {
@@ -116,5 +109,9 @@ export class ReportPage implements OnInit {
           this.userService.isLoading.set(false);
         },
       });
+  }
+
+  navigate(route: string): void {
+    this.router.navigate([route]);
   }
 }

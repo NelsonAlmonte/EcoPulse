@@ -1,17 +1,29 @@
-<ion-tabs>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button class="" tab="map" href="/tabs/map">
-      <ion-icon aria-hidden="true" name="map-outline"></ion-icon>
+<ion-tabs (ionTabsDidChange)="getSelectedTab()" #tabs>
+  <ion-tab-bar
+    class="absolute left-0.5 right-0.5 bottom-0.5 ion-margin rounded-4xl shadow-xl"
+    slot="bottom"
+  >
+    <ion-tab-button class="no-ripple" tab="map" href="/tabs/map">
+      <ion-icon
+        aria-hidden="true"
+        [name]="selectedTab === 'map' ? 'map' : 'map-outline' "
+      ></ion-icon>
       <ion-label>Mapa</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button class="" tab="report" href="/tabs/report">
-      <ion-icon aria-hidden="true" name="camera-outline"></ion-icon>
+    <ion-tab-button class="no-ripple" tab="report" href="/tabs/report">
+      <ion-icon
+        aria-hidden="true"
+        [name]="selectedTab === 'report' ? 'camera' : 'camera-outline' "
+      ></ion-icon>
       <ion-label>Reportes</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button class="" tab="profile" href="/tabs/profile">
-      <ion-icon aria-hidden="true" name="person-outline"></ion-icon>
+    <ion-tab-button class="no-ripple" tab="profile" href="/tabs/profile">
+      <ion-icon
+        aria-hidden="true"
+        [name]="selectedTab === 'profile' ? 'person' : 'person-outline' "
+      ></ion-icon>
       <ion-label>Perfil</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
