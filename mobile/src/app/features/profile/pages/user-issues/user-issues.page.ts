@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   InfiniteScrollCustomEvent,
-  IonBackButton,
   IonButtons,
   IonContent,
   IonHeader,
@@ -11,14 +10,23 @@ import {
   IonInfiniteScrollContent,
   IonRefresher,
   IonRefresherContent,
+  IonRippleEffect,
   IonTitle,
   IonToolbar,
   RefresherCustomEvent,
   ToastController,
+  IonActionSheet,
 } from '@ionic/angular/standalone';
 import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
 import { UserService } from '@core/services/user.service';
 import { AuthService } from '@core/services/auth.service';
+import {
+  ArrowLeft,
+  EllipsisVertical,
+  LucideAngularModule,
+} from 'lucide-angular';
+import { RouterLink } from '@angular/router';
+import type { OverlayEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-user-issues',
@@ -31,14 +39,17 @@ import { AuthService } from '@core/services/auth.service';
     IonTitle,
     IonToolbar,
     IonButtons,
-    IonBackButton,
     IonRefresher,
     IonRefresherContent,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
+    IonRippleEffect,
+    IonActionSheet,
     CommonModule,
     FormsModule,
     IssueListComponent,
+    LucideAngularModule,
+    RouterLink,
   ],
 })
 export class UserIssuesPage implements OnInit, OnDestroy {
@@ -46,6 +57,34 @@ export class UserIssuesPage implements OnInit, OnDestroy {
   authService = inject(AuthService);
   toastController = inject(ToastController);
   canGetMore = signal(true);
+  actionSheetButtons = [
+    {
+      text: 'Más recientes',
+      data: {
+        action: 'recent',
+      },
+    },
+    {
+      text: 'Más antiguos',
+      data: {
+        action: 'old',
+      },
+    },
+    {
+      text: 'Más destacados',
+      data: {
+        action: 'most-highlights',
+      },
+    },
+    {
+      text: 'Menos destacados',
+      data: {
+        action: 'least-highlights',
+      },
+    },
+  ];
+  backIcon = ArrowLeft;
+  optionsIcon = EllipsisVertical;
 
   ngOnInit(): void {
     this.userService
@@ -122,6 +161,10 @@ export class UserIssuesPage implements OnInit, OnDestroy {
     setTimeout(() => {
       event.target.complete();
     }, 1500);
+  }
+
+  sortIssues(event: CustomEvent<OverlayEventDetail>) {
+    console.log(JSON.stringify(event.detail, null, 2));
   }
 
   ngOnDestroy(): void {

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   InfiniteScrollCustomEvent,
-  IonBackButton,
   IonButtons,
   IonContent,
   IonHeader,
@@ -15,10 +14,13 @@ import {
   IonToolbar,
   RefresherCustomEvent,
   ToastController,
+  IonRippleEffect,
 } from '@ionic/angular/standalone';
 import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
 import { UserService } from '@core/services/user.service';
 import { AuthService } from '@core/services/auth.service';
+import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-highlights-given',
@@ -31,14 +33,16 @@ import { AuthService } from '@core/services/auth.service';
     IonTitle,
     IonToolbar,
     IonButtons,
-    IonBackButton,
     IonRefresher,
     IonRefresherContent,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
+    IonRippleEffect,
     CommonModule,
     FormsModule,
     IssueListComponent,
+    LucideAngularModule,
+    RouterLink,
   ],
 })
 export class HighlightsGivenPage implements OnInit, OnDestroy {
@@ -46,6 +50,7 @@ export class HighlightsGivenPage implements OnInit, OnDestroy {
   authService = inject(AuthService);
   toastController = inject(ToastController);
   canGetMore = signal(true);
+  backIcon = ArrowLeft;
 
   ngOnInit(): void {
     this.userService

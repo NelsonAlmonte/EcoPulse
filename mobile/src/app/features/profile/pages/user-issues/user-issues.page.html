@@ -1,9 +1,25 @@
 <ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+    <ion-buttons slot="start" class="ion-padding">
+      <a
+        class="md-on-surface focus:outline-none rounded-2xl ion-activatable relative overflow-hidden"
+        routerLink="/tabs/profile"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        <lucide-angular [img]="backIcon" size="24"></lucide-angular>
+      </a>
     </ion-buttons>
     <ion-title class="font-semibold">Tus reportes</ion-title>
+    <ion-buttons slot="end" class="ion-padding">
+      <button
+        type="button"
+        class="md-on-surface focus:outline-none rounded-2xl ion-activatable relative overflow-hidden"
+        id="open-sort-action-sheet"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        <lucide-angular [img]="optionsIcon" size="24"></lucide-angular>
+      </button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -19,4 +35,12 @@
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
   }
+
+  <ion-action-sheet
+    trigger="open-sort-action-sheet"
+    header="Ordenar por"
+    class="action-sheet"
+    [buttons]="actionSheetButtons"
+    (didDismiss)="sortIssues($event)"
+  ></ion-action-sheet>
 </ion-content>

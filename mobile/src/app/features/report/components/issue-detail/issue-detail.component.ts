@@ -104,6 +104,7 @@ export class IssueDetailComponent {
 
     const actionSheet = await this.actionSheetController.create({
       header: 'Acciones',
+      cssClass: 'action-sheet',
       buttons,
     });
 
@@ -167,7 +168,7 @@ export class IssueDetailComponent {
 
         const loading = await this.loadingController.create({
           message: 'Eliminando este reporte...',
-          cssClass: 'delete-loading',
+          cssClass: 'loading',
         });
 
         await loading.present();

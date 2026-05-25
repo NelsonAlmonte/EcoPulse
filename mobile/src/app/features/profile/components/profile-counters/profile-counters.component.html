@@ -1,29 +1,26 @@
 <div class="grid grid-cols-3 gap-2 mt-6">
-  <div class="text-center rounded-2xl md-surface-container-high p-5 counter">
-    <span class="text-md font-semibold md-on-surface">{{
-      userService.counters().issues
-    }}</span
-    ><br />
+  <div class="text-center rounded-2xl md-surface-container-high p-4 counter">
+    <p class="text-md font-semibold md-on-surface">
+      {{ userService.counters().issues }}
+    </p>
     <p class="text-sm leading-none md-on-surface-variant font-medium">
       Reportes
     </p>
     <p class="text-sm md-on-surface-variant font-medium">realizados</p>
   </div>
-  <div class="text-center rounded-2xl md-surface-container p-5 counter">
-    <span class="text-md font-semibold md-on-surface">{{
-      userService.counters().highlightsGiven
-    }}</span
-    ><br />
+  <div class="text-center rounded-2xl md-surface-container p-4 counter">
+    <p class="text-md font-semibold md-on-surface">
+      {{ userService.counters().highlightsGiven }}
+    </p>
     <p class="text-sm leading-none md-on-surface-variant font-medium">
       Reportes
     </p>
     <p class="text-sm md-on-surface-variant font-medium">resaltados</p>
   </div>
-  <div class="text-center rounded-2xl md-surface-container p-5 counter">
-    <span class="text-md font-semibold md-on-surface">{{
-      userService.counters().highlightsReceived
-    }}</span
-    ><br />
+  <div class="text-center rounded-2xl md-surface-container p-4 counter">
+    <p class="text-md font-semibold md-on-surface">
+      {{ userService.counters().highlightsReceived }}
+    </p>
     <p class="text-sm leading-none md-on-surface-variant font-medium">
       Resaltes
     </p>

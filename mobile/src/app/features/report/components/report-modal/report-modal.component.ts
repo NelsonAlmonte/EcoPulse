@@ -12,6 +12,7 @@ import {
   IonSegmentView,
   IonTextarea,
   IonToolbar,
+  LoadingController,
   ModalController,
   SegmentChangeEventDetail,
   ToastController,
@@ -67,6 +68,7 @@ export class ReportModalComponent {
   userService = inject(UserService);
   modalController = inject(ModalController);
   toastController = inject(ToastController);
+  loadingController = inject(LoadingController);
   photo = input.required<string>();
   comment: string = '';
   selectedCategory: string | null = null;
@@ -89,13 +91,11 @@ export class ReportModalComponent {
       isDisabled: true,
     },
   };
-  currentStatus: string = 'default';
-
-  get buttonStatus() {
-    return this.buttonOptions[
-      this.currentStatus as keyof typeof this.buttonOptions
-    ];
-  }
+  loading?: Promise<HTMLIonLoadingElement>;
+  // loading = this.loadingController.create({
+  //     message: 'Enviando reporte...',
+  //     cssClass: 'loading',
+  //   });
 
   cancel(): Promise<boolean> {
     return this.modalController.dismiss(null, 'cancel');
@@ -122,8 +122,6 @@ export class ReportModalComponent {
   }
 
   async sendReport(): Promise<void> {
-    this.currentStatus = 'loading';
-
     const coordinates = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
     });
@@ -147,6 +145,12 @@ export class ReportModalComponent {
       position: 'bottom',
       animated: true,
     });
+    this.loading = this.loadingController.create({
+      message: 'Enviando reporte...',
+      cssClass: 'loading',
+    });
+    const loadingRef = await this.loading;
+    loadingRef.present();
 
     formData.append(
       'photo',
@@ -157,6 +161,7 @@ export class ReportModalComponent {
       .uploadPhoto(formData)
       .pipe(
         switchMap((response) => {
+          console.log(response);
           if (!response) return this.handleError(response);
 
           issue.photo = `${response.fullPath}`;
@@ -183,7 +188,7 @@ export class ReportModalComponent {
         //   response,
         // }));
 
-        this.currentStatus = 'default';
+        loadingRef.dismiss();
         toast.present();
       });
   }
@@ -244,24 +249,21 @@ export class ReportModalComponent {
 
   private handleError(error: any): Observable<never> {
     return from(
-      this.toastController
-        .create({
+      (async () => {
+        if (this.loading) {
+          const loadingRef = await this.loading;
+          await loadingRef.dismiss();
+        }
+
+        const toast = await this.toastController.create({
           message: 'Ocurrió un error al enviar tu reporte.',
           duration: 4000,
           position: 'bottom',
           animated: true,
-          buttons: [
-            {
-              text: 'Reintentar',
-              side: 'end',
-              handler: () => {
-                this.sendReport();
-                return false;
-              },
-            },
-          ],
-        })
-        .then((toast) => toast.present()),
+        });
+
+        await toast.present();
+      })(),
     ).pipe(switchMap(() => throwError(() => error)));
   }
 }

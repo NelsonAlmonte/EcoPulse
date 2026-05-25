@@ -14,7 +14,7 @@ export class ApiService {
       catchError((err) => {
         console.error('GET error:', err);
         return throwError(() => err);
-      })
+      }),
     );
   }
 
@@ -23,7 +23,7 @@ export class ApiService {
       catchError((err) => {
         console.error('POST error:', err);
         return throwError(() => err);
-      })
+      }),
     );
   }
 
@@ -32,7 +32,7 @@ export class ApiService {
       catchError((err) => {
         console.error('PUT error:', err);
         return throwError(() => err);
-      })
+      }),
     );
   }
 
@@ -41,7 +41,7 @@ export class ApiService {
       catchError((err) => {
         console.error('DELETE error:', err);
         return throwError(() => err);
-      })
+      }),
     );
   }
 }

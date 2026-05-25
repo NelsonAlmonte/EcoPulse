@@ -1,11 +1,15 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title class="font-semibold ion-margin-start">Reportes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true" class="md-surface md-on-surface">
   <ion-refresher slot="fixed" (ionRefresh)="refreshLatestIssues($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <p class="text-lg font-semibold ion-padding-horizontal mt-6 mb-4">
-    Ubicación actual
-  </p>
+  <p class="text-lg font-semibold ion-padding">Ubicación actual</p>
   <app-location-preview></app-location-preview>
 
   <div

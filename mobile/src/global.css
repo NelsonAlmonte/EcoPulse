@@ -354,10 +354,31 @@ ion-textarea {
   --highlight-color-valid: var(--md-sys-color-on-surface) !important;
 }
 
-ion-loading.delete-loading {
-  --spinner-color: var(--md-sys-color-primary);
-}
-
 ion-spinner {
   --color: var(--md-sys-color-primary);
+}
+
+ion-action-sheet.action-sheet {
+  --background: var(--md-sys-color-surface-container);
+  --color: var(--md-sys-color-on-surface);
+
+  .action-sheet-title {
+    font-weight: 600;
+  }
+
+  .action-sheet-button {
+    font-weight: 500;
+  }
+}
+
+ion-loading.loading {
+  --background: var(--md-sys-color-surface-container);
+  --spinner-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
+  font-weight: 600;
+  font-size: medium;
+
+  .loading-wrapper {
+    @apply rounded-2xl
+  }
 }

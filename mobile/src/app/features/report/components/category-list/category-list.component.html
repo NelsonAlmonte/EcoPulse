@@ -2,7 +2,7 @@
   <p>Cargando...</p>
 }
 @if (categoryService.categories()) {
-  <div class="grid grid-cols-2 gap-2 ion-margin-bottom ion-margin-top">
+  <div class="grid grid-cols-2 gap-1 ion-margin-vertical">
     @for (category of categoryService.categories(); track $index) {
       <button
         type="button"

@@ -5,9 +5,12 @@ import { Router } from '@angular/router';
 import { Camera, CameraDirection } from '@capacitor/camera';
 import {
   IonContent,
+  IonHeader,
   IonRefresher,
   IonRefresherContent,
   IonRippleEffect,
+  IonTitle,
+  IonToolbar,
   ModalController,
   RefresherCustomEvent,
   ToastController,
@@ -26,6 +29,9 @@ import { ArrowRight, CameraIcon, LucideAngularModule } from 'lucide-angular';
   standalone: true,
   imports: [
     IonContent,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
     IonRefresher,
     IonRefresherContent,
     CommonModule,
