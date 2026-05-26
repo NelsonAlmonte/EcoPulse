@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -11,9 +12,11 @@ import {
   IonContent,
   IonInput,
   IonRippleEffect,
+  LoadingController,
+  ToastController,
 } from '@ionic/angular/standalone';
-import { RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
+import { UiService } from '@core/services/ui.service';
 
 @Component({
   selector: 'app-signup',
@@ -31,13 +34,15 @@ import { AuthService } from '@core/services/auth.service';
   ],
 })
 export class SignupPage implements OnInit {
-  private authService = inject(AuthService);
+  authService = inject(AuthService);
+  uiService = inject(UiService);
+  router = inject(Router);
   fb = inject(FormBuilder);
+  toastController = inject(ToastController);
+  loadingController = inject(LoadingController);
   signupForm!: FormGroup;
 
-  constructor() {}
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
       last: ['', Validators.required],
@@ -46,7 +51,22 @@ export class SignupPage implements OnInit {
     });
   }
 
-  signup() {
-    this.authService.signup(this.signupForm.getRawValue());
+  async signup(): Promise<void> {
+    await this.uiService.showLoading('Creando cuenta...');
+
+    this.authService.signup(this.signupForm.getRawValue()).subscribe({
+      next: async (response) => {
+        await this.uiService.hideLoading();
+
+        localStorage.setItem('auth', JSON.stringify(response));
+
+        this.router.navigate(['/']);
+      },
+      error: async (err) => {
+        await this.uiService.hideLoading();
+
+        await this.uiService.showToast(err.error.message);
+      },
+    });
   }
 }

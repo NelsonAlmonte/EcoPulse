@@ -30,20 +30,18 @@ export class UserService {
   URL = `${environment.apiUrl}user`;
   AMOUNT_OF_ISSUES_IN_REPORT_PAGE = 3;
 
-  getUserIssues(id: string, amount: number = 5, page: number = 1) {
-    this.isLoading.set(true);
-
+  getUserIssues(
+    id: string,
+    amount: number = 5,
+    page: number = 1,
+  ): Observable<List<Issue[]>> {
     return this.apiService.doFetch<List<Issue[]>>(
       `${this.URL}/${id}/issues?amount=${amount}&page=${page}&order=createdAt:desc`,
     );
   }
 
-  getUser(id: string): void {
-    this.user.set(null);
-
-    this.apiService.doFetch<User>(`${this.URL}/${id}`).subscribe((response) => {
-      this.user.set(response);
-    });
+  getUser(id: string): Observable<User> {
+    return this.apiService.doFetch<User>(`${this.URL}/${id}`);
   }
 
   updateUser(id: string, updateUserDto: UpdateUserDto): Observable<User> {
@@ -53,50 +51,43 @@ export class UserService {
     );
   }
 
-  countUserIssues(id: string): void {
-    this.counters.set({ issues: 0 });
-
-    this.apiService
-      .doFetch<string>(`${this.URL}/${id}/issues/count`)
-      .subscribe((response) => {
-        this.counters.set({
-          ...this.counters(),
-          issues: Number(response),
-        });
-      });
+  countUserIssues(id: string): Observable<string> {
+    return this.apiService.doFetch<string>(`${this.URL}/${id}/issues/count`);
   }
 
-  counthighlightsGiven(id: string): void {
-    this.counters.set({ highlightsGiven: 0 });
-
-    this.apiService
-      .doFetch<string>(`${this.URL}/${id}/highlights/given/count`)
-      .subscribe((response) => {
-        this.counters.set({
-          ...this.counters(),
-          highlightsGiven: Number(response),
-        });
-      });
+  counthighlightsGiven(id: string): Observable<string> {
+    return this.apiService.doFetch<string>(
+      `${this.URL}/${id}/highlights/given/count`,
+    );
   }
 
-  counthighlightsReceived(id: string): void {
-    this.counters.set({ highlightsReceived: 0 });
-
-    this.apiService
-      .doFetch<string>(`${this.URL}/${id}/highlights/received/count`)
-      .subscribe((response) => {
-        this.counters.set({
-          ...this.counters(),
-          highlightsReceived: Number(response),
-        });
-      });
+  counthighlightsReceived(id: string): Observable<string> {
+    return this.apiService.doFetch<string>(
+      `${this.URL}/${id}/highlights/received/count`,
+    );
   }
 
   getHighlightsGiven(id: string, amount: number = 5, page: number = 1) {
-    this.isLoading.set(true);
-
     return this.apiService.doFetch<List<Issue[]>>(
       `${this.URL}/${id}/highlights/given?amount=${amount}&page=${page}&order=createdAt:desc`,
     );
+  }
+
+  resetSignals(): void {
+    this.user.set(null);
+    this.issueList.set({
+      data: [],
+      pagination: {
+        page: 1,
+        amount: 5,
+        total: 5,
+      },
+    });
+    this.counters.set({
+      issues: 0,
+      highlightsGiven: 0,
+      highlightsReceived: 0,
+    });
+    this.isLoading.set(false);
   }
 }

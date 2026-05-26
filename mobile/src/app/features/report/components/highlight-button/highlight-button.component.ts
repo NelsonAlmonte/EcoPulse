@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
 import { HighlightService } from '@core/services/highlight.service';
+import { UiService } from '@core/services/ui.service';
 import { ToastController } from '@ionic/angular/standalone';
 import { HighlightDto } from '@shared/dto/highlight.dto';
 import { Issue } from '@shared/models/issue.model';
@@ -25,6 +26,7 @@ export class HighlightButtonComponent {
   renderer = inject(Renderer2);
   highlightService = inject(HighlightService);
   authService = inject(AuthService);
+  uiService = inject(UiService);
   toastController = inject(ToastController);
   @ViewChild('highlightsCount') highlightsCount!: ElementRef<HTMLSpanElement>;
   highlightIcon = StarIcon;
@@ -79,15 +81,9 @@ export class HighlightButtonComponent {
   }
 
   private async handleError(error: any): Promise<void> {
-    console.error('Highlight error:', error);
-    const toast = await this.toastController.create({
-      message: 'Ocurrió un error al resaltar este reporte.',
-      duration: 4000,
-      position: 'bottom',
-      animated: true,
-    });
-
-    toast.present();
+    await this.uiService.showToast(
+      'Ocurrió un error al resaltar este reporte.',
+    );
   }
 
   private updateHighlightCounter(delta: number): void {

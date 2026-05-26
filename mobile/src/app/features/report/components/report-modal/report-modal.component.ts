@@ -12,12 +12,11 @@ import {
   IonSegmentView,
   IonTextarea,
   IonToolbar,
-  LoadingController,
   ModalController,
   SegmentChangeEventDetail,
   ToastController,
 } from '@ionic/angular/standalone';
-import { from, Observable, switchMap, throwError } from 'rxjs';
+import { catchError, from, Observable, switchMap, throwError } from 'rxjs';
 import { Geolocation } from '@capacitor/geolocation';
 import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
@@ -39,6 +38,7 @@ import {
 import { UserService } from '@core/services/user.service';
 import { Issue } from '@shared/models/issue.model';
 import { List } from '@shared/models/response.model';
+import { UiService } from '@core/services/ui.service';
 
 @Component({
   selector: 'app-report-modal',
@@ -66,9 +66,9 @@ export class ReportModalComponent {
   issueService = inject(IssueService);
   authService = inject(AuthService);
   userService = inject(UserService);
+  uiService = inject(UiService);
   modalController = inject(ModalController);
   toastController = inject(ToastController);
-  loadingController = inject(LoadingController);
   photo = input.required<string>();
   comment: string = '';
   selectedCategory: string | null = null;
@@ -91,11 +91,6 @@ export class ReportModalComponent {
       isDisabled: true,
     },
   };
-  loading?: Promise<HTMLIonLoadingElement>;
-  // loading = this.loadingController.create({
-  //     message: 'Enviando reporte...',
-  //     cssClass: 'loading',
-  //   });
 
   cancel(): Promise<boolean> {
     return this.modalController.dismiss(null, 'cancel');
@@ -139,18 +134,8 @@ export class ReportModalComponent {
       user: this.authService.loggedUserData()!.id,
     };
     const formData = new FormData();
-    const toast = await this.toastController.create({
-      message: 'Tu reporte se ha enviado correctamente.',
-      duration: 4000,
-      position: 'bottom',
-      animated: true,
-    });
-    this.loading = this.loadingController.create({
-      message: 'Enviando reporte...',
-      cssClass: 'loading',
-    });
-    const loadingRef = await this.loading;
-    loadingRef.present();
+
+    await this.uiService.showLoading('Enviando reporte...');
 
     formData.append(
       'photo',
@@ -161,21 +146,18 @@ export class ReportModalComponent {
       .uploadPhoto(formData)
       .pipe(
         switchMap((response) => {
-          console.log(response);
-          if (!response) return this.handleError(response);
-
           issue.photo = `${response.fullPath}`;
 
           return this.issueService.createIssue(issue);
         }),
+        catchError((err) => {
+          return from(this.uiService.hideLoading()).pipe(
+            switchMap(() => this.handleError(err)),
+          );
+        }),
       )
-      .subscribe((response) => {
-        if (!response) {
-          from(this.handleError(response))
-            .pipe(switchMap(() => throwError(() => response)))
-            .subscribe();
-          return;
-        }
+      .subscribe(async (response) => {
+        await this.uiService.hideLoading();
 
         this.modalController.dismiss(response, 'confirm');
 
@@ -183,13 +165,9 @@ export class ReportModalComponent {
           this.updateUserIssues(current, response),
         );
 
-        // this.issueService.issues.update((current) => ({
-        //   ...current,
-        //   response,
-        // }));
-
-        loadingRef.dismiss();
-        toast.present();
+        await this.uiService.showToast(
+          'Tu reporte se ha enviado correctamente.',
+        );
       });
   }
 
@@ -249,21 +227,24 @@ export class ReportModalComponent {
 
   private handleError(error: any): Observable<never> {
     return from(
-      (async () => {
-        if (this.loading) {
-          const loadingRef = await this.loading;
-          await loadingRef.dismiss();
-        }
-
-        const toast = await this.toastController.create({
+      this.toastController
+        .create({
           message: 'Ocurrió un error al enviar tu reporte.',
           duration: 4000,
           position: 'bottom',
           animated: true,
-        });
-
-        await toast.present();
-      })(),
+          buttons: [
+            {
+              text: 'Reintentar',
+              side: 'end',
+              handler: () => {
+                this.sendReport();
+                return false;
+              },
+            },
+          ],
+        })
+        .then((toast) => toast.present()),
     ).pipe(switchMap(() => throwError(() => error)));
   }
 }

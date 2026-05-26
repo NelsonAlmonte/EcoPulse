@@ -1,7 +1,6 @@
-@if (!userData) {
+@if (userService.isLoading()) {
   <app-profile-detail-loading></app-profile-detail-loading>
-}
-@if (userData) {
+} @else {
   <div class="flex flex-col items-center rounded-2xl mb-4">
     <div>
       <lucide-angular
@@ -11,7 +10,7 @@
       ></lucide-angular>
     </div>
     <span class="md-on-surface-background text-xl font-semibold"
-      >{{ userData.name }} {{ userData.last }}</span
+      >{{ userService.user()?.name }} {{ userService.user()?.last }}</span
     >
     <app-profile-counters class="w-full"></app-profile-counters>
   </div>

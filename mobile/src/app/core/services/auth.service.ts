@@ -9,8 +9,6 @@ import {
 } from '@shared/dto/auth.dto';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ToastController } from '@ionic/angular/standalone';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -18,52 +16,20 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class AuthService {
   private apiService = inject(ApiService);
   private router = inject(Router);
-  private toastController = inject(ToastController);
   private URL = `${environment.apiUrl}auth`;
 
-  login(loginUserDto: LoginUserDto): void {
-    this.apiService
-      .doPost<AuthResponseDto, LoginUserDto>(`${this.URL}/login`, loginUserDto)
-      .subscribe({
-        next: (response) => {
-          localStorage.setItem('auth', JSON.stringify(response));
-          this.router.navigate(['/']);
-        },
-        error: async (err: HttpErrorResponse) => {
-          const toast = await this.toastController.create({
-            message: err.error.message,
-            duration: 6000,
-            position: 'bottom',
-            animated: true,
-          });
-
-          await toast.present();
-        },
-      });
+  login(loginUserDto: LoginUserDto): Observable<AuthResponseDto> {
+    return this.apiService.doPost<AuthResponseDto, LoginUserDto>(
+      `${this.URL}/login`,
+      loginUserDto,
+    );
   }
 
-  signup(signupUserDto: SignupUserDto): void {
-    this.apiService
-      .doPost<
-        AuthResponseDto,
-        SignupUserDto
-      >(`${this.URL}/signup`, signupUserDto)
-      .subscribe({
-        next: (response) => {
-          localStorage.setItem('auth', JSON.stringify(response));
-          this.router.navigate(['/']);
-        },
-        error: async (err) => {
-          const toast = await this.toastController.create({
-            message: err.error.message,
-            duration: 6000,
-            position: 'bottom',
-            animated: true,
-          });
-
-          await toast.present();
-        },
-      });
+  signup(signupUserDto: SignupUserDto): Observable<AuthResponseDto> {
+    return this.apiService.doPost<AuthResponseDto, SignupUserDto>(
+      `${this.URL}/signup`,
+      signupUserDto,
+    );
   }
 
   refreshSession(

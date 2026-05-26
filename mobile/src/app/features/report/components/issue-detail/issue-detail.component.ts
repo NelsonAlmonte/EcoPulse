@@ -28,6 +28,7 @@ import { UserService } from '@core/services/user.service';
 import { AuthService } from '@core/services/auth.service';
 import { switchMap, tap } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
+import { UiService } from '@core/services/ui.service';
 
 @Component({
   selector: 'app-issue-detail',
@@ -45,6 +46,7 @@ export class IssueDetailComponent {
   issueService = inject(IssueService);
   userService = inject(UserService);
   authService = inject(AuthService);
+  uiService = inject(UiService);
   modalController = inject(ModalController);
   actionSheetController = inject(ActionSheetController);
   toastController = inject(ToastController);
@@ -166,27 +168,18 @@ export class IssueDetailComponent {
 
         if (selectedOption !== 'delete') return;
 
-        const loading = await this.loadingController.create({
-          message: 'Eliminando este reporte...',
-          cssClass: 'loading',
-        });
-
-        await loading.present();
+        await this.uiService.showLoading('Eliminando reporte...');
 
         this.issueService
           .deleteIssue(id)
           .pipe(
             tap(async () => {
-              const toast = await this.toastController.create({
-                message: 'Reporte eliminado exitosamente.',
-                duration: 4000,
-                position: 'bottom',
-              });
+              await this.uiService.showToast('Reporte eliminado exitosamente.');
 
               const modal = await this.modalController.getTop();
 
-              await loading.dismiss();
-              await toast.present();
+              await this.uiService.hideLoading();
+
               modal?.dismiss();
 
               this.issueService.issueList.update((current) => ({
@@ -205,14 +198,9 @@ export class IssueDetailComponent {
             next: (response) => this.userService.issueList.set(response),
             error: async (err) => {
               console.log(err);
-
-              const toast = await this.toastController.create({
-                message: 'Ocurrió un error al eliminar este reporte.',
-                duration: 4000,
-                position: 'bottom',
-              });
-
-              await toast.present();
+              await this.uiService.showToast(
+                'Ocurrió un error al eliminar este reporte.',
+              );
             },
             complete: () => this.userService.isLoading.set(false),
           });

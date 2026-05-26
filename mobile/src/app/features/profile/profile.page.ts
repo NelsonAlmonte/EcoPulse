@@ -1,6 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -13,7 +14,8 @@ import {
 import { ProfileDetailComponent } from '@features/profile/components/profile-detail/profile-detail.component';
 import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
-import { Router } from '@angular/router';
+import { UiService } from '@core/services/ui.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -32,27 +34,51 @@ import { Router } from '@angular/router';
     ProfileDetailComponent,
   ],
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage {
   router = inject(Router);
   authService = inject(AuthService);
   userService = inject(UserService);
+  uiService = inject(UiService);
 
-  ngOnInit(): void {
-    this.userService.getUser(this.authService.loggedUserData()!.id);
+  ionViewWillEnter(): void {
+    if (!this.userService.user()) {
+      this.getUserProfile();
+    }
   }
 
   refreshUserData(event: RefresherCustomEvent): void {
-    this.userService.getUser(this.authService.loggedUserData()!.id);
-    this.userService.countUserIssues(this.authService.loggedUserData()!.id);
-    this.userService.counthighlightsGiven(
-      this.authService.loggedUserData()!.id
-    );
-    this.userService.counthighlightsReceived(
-      this.authService.loggedUserData()!.id
-    );
+    this.getUserProfile();
 
     setTimeout(() => {
       event.target.complete();
     }, 2000);
+  }
+
+  getUserProfile(): void {
+    const userId = this.authService.loggedUserData()!.id;
+
+    this.userService.isLoading.set(true);
+
+    forkJoin({
+      user: this.userService.getUser(userId),
+      issues: this.userService.countUserIssues(userId),
+      highlightsGiven: this.userService.counthighlightsGiven(userId),
+      highlightsReceived: this.userService.counthighlightsReceived(userId),
+    }).subscribe({
+      next: (response) => {
+        this.userService.user.set(response.user);
+        this.userService.counters.set({
+          issues: Number(response.issues),
+          highlightsGiven: Number(response.highlightsGiven),
+          highlightsReceived: Number(response.highlightsReceived),
+        });
+      },
+      error: async () => {
+        await this.uiService.showToast(
+          'Ocurrió un error al obtener tus datos.',
+        );
+      },
+      complete: () => this.userService.isLoading.set(false),
+    });
   }
 }

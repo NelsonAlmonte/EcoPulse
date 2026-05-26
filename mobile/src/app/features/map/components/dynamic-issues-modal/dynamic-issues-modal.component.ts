@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { IssueService } from '@core/services/issue.service';
 import { MapService } from '@core/services/map.service';
+import { UiService } from '@core/services/ui.service';
 import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
 import {
   InfiniteScrollCustomEvent,
@@ -29,6 +30,7 @@ import { LucideAngularModule, MapIcon, XIcon } from 'lucide-angular';
 export class DynamicIssuesModalComponent implements OnInit {
   issueService = inject(IssueService);
   mapService = inject(MapService);
+  uiService = inject(UiService);
   modalController = inject(ModalController);
   toastController = inject(ToastController);
   canGetMore = signal(true);
@@ -68,14 +70,9 @@ export class DynamicIssuesModalComponent implements OnInit {
         if (!response.data.length) this.canGetMore.set(false);
       },
       error: async (err) => {
-        console.log(err);
-        const toast = await this.toastController.create({
-          message: 'Ocurrió un error al obtener los reportes.',
-          duration: 4000,
-          position: 'bottom',
-        });
-
-        toast.present();
+        await this.uiService.showToast(
+          'Ocurrió un error al obtener los reportes.',
+        );
       },
       complete: () => this.issueService.isLoading.set(false),
     });

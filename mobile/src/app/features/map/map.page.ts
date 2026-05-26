@@ -3,10 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
-  IonHeader,
   IonRippleEffect,
-  IonTitle,
-  IonToolbar,
   ModalController,
 } from '@ionic/angular/standalone';
 import { MapViewComponent } from '@features/map/components/map-view/map-view.component';
@@ -20,9 +17,6 @@ import { ChevronUpIcon, LucideAngularModule } from 'lucide-angular';
   styleUrls: ['./map.page.css'],
   imports: [
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
     IonRippleEffect,
     CommonModule,
     FormsModule,

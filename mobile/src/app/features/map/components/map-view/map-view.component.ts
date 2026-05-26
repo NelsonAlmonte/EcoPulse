@@ -25,6 +25,7 @@ import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
 import { importLibrary } from '@googlemaps/js-api-loader';
 import { MapService } from '@core/services/map.service';
+import { UiService } from '@core/services/ui.service';
 
 @Component({
   selector: 'app-map-view',
@@ -41,6 +42,7 @@ export class MapViewComponent implements AfterViewInit {
   toastController = inject(ToastController);
   issueService = inject(IssueService);
   authService = inject(AuthService);
+  uiService = inject(UiService);
   renderer = inject(Renderer2);
   @ViewChild('map') mapRef!: ElementRef<Element>;
   map!: google.maps.Map;
@@ -85,14 +87,9 @@ export class MapViewComponent implements AfterViewInit {
           this.issueService.issueList.update(() => response);
         },
         error: async (err) => {
-          console.log(err);
-          const toast = await this.toastController.create({
-            message: 'Ocurrió un error al obtener los reportes.',
-            duration: 4000,
-            position: 'bottom',
-          });
-
-          toast.present();
+          await this.uiService.showToast(
+            'Ocurrió un error al obtener los reportes.',
+          );
         },
         complete: () => {
           this.issueService.isLoading.set(false);
@@ -150,15 +147,9 @@ export class MapViewComponent implements AfterViewInit {
 
   async viewIssueDetail(issue?: Issue): Promise<void> {
     if (!issue) {
-      const toast = await this.toastController.create({
-        message:
-          'Ocurrio un error al ver este reporte, intentelo de nuevo mas tarde.',
-        duration: 4000,
-        position: 'bottom',
-        animated: true,
-      });
-
-      toast.present();
+      await this.uiService.showToast(
+        'Ocurrio un error al ver este reporte, intentelo de nuevo mas tarde.',
+      );
       return;
     }
 
@@ -181,22 +172,24 @@ export class MapViewComponent implements AfterViewInit {
 
     modal.onDidDismiss().then(() => this.issueService.issue.set(null));
 
-    this.issueService.getIssue(issue!.id, userId);
+    this.issueService.getIssue(issue!.id, userId).subscribe({
+      next: (response) => {
+        this.issueService.issue.set(response);
+      },
+      error: async (err) => {
+        console.log(err);
+        await this.uiService.showToast('Ocurrio un error al ver este reporte.');
+      },
+    });
   }
 
   async getBounds(map: google.maps.Map): Promise<void> {
     const bounds = map.getBounds();
 
     if (!bounds) {
-      const toast = await this.toastController.create({
-        message:
-          'Ocurrio un error al obtener los reportes, intentelo de nuevo mas tarde.',
-        duration: 4000,
-        position: 'bottom',
-        animated: true,
-      });
-
-      toast.present();
+      await this.uiService.showToast(
+        'Ocurrio un error al ver este reporte, intentelo de nuevo mas tarde.',
+      );
       return;
     }
 

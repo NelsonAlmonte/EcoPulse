@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   IonBackButton,
   IonButtons,
@@ -22,7 +23,7 @@ import {
 import { UpdateUserDto } from '@shared/dto/user.dto';
 import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
-import { Router } from '@angular/router';
+import { UiService } from '@core/services/ui.service';
 import {
   CheckCircleIcon,
   LucideAngularModule,
@@ -54,6 +55,7 @@ export class EditProfilePage implements OnInit {
   router = inject(Router);
   authService = inject(AuthService);
   userService = inject(UserService);
+  uiService = inject(UiService);
   toastController = inject(ToastController);
   userForm!: FormGroup;
   editProfileIcon = UserCogIcon;
@@ -73,12 +75,6 @@ export class EditProfilePage implements OnInit {
       name: formValue.name,
       last: formValue.last,
     };
-    let toast = await this.toastController.create({
-      message: 'Tu perfil se actualizo correctamente.',
-      duration: 4000,
-      position: 'bottom',
-      animated: true,
-    });
 
     this.userService
       .updateUser(loggedUserData.id, updateUserDto)
@@ -97,7 +93,9 @@ export class EditProfilePage implements OnInit {
         // }
 
         this.userService.user.set(result);
-        toast.present();
+
+        await this.uiService.showToast('Tu perfil se actualizo correctamente.');
+
         this.router.navigate(['/tabs/profile']);
       });
   }

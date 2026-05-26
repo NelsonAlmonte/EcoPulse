@@ -20,6 +20,7 @@ import {
 import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
 import { UserService } from '@core/services/user.service';
 import { AuthService } from '@core/services/auth.service';
+import { UiService } from '@core/services/ui.service';
 import {
   ArrowLeft,
   EllipsisVertical,
@@ -55,6 +56,7 @@ import type { OverlayEventDetail } from '@ionic/core';
 export class UserIssuesPage implements OnInit, OnDestroy {
   userService = inject(UserService);
   authService = inject(AuthService);
+  uiService = inject(UiService);
   toastController = inject(ToastController);
   canGetMore = signal(true);
   actionSheetButtons = [
@@ -87,19 +89,16 @@ export class UserIssuesPage implements OnInit, OnDestroy {
   optionsIcon = EllipsisVertical;
 
   ngOnInit(): void {
+    this.userService.isLoading.set(true);
+
     this.userService
       .getUserIssues(this.authService.loggedUserData()!.id)
       .subscribe({
         next: (response) => this.userService.issueList.update(() => response),
         error: async (err) => {
-          console.log(err);
-          const toast = await this.toastController.create({
-            message: 'Ocurrió un error al obtener los reportes.',
-            duration: 4000,
-            position: 'bottom',
-          });
-
-          toast.present();
+          await this.uiService.showToast(
+            'Ocurrió un error al obtener los reportes.',
+          );
         },
         complete: () => this.userService.isLoading.set(false),
       });
@@ -107,20 +106,16 @@ export class UserIssuesPage implements OnInit, OnDestroy {
 
   refreshUserIssues(event: RefresherCustomEvent): void {
     this.canGetMore.set(true);
+    this.userService.isLoading.set(true);
 
     this.userService
       .getUserIssues(this.authService.loggedUserData()!.id)
       .subscribe({
         next: (response) => this.userService.issueList.update(() => response),
         error: async (err) => {
-          console.log(err);
-          const toast = await this.toastController.create({
-            message: 'Ocurrió un error al obtener los reportes.',
-            duration: 4000,
-            position: 'bottom',
-          });
-
-          toast.present();
+          await this.uiService.showToast(
+            'Ocurrió un error al obtener los reportes.',
+          );
         },
         complete: () => {
           event.target.complete();
@@ -146,14 +141,9 @@ export class UserIssuesPage implements OnInit, OnDestroy {
           if (!response.data.length) this.canGetMore.set(false);
         },
         error: async (err) => {
-          console.log(err);
-          const toast = await this.toastController.create({
-            message: 'Ocurrió un error al obtener los reportes.',
-            duration: 4000,
-            position: 'bottom',
-          });
-
-          toast.present();
+          await this.uiService.showToast(
+            'Ocurrió un error al obtener los reportes.',
+          );
         },
         complete: () => this.userService.isLoading.set(false),
       });
@@ -168,14 +158,23 @@ export class UserIssuesPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.userService.isLoading.set(true);
+
     this.userService
       .getUserIssues(
         this.authService.loggedUserData()!.id,
         this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE,
       )
-      .subscribe((response) => {
-        this.userService.isLoading.set(false);
-        this.userService.issueList.update(() => response);
+      .subscribe({
+        next: (response) => {
+          this.userService.issueList.update(() => response);
+        },
+        error: async (err) => {
+          await this.uiService.showToast(
+            'Ocurrió un error al obtener los reportes.',
+          );
+        },
+        complete: () => this.userService.isLoading.set(false),
       });
   }
 }

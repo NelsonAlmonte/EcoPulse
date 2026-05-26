@@ -16,7 +16,6 @@ export class IssueService {
   apiService = inject(ApiService);
   authService = inject(AuthService);
   toastController = inject(ToastController);
-  // issues = signal<Issue[]>([]);
   issue = signal<Issue | null>(null);
   issueList = signal<List<Issue[]>>({
     data: [],
@@ -40,27 +39,10 @@ export class IssueService {
     );
   }
 
-  getIssue(issueId: string, userId: string): void {
+  getIssue(issueId: string, userId: string) {
     this.issue.set(null);
 
-    this.apiService
-      .doFetch<Issue>(`${this.URL}/${issueId}/${userId}`)
-      .subscribe({
-        next: (response) => {
-          this.issue.set(response);
-        },
-        error: async (err) => {
-          console.log(err);
-
-          const toast = await this.toastController.create({
-            message: 'Ocurrió un error al obtener este reporte.',
-            duration: 4000,
-            position: 'bottom',
-          });
-
-          await toast.present();
-        },
-      });
+    return this.apiService.doFetch<Issue>(`${this.URL}/${issueId}/${userId}`);
   }
 
   getIssuesByBounds(

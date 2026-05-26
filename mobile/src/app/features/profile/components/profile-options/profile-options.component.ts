@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
+import { UserService } from '@core/services/user.service';
 import { IonRippleEffect } from '@ionic/angular/standalone';
 import {
   CircleUserIcon,
@@ -21,6 +22,7 @@ import {
 export class ProfileOptionsComponent {
   router = inject(Router);
   authService = inject(AuthService);
+  userService = inject(UserService);
   userIcon = CircleUserIcon;
   editProfileIcon = UserCogIcon;
   issuesIcon = FileSearchIcon;
@@ -33,6 +35,7 @@ export class ProfileOptionsComponent {
   }
 
   logout(): void {
+    this.userService.resetSignals();
     this.authService.logout();
   }
 }
