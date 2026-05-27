@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -16,12 +16,14 @@ import {
   RefresherCustomEvent,
   ToastController,
   IonRippleEffect,
+  IonActionSheet,
 } from '@ionic/angular/standalone';
 import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
 import { UserService } from '@core/services/user.service';
 import { AuthService } from '@core/services/auth.service';
-import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
+import { ArrowLeft, ArrowUpDown, LucideAngularModule } from 'lucide-angular';
 import { UiService } from '@core/services/ui.service';
+import { OverlayEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-highlights-given',
@@ -39,6 +41,7 @@ import { UiService } from '@core/services/ui.service';
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonRippleEffect,
+    IonActionSheet,
     CommonModule,
     FormsModule,
     IssueListComponent,
@@ -46,21 +49,38 @@ import { UiService } from '@core/services/ui.service';
     RouterLink,
   ],
 })
-export class HighlightsGivenPage implements OnInit, OnDestroy {
+export class HighlightsGivenPage {
   userService = inject(UserService);
   authService = inject(AuthService);
   uiService = inject(UiService);
   toastController = inject(ToastController);
   canGetMore = signal(true);
+  actionSheetButtons = [
+    {
+      text: 'Resaltes más recientes',
+      data: {
+        value: 'createdAt:desc',
+      },
+    },
+    {
+      text: 'Resaltes más antiguos',
+      data: {
+        value: 'createdAt:asc',
+      },
+    },
+  ];
+  orderBy = 'createdAt:desc';
   backIcon = ArrowLeft;
+  orderIcon = ArrowUpDown;
 
-  ngOnInit(): void {
+  ionViewWillEnter(): void {
     this.userService.isLoading.set(true);
+    this.canGetMore.set(true);
 
     this.userService
       .getHighlightsGiven(this.authService.loggedUserData()!.id)
       .subscribe({
-        next: (response) => this.userService.issueList.update(() => response),
+        next: (response) => this.userService.issueList.set(response),
         error: async (err) => {
           await this.uiService.showToast(
             'Ocurrió un error al obtener los reportes.',
@@ -71,12 +91,13 @@ export class HighlightsGivenPage implements OnInit, OnDestroy {
   }
 
   refreshUserIssues(event: RefresherCustomEvent): void {
+    this.userService.isLoading.set(true);
     this.canGetMore.set(true);
 
     this.userService
       .getHighlightsGiven(this.authService.loggedUserData()!.id)
       .subscribe({
-        next: (response) => this.userService.issueList.update(() => response),
+        next: (response) => this.userService.issueList.set(response),
         error: async (err) => {
           await this.uiService.showToast(
             'Ocurrió un error al obtener los reportes.',
@@ -118,7 +139,35 @@ export class HighlightsGivenPage implements OnInit, OnDestroy {
     }, 1500);
   }
 
-  ngOnDestroy(): void {
+  orderIssues(event: CustomEvent<OverlayEventDetail>): void {
+    if (!event.detail.data) return;
+
+    this.orderBy = event.detail.data.value;
+    this.userService.isLoading.set(true);
+    this.canGetMore.set(true);
+
+    this.userService
+      .getHighlightsGiven(
+        this.authService.loggedUserData()!.id,
+        5,
+        1,
+        this.orderBy,
+      )
+      .subscribe({
+        next: (response) => this.userService.issueList.set(response),
+        error: async (err) => {
+          await this.uiService.showToast(
+            'Ocurrió un error al obtener los reportes.',
+          );
+        },
+        complete: () => this.userService.isLoading.set(false),
+      });
+  }
+
+  ionViewWillLeave(): void {
+    this.userService.isLoading.set(true);
+    this.canGetMore.set(true);
+
     this.userService
       .getUserIssues(
         this.authService.loggedUserData()!.id,
@@ -126,7 +175,7 @@ export class HighlightsGivenPage implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response) => {
-          this.userService.issueList.update(() => response);
+          this.userService.issueList.set(response);
         },
         error: async (err) => {
           await this.uiService.showToast(

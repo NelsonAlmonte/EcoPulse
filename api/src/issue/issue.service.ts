@@ -46,7 +46,7 @@ export class IssueService {
   getIssuesList(
     pagination: PaginationParams,
     where: Prisma.IssueWhereInput,
-    order: Prisma.IssueOrderByWithRelationInput,
+    order: Prisma.IssueOrderByWithRelationInput[],
   ): Promise<Issue[] | null> {
     return this.prisma.issue.findMany({
       skip: pagination.skip,
@@ -68,7 +68,7 @@ export class IssueService {
   async getIssuesInBounds(
     pagination: PaginationParams,
     where: Prisma.IssueWhereInput,
-    order: Prisma.IssueOrderByWithRelationInput,
+    order: Prisma.IssueOrderByWithRelationInput[],
   ): Promise<GetIssueListDto[] | null> {
     const include: Prisma.IssueInclude = {
       category: true,

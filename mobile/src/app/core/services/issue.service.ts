@@ -26,6 +26,7 @@ export class IssueService {
     },
   });
   isLoading = signal(false);
+  order = signal('highlights:desc');
   URL = `${environment.apiUrl}issue`;
 
   createIssue(issue: CreateIssueDto): Observable<Issue> {
@@ -51,14 +52,12 @@ export class IssueService {
   ): Observable<List<Issue[]>> {
     const loggedUser = this.authService.loggedUserData();
 
-    this.isLoading.set(true);
-
     return this.apiService.doFetch<List<Issue[]>>(
       `${this.URL}/in-bound?north=${bounds.north}&south=${bounds.south}&east=${
         bounds.east
       }&west=${bounds.west}&page=${page}&amount=${10}&userId=${
         loggedUser!.id
-      }&order=highlights:desc`,
+      }&order=${this.order()}`,
     );
   }
 

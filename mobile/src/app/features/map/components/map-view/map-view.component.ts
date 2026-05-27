@@ -26,6 +26,7 @@ import { AuthService } from '@core/services/auth.service';
 import { importLibrary } from '@googlemaps/js-api-loader';
 import { MapService } from '@core/services/map.service';
 import { UiService } from '@core/services/ui.service';
+import { Bounds } from '@shared/models/user.model';
 
 @Component({
   selector: 'app-map-view',
@@ -48,6 +49,18 @@ export class MapViewComponent implements AfterViewInit {
   map!: google.maps.Map;
   markers = new Map<google.maps.marker.AdvancedMarkerElement, Issue>();
   isLoading = signal(false);
+
+  constructor() {
+    effect(() => {
+      this.issueService.order();
+
+      const bounds = this.mapService.bounds();
+
+      if (!bounds) return;
+
+      this.fetchIssues(bounds);
+    });
+  }
 
   async ngAfterViewInit() {
     await this.initMap();
@@ -78,30 +91,34 @@ export class MapViewComponent implements AfterViewInit {
 
     this.map.addListener('idle', async () => {
       await this.getBounds(this.map);
-      const bounds = this.mapService.bounds();
-
-      if (!bounds) return;
-
-      this.issueService.getIssuesByBounds(bounds).subscribe({
-        next: (response) => {
-          this.issueService.issueList.update(() => response);
-        },
-        error: async (err) => {
-          await this.uiService.showToast(
-            'Ocurrió un error al obtener los reportes.',
-          );
-        },
-        complete: () => {
-          this.issueService.isLoading.set(false);
-          this.isLoading.set(false);
-        },
-      });
     });
 
     this.addMarkers();
   }
 
-  async addMarkers() {
+  fetchIssues(bounds: Bounds): void {
+    if (!bounds) return;
+
+    this.issueService.isLoading.set(true);
+    this.isLoading.set(true);
+
+    this.issueService.getIssuesByBounds(bounds).subscribe({
+      next: (response) => {
+        this.issueService.issueList.set(response);
+      },
+      error: async (err) => {
+        await this.uiService.showToast(
+          'Ocurrió un error al obtener los reportes.',
+        );
+      },
+      complete: () => {
+        this.issueService.isLoading.set(false);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  async addMarkers(): Promise<void> {
     effect(
       async () => {
         const issues = this.issueService.issueList().data;

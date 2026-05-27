@@ -10,6 +10,16 @@
       </a>
     </ion-buttons>
     <ion-title class="font-semibold">Reportes resaltados</ion-title>
+    <ion-buttons slot="end" class="ion-padding">
+      <button
+        type="button"
+        class="md-on-surface focus:outline-none rounded-2xl ion-activatable relative overflow-hidden"
+        id="open-order-action-sheet-highlights-given"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        <lucide-angular [img]="orderIcon" size="24"></lucide-angular>
+      </button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -25,4 +35,12 @@
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
   }
+
+  <ion-action-sheet
+    trigger="open-order-action-sheet-highlights-given"
+    header="Ordenar por"
+    class="action-sheet"
+    [buttons]="actionSheetButtons"
+    (didDismiss)="orderIssues($event)"
+  ></ion-action-sheet>
 </ion-content>

@@ -369,6 +369,15 @@ ion-action-sheet.action-sheet {
   .action-sheet-button {
     font-weight: 500;
   }
+
+  .action-sheet-group:not(.action-sheet-group-cancel) {
+    @apply rounded-t-2xl;
+  }
+
+  .action-sheet-title {
+    @apply border-b-1;
+    border-color: var(--md-sys-color-outline-variant);
+  }
 }
 
 ion-loading.loading {

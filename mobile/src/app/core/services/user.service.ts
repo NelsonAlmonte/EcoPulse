@@ -34,10 +34,10 @@ export class UserService {
     id: string,
     amount: number = 5,
     page: number = 1,
-    sort: string = 'createdAt:desc',
+    order: string = 'createdAt:desc',
   ): Observable<List<Issue[]>> {
     return this.apiService.doFetch<List<Issue[]>>(
-      `${this.URL}/${id}/issues?amount=${amount}&page=${page}&order=${sort}`,
+      `${this.URL}/${id}/issues?amount=${amount}&page=${page}&order=${order}`,
     );
   }
 
@@ -68,9 +68,14 @@ export class UserService {
     );
   }
 
-  getHighlightsGiven(id: string, amount: number = 5, page: number = 1) {
+  getHighlightsGiven(
+    id: string,
+    amount: number = 5,
+    page: number = 1,
+    order: string = 'createdAt:desc',
+  ) {
     return this.apiService.doFetch<List<Issue[]>>(
-      `${this.URL}/${id}/highlights/given?amount=${amount}&page=${page}&order=createdAt:desc`,
+      `${this.URL}/${id}/highlights/given?amount=${amount}&page=${page}&order=${order}`,
     );
   }
 

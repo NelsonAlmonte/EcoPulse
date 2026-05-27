@@ -14,10 +14,10 @@
       <button
         type="button"
         class="md-on-surface focus:outline-none rounded-2xl ion-activatable relative overflow-hidden"
-        id="open-sort-action-sheet"
+        id="open-order-action-sheet-user-issues"
       >
         <ion-ripple-effect></ion-ripple-effect>
-        <lucide-angular [img]="optionsIcon" size="24"></lucide-angular>
+        <lucide-angular [img]="orderIcon" size="24"></lucide-angular>
       </button>
     </ion-buttons>
   </ion-toolbar>
@@ -37,10 +37,10 @@
   }
 
   <ion-action-sheet
-    trigger="open-sort-action-sheet"
+    trigger="open-order-action-sheet-user-issues"
     header="Ordenar por"
     class="action-sheet"
     [buttons]="actionSheetButtons"
-    (didDismiss)="sortIssues($event)"
+    (didDismiss)="orderIssues($event)"
   ></ion-action-sheet>
 </ion-content>

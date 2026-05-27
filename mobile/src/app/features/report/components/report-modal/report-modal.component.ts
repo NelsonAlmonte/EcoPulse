@@ -117,6 +117,8 @@ export class ReportModalComponent {
   }
 
   async sendReport(): Promise<void> {
+    await this.uiService.showLoading('Enviando reporte...');
+
     const coordinates = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
     });
@@ -134,8 +136,6 @@ export class ReportModalComponent {
       user: this.authService.loggedUserData()!.id,
     };
     const formData = new FormData();
-
-    await this.uiService.showLoading('Enviando reporte...');
 
     formData.append(
       'photo',

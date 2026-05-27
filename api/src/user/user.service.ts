@@ -40,7 +40,7 @@ export class UserService {
     userId: string,
     pagination: PaginationParams,
     where: Prisma.IssueWhereInput,
-    order: Prisma.IssueOrderByWithRelationInput,
+    order: Prisma.IssueOrderByWithRelationInput[],
   ): Promise<GetIssueDto[] | null> {
     const issues = await this.prisma.issue.findMany({
       skip: pagination.skip,
@@ -88,6 +88,7 @@ export class UserService {
   async getHighlightsGiven(
     userId: string,
     pagination: PaginationParams,
+    order: Prisma.IssueOrderByWithRelationInput[],
   ): Promise<GetIssueDto[] | null> {
     const highlights = await this.prisma.highlight.findMany({
       where: {
@@ -122,9 +123,7 @@ export class UserService {
       },
       skip: pagination.skip,
       take: pagination.take,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: order,
     });
 
     return highlights.map((highlight) => {

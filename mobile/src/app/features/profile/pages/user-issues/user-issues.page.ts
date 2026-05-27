@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -21,11 +21,7 @@ import { IssueListComponent } from '@features/report/components/issue-list/issue
 import { UserService } from '@core/services/user.service';
 import { AuthService } from '@core/services/auth.service';
 import { UiService } from '@core/services/ui.service';
-import {
-  ArrowLeft,
-  EllipsisVertical,
-  LucideAngularModule,
-} from 'lucide-angular';
+import { ArrowLeft, ArrowUpDown, LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
 import type { OverlayEventDetail } from '@ionic/core';
 
@@ -53,7 +49,7 @@ import type { OverlayEventDetail } from '@ionic/core';
     RouterLink,
   ],
 })
-export class UserIssuesPage implements OnInit {
+export class UserIssuesPage {
   userService = inject(UserService);
   authService = inject(AuthService);
   uiService = inject(UiService);
@@ -85,12 +81,13 @@ export class UserIssuesPage implements OnInit {
       },
     },
   ];
-  sortBy = 'createdAt:desc';
+  orderBy = 'createdAt:desc';
   backIcon = ArrowLeft;
-  optionsIcon = EllipsisVertical;
+  orderIcon = ArrowUpDown;
 
-  ngOnInit(): void {
+  ionViewWillEnter(): void {
     this.userService.isLoading.set(true);
+    this.canGetMore.set(true);
 
     this.userService
       .getUserIssues(this.authService.loggedUserData()!.id)
@@ -106,11 +103,11 @@ export class UserIssuesPage implements OnInit {
   }
 
   refreshUserIssues(event: RefresherCustomEvent): void {
-    this.canGetMore.set(true);
     this.userService.isLoading.set(true);
+    this.canGetMore.set(true);
 
     this.userService
-      .getUserIssues(this.authService.loggedUserData()!.id, 5, 1, this.sortBy)
+      .getUserIssues(this.authService.loggedUserData()!.id, 5, 1, this.orderBy)
       .subscribe({
         next: (response) => this.userService.issueList.set(response),
         error: async (err) => {
@@ -133,7 +130,7 @@ export class UserIssuesPage implements OnInit {
         this.authService.loggedUserData()!.id,
         5,
         nextPage,
-        this.sortBy,
+        this.orderBy,
       )
       .subscribe({
         next: (response) => {
@@ -159,13 +156,15 @@ export class UserIssuesPage implements OnInit {
     }, 1500);
   }
 
-  sortIssues(event: CustomEvent<OverlayEventDetail>) {
-    this.sortBy = event.detail.data.value;
+  orderIssues(event: CustomEvent<OverlayEventDetail>): void {
+    if (!event.detail.data) return;
 
+    this.orderBy = event.detail.data.value;
     this.userService.isLoading.set(true);
+    this.canGetMore.set(true);
 
     this.userService
-      .getUserIssues(this.authService.loggedUserData()!.id, 5, 1, this.sortBy)
+      .getUserIssues(this.authService.loggedUserData()!.id, 5, 1, this.orderBy)
       .subscribe({
         next: (response) => this.userService.issueList.set(response),
         error: async (err) => {
@@ -179,6 +178,7 @@ export class UserIssuesPage implements OnInit {
 
   ionViewWillLeave(): void {
     this.userService.isLoading.set(true);
+    this.canGetMore.set(true);
 
     this.userService
       .getUserIssues(

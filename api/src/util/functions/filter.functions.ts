@@ -27,23 +27,30 @@ export function buildFilterParams(
 
 export function buildOrderParam(
   order?: string,
-): Prisma.IssueOrderByWithRelationInput | undefined {
-  let orderBy: Prisma.IssueOrderByWithRelationInput | undefined = undefined;
+): Prisma.IssueOrderByWithRelationInput[] {
+  let orderBy: Prisma.IssueOrderByWithRelationInput[] = [];
 
   if (order) {
     const column = order.split(':')[0];
     const value = order.split(':')[1] as Prisma.SortOrder;
 
     if (column === 'highlights') {
-      orderBy = {
-        highlights: {
-          _count: value,
+      orderBy = [
+        {
+          highlights: {
+            _count: value,
+          },
         },
-      };
+        {
+          id: 'asc',
+        },
+      ];
     } else {
-      orderBy = {
-        [order.split(':')[0]]: order.split(':')[1],
-      };
+      orderBy = [
+        {
+          [order.split(':')[0]]: order.split(':')[1],
+        },
+      ];
     }
   }
 
