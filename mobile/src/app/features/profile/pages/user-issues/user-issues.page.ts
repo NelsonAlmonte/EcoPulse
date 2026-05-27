@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -53,7 +53,7 @@ import type { OverlayEventDetail } from '@ionic/core';
     RouterLink,
   ],
 })
-export class UserIssuesPage implements OnInit, OnDestroy {
+export class UserIssuesPage implements OnInit {
   userService = inject(UserService);
   authService = inject(AuthService);
   uiService = inject(UiService);
@@ -63,28 +63,29 @@ export class UserIssuesPage implements OnInit, OnDestroy {
     {
       text: 'Más recientes',
       data: {
-        action: 'recent',
+        value: 'createdAt:desc',
       },
     },
     {
       text: 'Más antiguos',
       data: {
-        action: 'old',
+        value: 'createdAt:asc',
       },
     },
     {
       text: 'Más destacados',
       data: {
-        action: 'most-highlights',
+        value: 'highlights:desc',
       },
     },
     {
       text: 'Menos destacados',
       data: {
-        action: 'least-highlights',
+        value: 'highlights:asc',
       },
     },
   ];
+  sortBy = 'createdAt:desc';
   backIcon = ArrowLeft;
   optionsIcon = EllipsisVertical;
 
@@ -94,7 +95,7 @@ export class UserIssuesPage implements OnInit, OnDestroy {
     this.userService
       .getUserIssues(this.authService.loggedUserData()!.id)
       .subscribe({
-        next: (response) => this.userService.issueList.update(() => response),
+        next: (response) => this.userService.issueList.set(response),
         error: async (err) => {
           await this.uiService.showToast(
             'Ocurrió un error al obtener los reportes.',
@@ -109,9 +110,9 @@ export class UserIssuesPage implements OnInit, OnDestroy {
     this.userService.isLoading.set(true);
 
     this.userService
-      .getUserIssues(this.authService.loggedUserData()!.id)
+      .getUserIssues(this.authService.loggedUserData()!.id, 5, 1, this.sortBy)
       .subscribe({
-        next: (response) => this.userService.issueList.update(() => response),
+        next: (response) => this.userService.issueList.set(response),
         error: async (err) => {
           await this.uiService.showToast(
             'Ocurrió un error al obtener los reportes.',
@@ -128,7 +129,12 @@ export class UserIssuesPage implements OnInit, OnDestroy {
     const nextPage = this.userService.issueList().pagination.page + 1;
 
     this.userService
-      .getUserIssues(this.authService.loggedUserData()!.id, 5, nextPage)
+      .getUserIssues(
+        this.authService.loggedUserData()!.id,
+        5,
+        nextPage,
+        this.sortBy,
+      )
       .subscribe({
         next: (response) => {
           this.userService.issueList.update((current) => {
@@ -154,10 +160,24 @@ export class UserIssuesPage implements OnInit, OnDestroy {
   }
 
   sortIssues(event: CustomEvent<OverlayEventDetail>) {
-    console.log(JSON.stringify(event.detail, null, 2));
+    this.sortBy = event.detail.data.value;
+
+    this.userService.isLoading.set(true);
+
+    this.userService
+      .getUserIssues(this.authService.loggedUserData()!.id, 5, 1, this.sortBy)
+      .subscribe({
+        next: (response) => this.userService.issueList.set(response),
+        error: async (err) => {
+          await this.uiService.showToast(
+            'Ocurrió un error al obtener los reportes.',
+          );
+        },
+        complete: () => this.userService.isLoading.set(false),
+      });
   }
 
-  ngOnDestroy(): void {
+  ionViewWillLeave(): void {
     this.userService.isLoading.set(true);
 
     this.userService
@@ -167,7 +187,7 @@ export class UserIssuesPage implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response) => {
-          this.userService.issueList.update(() => response);
+          this.userService.issueList.set(response);
         },
         error: async (err) => {
           await this.uiService.showToast(

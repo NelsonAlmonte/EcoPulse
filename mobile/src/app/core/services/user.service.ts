@@ -34,9 +34,10 @@ export class UserService {
     id: string,
     amount: number = 5,
     page: number = 1,
+    sort: string = 'createdAt:desc',
   ): Observable<List<Issue[]>> {
     return this.apiService.doFetch<List<Issue[]>>(
-      `${this.URL}/${id}/issues?amount=${amount}&page=${page}&order=createdAt:desc`,
+      `${this.URL}/${id}/issues?amount=${amount}&page=${page}&order=${sort}`,
     );
   }
 

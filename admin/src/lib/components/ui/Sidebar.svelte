@@ -27,13 +27,13 @@
 <Drawer bind:open={sidebarState.canShow} class="w-64 bg-gray-50 p-0 dark:bg-gray-800">
 	<div class="flex justify-between px-6 py-4">
 		<NavBrand href="/">
-			<img src="/img/logo.png" alt="Flowbite Svelte" class="h-6 w-6 rounded-full" />
-			<span class="ml-2 self-center whitespace-nowrap text-xl font-semibold dark:text-white"
+			<img src="/img/logo.png" alt="Flowbite Svelte" class="h-6 w-6" />
+			<span class="ml-2 self-center text-xl font-semibold whitespace-nowrap dark:text-white"
 				>EcoPulse</span
 			>
 		</NavBrand>
 		<Button
-			class="p-2! cursor-pointer"
+			class="cursor-pointer p-2!"
 			size="lg"
 			color="light"
 			onclick={() => (sidebarState.canShow = false)}
