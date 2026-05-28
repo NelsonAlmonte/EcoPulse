@@ -174,16 +174,13 @@ export class MapViewComponent implements AfterViewInit {
     const modal = await this.modalController.create({
       component: IssueDetailComponent,
       cssClass: 'issue-detail-modal',
-      initialBreakpoint: 0.45,
-      // breakpoints: [0, 0.47],
+      initialBreakpoint: this.getBreakpoint(issue?.comment),
       componentProps: {
         issue: {},
       },
       backdropDismiss: true,
       focusTrap: false,
     });
-
-    if (issue!.comment) modal.initialBreakpoint = 0.55;
 
     await modal.present();
 
@@ -226,5 +223,19 @@ export class MapViewComponent implements AfterViewInit {
       marker.map = null;
     }
     this.markers.clear();
+  }
+
+  private getBreakpoint(comment?: string): number {
+    const BASE = 0.41;
+
+    if (!comment) return BASE;
+
+    const screenWidth = window.innerWidth;
+    const usableWidth = screenWidth - 64;
+    const avgCharWidth = 8;
+    const charsPerLine = Math.floor(usableWidth / avgCharWidth);
+    const lines = Math.ceil(comment.length / charsPerLine);
+
+    return Math.min(BASE + lines * 0.04, 0.75);
   }
 }

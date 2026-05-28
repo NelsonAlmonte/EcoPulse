@@ -12,6 +12,7 @@ import {
 } from 'src/issue/issue.dto';
 import { PrismaService } from 'src/prisma.service';
 import { PaginationParams } from 'src/util/interfaces/response.params';
+import type { Multer } from 'multer';
 
 @Injectable()
 export class IssueService {

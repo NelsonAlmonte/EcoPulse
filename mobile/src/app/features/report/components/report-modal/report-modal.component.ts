@@ -164,6 +164,10 @@ export class ReportModalComponent {
         this.userService.issueList.update((current) =>
           this.updateUserIssues(current, response),
         );
+        this.userService.counters.update((current) => ({
+          ...current,
+          issues: current.issues + 1,
+        }));
 
         await this.uiService.showToast(
           'Tu reporte se ha enviado correctamente.',

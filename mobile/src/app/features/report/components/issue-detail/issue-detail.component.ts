@@ -195,7 +195,13 @@ export class IssueDetailComponent {
             ),
           )
           .subscribe({
-            next: (response) => this.userService.issueList.set(response),
+            next: (response) => {
+              this.userService.issueList.set(response);
+              this.userService.counters.update((current) => ({
+                ...current,
+                issues: current.issues - 1,
+              }));
+            },
             error: async (err) => {
               console.log(err);
               await this.uiService.showToast(

@@ -8,9 +8,9 @@ export interface User {
 }
 
 export interface Counters {
-  issues?: number;
-  highlightsGiven?: number;
-  highlightsReceived?: number;
+  issues: number;
+  highlightsGiven: number;
+  highlightsReceived: number;
 }
 
 export interface Bounds {

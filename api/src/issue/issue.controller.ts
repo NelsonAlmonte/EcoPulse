@@ -239,7 +239,10 @@ export class IssueController {
   @Post()
   async create(
     @Body() createIssueDto: CreateIssueDto,
-  ): Promise<Issue | BadRequestException> {
+  ): Promise<
+    | (Issue & { highlights: number; hasCurrentUserHighlight: boolean })
+    | BadRequestException
+  > {
     const issue: Prisma.IssueCreateInput = {
       photo: createIssueDto.photo,
       latitude: createIssueDto.latitude,
@@ -259,6 +262,8 @@ export class IssueController {
     return {
       ...createdIssue,
       photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
+      highlights: 0,
+      hasCurrentUserHighlight: false,
     };
   }
 

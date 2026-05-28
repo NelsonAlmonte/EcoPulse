@@ -10,6 +10,7 @@ import {
 import { AuthService } from '@core/services/auth.service';
 import { HighlightService } from '@core/services/highlight.service';
 import { UiService } from '@core/services/ui.service';
+import { UserService } from '@core/services/user.service';
 import { ToastController } from '@ionic/angular/standalone';
 import { HighlightDto } from '@shared/dto/highlight.dto';
 import { Issue } from '@shared/models/issue.model';
@@ -26,6 +27,7 @@ export class HighlightButtonComponent {
   renderer = inject(Renderer2);
   highlightService = inject(HighlightService);
   authService = inject(AuthService);
+  userService = inject(UserService);
   uiService = inject(UiService);
   toastController = inject(ToastController);
   @ViewChild('highlightsCount') highlightsCount!: ElementRef<HTMLSpanElement>;
@@ -62,6 +64,11 @@ export class HighlightButtonComponent {
       }
 
       this.renderer.setProperty(button, 'disabled', false);
+
+      this.userService.counters.update((current) => ({
+        ...current,
+        highlightsGiven: current.highlightsGiven + 1,
+      }));
     });
   }
 
@@ -77,6 +84,11 @@ export class HighlightButtonComponent {
       }
 
       this.renderer.setProperty(button, 'disabled', false);
+
+      this.userService.counters.update((current) => ({
+        ...current,
+        highlightsGiven: current.highlightsGiven - 1,
+      }));
     });
   }
 
