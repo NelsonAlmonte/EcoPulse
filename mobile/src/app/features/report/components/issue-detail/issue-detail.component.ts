@@ -19,9 +19,7 @@ import {
   ClockIcon,
   EllipsisIcon,
   LucideAngularModule,
-  LucideIconData,
   Maximize2Icon,
-  TreePineIcon,
 } from 'lucide-angular';
 import type { OverlayEventDetail } from '@ionic/core';
 import { UserService } from '@core/services/user.service';
@@ -143,6 +141,7 @@ export class IssueDetailComponent {
   async deleteIssue(id: string) {
     const actionSheet = await this.actionSheetController.create({
       header: '¿Desea eliminar este reporte?',
+      cssClass: 'action-sheet',
       buttons: [
         {
           text: 'Sí, eliminar',

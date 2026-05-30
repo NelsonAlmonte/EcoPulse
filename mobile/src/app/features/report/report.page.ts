@@ -96,6 +96,7 @@ export class ReportPage {
       componentProps: {
         photo: photo,
       },
+      cssClass: 'report-modal',
     });
     modal.present();
 

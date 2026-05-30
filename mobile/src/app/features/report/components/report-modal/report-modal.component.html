@@ -75,7 +75,7 @@
       @if (currentSegment === "photo") {
         <button
           type="button"
-          class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center ion-activatable relative overflow-hidden"
+          class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center ion-activatable relative overflow-hidden"
           (click)="cancel()"
         >
           <ion-ripple-effect></ion-ripple-effect>
@@ -89,7 +89,7 @@
       } @else {
         <button
           type="button"
-          class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center ion-activatable relative overflow-hidden"
+          class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center ion-activatable relative overflow-hidden"
           (click)="back()"
         >
           <ion-ripple-effect></ion-ripple-effect>
@@ -104,7 +104,7 @@
       @if (currentSegment === "categories") {
         <button
           type="button"
-          class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center send-report-button ion-activatable relative overflow-hidden"
+          class="md-primary md-on-primary focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center send-report-button ion-activatable relative overflow-hidden"
           [disabled]="!selectedCategory"
           (click)="sendReport()"
         >
@@ -116,12 +116,12 @@
             [img]="sendIcon"
             size="18"
           ></lucide-angular>
-          Enviar
+          Enviar reporte
         </button>
       } @else {
         <button
           type="button"
-          class="md-primary md-on-primary focus:outline-none font-medium rounded-3xl text-sm px-5 py-2.5 text-center inline-flex items-center ion-activatable relative overflow-hidden"
+          class="md-primary md-on-primary focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center ion-activatable relative overflow-hidden"
           (click)="next()"
         >
           <ion-ripple-effect></ion-ripple-effect>
