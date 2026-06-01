@@ -6,6 +6,7 @@ import { User, Counters } from '@shared/models/user.model';
 import { UpdateUserDto } from '@shared/dto/user.dto';
 import { Observable } from 'rxjs';
 import { List } from '@shared/models/response.model';
+import { Filter } from '@shared/constants/system.constant';
 
 @Injectable({
   providedIn: 'root',
@@ -35,9 +36,20 @@ export class UserService {
     amount: number = 5,
     page: number = 1,
     order: string = 'createdAt:desc',
+    filter: Filter = 'TODO'
   ): Observable<List<Issue[]>> {
+    const params = new URLSearchParams({
+      amount: String(amount),
+      page: String(page),
+      order,
+    });
+
+    if (filter !== 'TODO') {
+      params.append('status', filter);
+    }
+
     return this.apiService.doFetch<List<Issue[]>>(
-      `${this.URL}/${id}/issues?amount=${amount}&page=${page}&order=${order}`,
+      `${this.URL}/${id}/issues?${params}`
     );
   }
 
@@ -48,7 +60,7 @@ export class UserService {
   updateUser(id: string, updateUserDto: UpdateUserDto): Observable<User> {
     return this.apiService.doPut<User, UpdateUserDto>(
       `${this.URL}/${id}`,
-      updateUserDto,
+      updateUserDto
     );
   }
 
@@ -58,13 +70,13 @@ export class UserService {
 
   counthighlightsGiven(id: string): Observable<string> {
     return this.apiService.doFetch<string>(
-      `${this.URL}/${id}/highlights/given/count`,
+      `${this.URL}/${id}/highlights/given/count`
     );
   }
 
   counthighlightsReceived(id: string): Observable<string> {
     return this.apiService.doFetch<string>(
-      `${this.URL}/${id}/highlights/received/count`,
+      `${this.URL}/${id}/highlights/received/count`
     );
   }
 
@@ -73,9 +85,20 @@ export class UserService {
     amount: number = 5,
     page: number = 1,
     order: string = 'createdAt:desc',
-  ) {
+    filter: Filter = 'TODO'
+  ): Observable<List<Issue[]>> {
+    const params = new URLSearchParams({
+      amount: String(amount),
+      page: String(page),
+      order,
+    });
+
+    if (filter !== 'TODO') {
+      params.append('status', filter);
+    }
+
     return this.apiService.doFetch<List<Issue[]>>(
-      `${this.URL}/${id}/highlights/given?amount=${amount}&page=${page}&order=${order}`,
+      `${this.URL}/${id}/highlights/given?${params}`
     );
   }
 

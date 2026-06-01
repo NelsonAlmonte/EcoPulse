@@ -36,11 +36,11 @@ export class IssueService {
   uploadPhoto(formData: FormData): Observable<SupaBaseUploadFileResponse> {
     return this.apiService.doPost<SupaBaseUploadFileResponse, FormData>(
       `${this.URL}/upload`,
-      formData,
+      formData
     );
   }
 
-  getIssue(issueId: string, userId: string) {
+  getIssue(issueId: string, userId: string): Observable<Issue> {
     this.issue.set(null);
 
     return this.apiService.doFetch<Issue>(`${this.URL}/${issueId}/${userId}`);
@@ -48,7 +48,7 @@ export class IssueService {
 
   getIssuesByBounds(
     bounds: Bounds,
-    page: number = 1,
+    page: number = 1
   ): Observable<List<Issue[]>> {
     const loggedUser = this.authService.loggedUserData();
 
@@ -57,11 +57,11 @@ export class IssueService {
         bounds.east
       }&west=${bounds.west}&page=${page}&amount=${10}&userId=${
         loggedUser!.id
-      }&order=${this.order()}`,
+      }&order=${this.order()}`
     );
   }
 
-  deleteIssue(id: string) {
+  deleteIssue(id: string): Observable<Issue> {
     return this.apiService.doDelete<Issue>(`${this.URL}/${id}`);
   }
 }

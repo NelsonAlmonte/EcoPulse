@@ -28,6 +28,11 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <div class="mb-4">
+    <app-status-filter
+      (filterSelected)="onFilterSelected($event)"
+    ></app-status-filter>
+  </div>
   <app-issue-list [issueList]="this.userService.issueList()"></app-issue-list>
 
   @if (canGetMore()) {

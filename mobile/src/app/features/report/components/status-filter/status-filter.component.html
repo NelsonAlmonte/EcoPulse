@@ -1,0 +1,26 @@
+<div class="flex gap-2 overflow-x-auto whitespace-nowrap hide-scrollbar">
+  @for (filter of filters; track filter.value) {
+  <button
+    type="button"
+    class="shrink-0 flex items-center px-2 py-1 rounded-lg font-medium border filter-item ion-activatable relative overflow-hidden"
+    [class.selected]="selectedFilter === filter.value"
+    (click)="selectFilter(filter.value)"
+  >
+    <ion-ripple-effect class="md-on-primary-container"></ion-ripple-effect>
+
+    @if (filter.icon) {
+    <div class="me-1">
+      <lucide-angular
+        class="filter-icon"
+        [img]="filter.icon"
+        size="14"
+      ></lucide-angular>
+    </div>
+    }
+
+    <span class="text-sm">
+      {{ filter.label }}
+    </span>
+  </button>
+  }
+</div>

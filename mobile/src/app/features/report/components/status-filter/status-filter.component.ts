@@ -1,0 +1,51 @@
+import { Component, OnInit, output } from '@angular/core';
+import { IonRippleEffect } from '@ionic/angular/standalone';
+import { Filter } from '@shared/constants/system.constant';
+import {
+  CircleCheck,
+  CircleDot,
+  CircleX,
+  LucideAngularModule,
+} from 'lucide-angular';
+
+@Component({
+  selector: 'app-status-filter',
+  templateUrl: './status-filter.component.html',
+  styleUrls: ['./status-filter.component.css'],
+  standalone: true,
+  imports: [IonRippleEffect, LucideAngularModule],
+})
+export class StatusFilterComponent {
+  filterSelected = output<Filter>();
+  selectedFilter: Filter = 'TODO';
+  pendingIcon = CircleDot;
+  resolvedIcon = CircleCheck;
+  discardedIcon = CircleX;
+  filters = [
+    {
+      value: 'TODO',
+      label: 'Todos',
+      icon: null,
+    },
+    {
+      value: 'PENDIENTE',
+      label: 'Pendientes',
+      icon: CircleDot,
+    },
+    {
+      value: 'RESUELTO',
+      label: 'Resueltos',
+      icon: CircleCheck,
+    },
+    {
+      value: 'DESCARTADO',
+      label: 'Descartados',
+      icon: CircleX,
+    },
+  ] as const;
+
+  selectFilter(filter: Filter): void {
+    this.selectedFilter = filter;
+    this.filterSelected.emit(filter);
+  }
+}

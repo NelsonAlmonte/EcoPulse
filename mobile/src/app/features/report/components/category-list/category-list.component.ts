@@ -8,12 +8,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { CategoryService } from '@core/services/category.service';
 import { IonRippleEffect } from '@ionic/angular/standalone';
-import { iconMap } from '@shared/constants/system.constant';
-import {
-  LucideAngularModule,
-  LucideIconData,
-  TreePineIcon,
-} from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-category-list',
@@ -36,9 +31,5 @@ export class CategoryListComponent implements OnInit {
   selectCategory(id: string): void {
     this.selectedCategoryId = id;
     this.selectedCategory.emit(id);
-  }
-
-  showIcon(iconName: string): LucideIconData {
-    return iconMap[iconName] || TreePineIcon;
   }
 }

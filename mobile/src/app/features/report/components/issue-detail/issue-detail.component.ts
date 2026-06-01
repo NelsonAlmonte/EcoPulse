@@ -8,7 +8,7 @@ import {
   ToastController,
 } from '@ionic/angular/standalone';
 import { RelativeTimePipe } from '@shared/pipes/relative-time.pipe';
-import { DEFAULT_STATUS, iconMap } from '@shared/constants/system.constant';
+import { DEFAULT_STATUS } from '@shared/constants/system.constant';
 import { Issue } from '@shared/models/issue.model';
 import { HighlightButtonComponent } from '@features/report/components/highlight-button/highlight-button.component';
 import { IssuePhotoComponent } from '@features/report/components/issue-photo/issue-photo.component';
@@ -113,7 +113,7 @@ export class IssueDetailComponent {
     actionSheet.addEventListener(
       'willDismiss',
       async (event: CustomEvent<OverlayEventDetail>) =>
-        await this.handleOptions(event),
+        await this.handleOptions(event)
     );
   }
 
@@ -189,9 +189,9 @@ export class IssueDetailComponent {
             switchMap(() =>
               this.userService.getUserIssues(
                 this.authService.loggedUserData()!.id,
-                this.AMOUNT_OF_ISSUES,
-              ),
-            ),
+                this.AMOUNT_OF_ISSUES
+              )
+            )
           )
           .subscribe({
             next: (response) => {
@@ -204,12 +204,12 @@ export class IssueDetailComponent {
             error: async (err) => {
               console.log(err);
               await this.uiService.showToast(
-                'Ocurrió un error al eliminar este reporte.',
+                'Ocurrió un error al eliminar este reporte.'
               );
             },
             complete: () => this.userService.isLoading.set(false),
           });
-      },
+      }
     );
 
     await actionSheet.present();
