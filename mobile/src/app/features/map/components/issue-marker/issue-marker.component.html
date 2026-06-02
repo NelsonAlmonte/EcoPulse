@@ -1,10 +1,10 @@
 <button
-  class="md-surface-container-high highlight-button inline-flex cursor-pointer items-center rounded-lg px-4 py-1.5 shadow-lg ion-activatable relative overflow-hidden"
+  class="md-surface-container-high highlight-button inline-flex items-center rounded-lg px-4 py-1.5 shadow ion-activatable relative overflow-hidden"
   [class.highlighted]="issue().hasCurrentUserHighlight"
 >
   <ion-ripple-effect></ion-ripple-effect>
   <lucide-angular [img]="highlightIcon" size="18"></lucide-angular>
-  <span class="ms-0.5 text-sm font-bold md-on-surface">{{
+  <span class="ms-0.5 text-sm font-semibold md-on-surface">{{
     issue().highlights
   }}</span>
 </button>

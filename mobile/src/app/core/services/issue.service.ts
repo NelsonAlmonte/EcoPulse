@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { ToastController } from '@ionic/angular/standalone';
 import { Bounds } from '@shared/models/user.model';
 import { List } from '@shared/models/response.model';
+import { Filter } from '@shared/constants/system.constant';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -27,6 +28,7 @@ export class IssueService {
   });
   isLoading = signal(false);
   order = signal('highlights:desc');
+  filter = signal<Filter>('TODO');
   URL = `${environment.apiUrl}issue`;
 
   createIssue(issue: CreateIssueDto): Observable<Issue> {
@@ -50,14 +52,23 @@ export class IssueService {
     bounds: Bounds,
     page: number = 1
   ): Observable<List<Issue[]>> {
-    const loggedUser = this.authService.loggedUserData();
+    const params = new URLSearchParams({
+      north: String(bounds.north),
+      south: String(bounds.south),
+      east: String(bounds.east),
+      west: String(bounds.west),
+      page: String(page),
+      amount: '10',
+      userId: this.authService.loggedUserData()!.id,
+      order: this.order(),
+    });
+
+    if (this.filter() !== 'TODO') {
+      params.append('status', this.filter());
+    }
 
     return this.apiService.doFetch<List<Issue[]>>(
-      `${this.URL}/in-bound?north=${bounds.north}&south=${bounds.south}&east=${
-        bounds.east
-      }&west=${bounds.west}&page=${page}&amount=${10}&userId=${
-        loggedUser!.id
-      }&order=${this.order()}`
+      `${this.URL}/in-bound?${params}`
     );
   }
 

@@ -14,12 +14,14 @@ import {
 import { MapViewComponent } from '@features/map/components/map-view/map-view.component';
 import { IssueService } from '@core/services/issue.service';
 import { DynamicIssuesModalComponent } from '@features/map/components/dynamic-issues-modal/dynamic-issues-modal.component';
+import { StatusFilterComponent } from '@features/report/components/status-filter/status-filter.component';
+import { Filter } from '@shared/constants/system.constant';
+import { OverlayEventDetail } from '@ionic/core';
 import {
   ArrowUpDown,
   ChevronUpIcon,
   LucideAngularModule,
 } from 'lucide-angular';
-import { OverlayEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-map',
@@ -31,6 +33,7 @@ import { OverlayEventDetail } from '@ionic/core';
     CommonModule,
     FormsModule,
     MapViewComponent,
+    StatusFilterComponent,
     LucideAngularModule,
     IonHeader,
     IonToolbar,

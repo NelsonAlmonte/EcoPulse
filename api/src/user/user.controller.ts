@@ -150,12 +150,15 @@ export class UserController {
     @Param('user') userId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('amount', new DefaultValuePipe(6), ParseIntPipe) amount: number,
+    @Query('status') status?: string,
     @Query('order') order?: string,
   ): Promise<List<GetIssueDto[]>> {
+    const where = buildFilterParams(status);
     const orderFilter = buildOrderParam(order);
     const highlights = await this.userService.getHighlightsGiven(
       userId,
       buildPaginationParams(page, amount),
+      where,
       orderFilter,
     );
 

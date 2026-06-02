@@ -52,6 +52,8 @@ export class UserService {
           omit: {
             password: true,
             role: true,
+            email: true,
+            createdAt: true,
           },
         },
         highlights: {
@@ -88,11 +90,13 @@ export class UserService {
   async getHighlightsGiven(
     userId: string,
     pagination: PaginationParams,
+    where: Prisma.IssueWhereInput,
     order: Prisma.IssueOrderByWithRelationInput[],
   ): Promise<GetIssueDto[] | null> {
     const highlights = await this.prisma.highlight.findMany({
       where: {
         userId,
+        issue: where,
       },
       include: {
         issue: {
@@ -102,6 +106,8 @@ export class UserService {
               omit: {
                 password: true,
                 role: true,
+                email: true,
+                createdAt: true,
               },
             },
             highlights: {

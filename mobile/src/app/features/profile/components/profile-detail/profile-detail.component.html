@@ -1,19 +1,18 @@
 @if (userService.isLoading()) {
-  <app-profile-detail-loading></app-profile-detail-loading>
+<app-profile-detail-loading></app-profile-detail-loading>
 } @else {
-  <div class="flex flex-col items-center rounded-2xl mb-4">
-    <div>
-      <lucide-angular
-        class="md-on-surface-variant"
-        [img]="userIcon"
-        size="80"
-      ></lucide-angular>
-    </div>
-    <span class="md-on-surface-background text-xl font-semibold"
-      >{{ userService.user()?.name }} {{ userService.user()?.last }}</span
-    >
-    <app-profile-counters class="w-full"></app-profile-counters>
+<div class="flex flex-col items-center rounded-2xl mb-4">
+  <div>
+    <lucide-angular
+      class="md-on-surface-variant"
+      [img]="userIcon"
+      size="80"
+    ></lucide-angular>
   </div>
-
-  <app-profile-options></app-profile-options>
+  <span class="md-on-surface-background text-xl font-semibold"
+    >{{ userService.user()?.name }} {{ userService.user()?.last }}</span
+  >
+  <app-profile-counters class="w-full"></app-profile-counters>
+</div>
 }
+<app-profile-options></app-profile-options>

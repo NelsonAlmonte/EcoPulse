@@ -1,6 +1,6 @@
 <ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
-    <ion-title class="font-semibold ion-margin-start">Mapa</ion-title>
+    <ion-title class="font-semibold ion-margin-start"> Mapa </ion-title>
     <ion-buttons slot="end" class="ion-padding">
       <button
         type="button"
@@ -15,22 +15,35 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" [scrollY]="false" class="no-scroll">
-  <div class="fixed bottom-22 left-1/2 -translate-x-1/2 z-50">
-    <button
-      type="button"
-      class="md-primary md-on-primary focus:outline-none font-bold rounded-2xl text-sm p-4 text-center inline-flex items-center shadow-xl ion-activatable relative overflow-hidden"
-      (click)="openDynamicIssuesModal()"
-    >
-      <ion-ripple-effect></ion-ripple-effect>
-      <lucide-angular
-        class="me-1"
-        [img]="chevronUpIcon"
-        size="24"
-      ></lucide-angular>
-      <span>{{this.issueService.issueList().pagination.total}} Reportes</span>
-    </button>
+  <div class="relative w-full h-full">
+    <app-map-view></app-map-view>
+
+    <div class="absolute top-4 left-0 right-0 z-1000 pointer-events-none">
+      <div class="pointer-events-auto">
+        <app-status-filter
+          (filterSelected)="issueService.filter.set($event)"
+        ></app-status-filter>
+      </div>
+    </div>
+
+    <div class="absolute bottom-22 left-1/2 -translate-x-1/2 z-1000">
+      <button
+        type="button"
+        class="md-primary md-on-primary focus:outline-none font-bold rounded-2xl text-sm p-4 text-center inline-flex items-center shadow-lg ion-activatable relative overflow-hidden"
+        (click)="openDynamicIssuesModal()"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+
+        <lucide-angular
+          class="me-1"
+          [img]="chevronUpIcon"
+          size="24"
+        ></lucide-angular>
+
+        <span> {{ issueService.issueList().pagination.total }} Reportes </span>
+      </button>
+    </div>
   </div>
-  <app-map-view></app-map-view>
 
   <ion-action-sheet
     trigger="open-order-action-sheet-map"

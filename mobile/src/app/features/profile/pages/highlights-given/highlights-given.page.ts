@@ -26,6 +26,8 @@ import { ArrowLeft, ArrowUpDown, LucideAngularModule } from 'lucide-angular';
 import { UiService } from '@core/services/ui.service';
 import { OverlayEventDetail } from '@ionic/core';
 import { Filter } from '@shared/constants/system.constant';
+import { List } from '@shared/models/response.model';
+import { Issue } from '@shared/models/issue.model';
 
 @Component({
   selector: 'app-highlights-given',
@@ -77,150 +79,141 @@ export class HighlightsGivenPage {
   backIcon = ArrowLeft;
   orderIcon = ArrowUpDown;
 
-  ionViewWillEnter(): void {
-    this.userService.isLoading.set(true);
-    this.canGetMore.set(true);
+  private get userId(): string {
+    return this.authService.loggedUserData()!.id;
+  }
+
+  private fetchHighlights(options?: {
+    page?: number;
+    amount?: number;
+    orderBy?: string;
+    filter?: Filter;
+    reset?: boolean;
+    onSuccess?: (response: List<Issue[]>) => void;
+    onComplete?: () => void;
+  }): void {
+    const {
+      page = 1,
+      amount = 5,
+      orderBy = this.orderBy,
+      filter = this.filter,
+      reset = false,
+      onSuccess,
+      onComplete,
+    } = options ?? {};
+
+    if (reset) {
+      this.userService.isLoading.set(true);
+      this.canGetMore.set(true);
+    }
 
     this.userService
-      .getHighlightsGiven(this.authService.loggedUserData()!.id)
+      .getHighlightsGiven(this.userId, amount, page, orderBy, filter)
       .subscribe({
-        next: (response) => this.userService.issueList.set(response),
-        error: async (err) => {
+        next: (response) => {
+          if (onSuccess) {
+            onSuccess(response);
+            return;
+          }
+
+          this.userService.issueList.set(response);
+        },
+
+        error: async () => {
           await this.uiService.showToast(
             'Ocurrió un error al obtener los reportes.'
           );
         },
-        complete: () => this.userService.isLoading.set(false),
+
+        complete: () => {
+          this.userService.isLoading.set(false);
+          onComplete?.();
+        },
       });
+  }
+
+  ionViewWillEnter(): void {
+    this.fetchHighlights({
+      reset: true,
+    });
   }
 
   refreshUserIssues(event: RefresherCustomEvent): void {
-    this.userService.isLoading.set(true);
-    this.canGetMore.set(true);
+    this.fetchHighlights({
+      reset: true,
 
-    this.userService
-      .getHighlightsGiven(
-        this.authService.loggedUserData()!.id,
-        5,
-        1,
-        this.orderBy,
-        this.filter
-      )
-      .subscribe({
-        next: (response) => this.userService.issueList.set(response),
-        error: async (err) => {
-          await this.uiService.showToast(
-            'Ocurrió un error al obtener los reportes.'
-          );
-        },
-        complete: () => {
-          event.target.complete();
-          this.userService.isLoading.set(false);
-        },
-      });
+      onComplete: () => {
+        event.target.complete();
+      },
+    });
   }
 
-  getMoreIssues(event: InfiniteScrollCustomEvent) {
+  getMoreIssues(event: InfiniteScrollCustomEvent): void {
     const nextPage = this.userService.issueList().pagination.page + 1;
 
-    this.userService
-      .getHighlightsGiven(
-        this.authService.loggedUserData()!.id,
-        5,
-        nextPage,
-        this.orderBy,
-        this.filter
-      )
-      .subscribe({
-        next: (response) => {
-          this.userService.issueList.update((current) => {
-            return {
-              data: [...current.data, ...response.data],
-              pagination: response.pagination,
-            };
-          });
+    this.fetchHighlights({
+      page: nextPage,
 
-          if (!response.data.length) this.canGetMore.set(false);
-        },
-        error: async (err) => {
-          await this.uiService.showToast(
-            'Ocurrió un error al obtener los reportes.'
-          );
-        },
-        complete: () => event.target.complete(),
-      });
+      onSuccess: (response) => {
+        this.userService.issueList.update((current) => ({
+          data: [...current.data, ...response.data],
+          pagination: response.pagination,
+        }));
+
+        if (!response.data.length) {
+          this.canGetMore.set(false);
+        }
+      },
+
+      onComplete: () => {
+        event.target.complete();
+      },
+    });
   }
 
   orderIssues(event: CustomEvent<OverlayEventDetail>): void {
     if (!event.detail.data) return;
 
     this.orderBy = event.detail.data.value;
-    this.userService.isLoading.set(true);
-    this.canGetMore.set(true);
 
-    this.userService
-      .getHighlightsGiven(
-        this.authService.loggedUserData()!.id,
-        5,
-        1,
-        this.orderBy,
-        this.filter
-      )
-      .subscribe({
-        next: (response) => this.userService.issueList.set(response),
-        error: async (err) => {
-          await this.uiService.showToast(
-            'Ocurrió un error al obtener los reportes.'
-          );
-        },
-        complete: () => this.userService.isLoading.set(false),
-      });
+    this.fetchHighlights({
+      reset: true,
+    });
   }
 
   onFilterSelected(filter: Filter): void {
     this.filter = filter;
-    this.canGetMore.set(true);
 
-    this.userService
-      .getHighlightsGiven(
-        this.authService.loggedUserData()!.id,
-        5,
-        1,
-        this.orderBy,
-        this.filter
-      )
-      .subscribe({
-        next: (response) => this.userService.issueList.set(response),
-        error: async (err) => {
-          await this.uiService.showToast(
-            'Ocurrió un error al obtener los reportes.'
-          );
-        },
-        complete: () => {
-          this.userService.isLoading.set(false);
-        },
-      });
+    this.fetchHighlights({
+      reset: true,
+    });
   }
 
   ionViewWillLeave(): void {
+    this.filter = 'TODO';
+
     this.userService.isLoading.set(true);
     this.canGetMore.set(true);
 
     this.userService
       .getUserIssues(
-        this.authService.loggedUserData()!.id,
+        this.userId,
         this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE
       )
       .subscribe({
         next: (response) => {
           this.userService.issueList.set(response);
         },
-        error: async (err) => {
+
+        error: async () => {
           await this.uiService.showToast(
             'Ocurrió un error al obtener los reportes.'
           );
         },
-        complete: () => this.userService.isLoading.set(false),
+
+        complete: () => {
+          this.userService.isLoading.set(false);
+        },
       });
   }
 }

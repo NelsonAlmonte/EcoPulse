@@ -60,7 +60,7 @@ export class ReportPage {
       this.userService
         .getUserIssues(
           this.authService.loggedUserData()!.id,
-          this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE,
+          this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE
         )
         .subscribe((response) => {
           this.userService.isLoading.set(false);
@@ -72,7 +72,7 @@ export class ReportPage {
   async takePicture(): Promise<void> {
     try {
       const image = await Camera.takePhoto({
-        quality: 60,
+        quality: 40,
         targetWidth: 1280,
         targetHeight: 720,
         includeMetadata: true,
@@ -80,12 +80,14 @@ export class ReportPage {
         saveToGallery: false,
         cameraDirection: CameraDirection.Rear,
       });
-      const dataUrl = `data:image/${image.metadata!.format};base64,${image.thumbnail}`;
+      const dataUrl = `data:image/${image.metadata!.format};base64,${
+        image.thumbnail
+      }`;
 
       this.openReportModal(dataUrl);
     } catch (error) {
       await this.uiService.showToast(
-        'Ocurrio un error al abrir la cámara. Intentalo de nuevo.',
+        'Ocurrio un error al abrir la cámara. Intentalo de nuevo.'
       );
     }
   }
@@ -111,13 +113,13 @@ export class ReportPage {
     this.userService
       .getUserIssues(
         this.authService.loggedUserData()!.id,
-        this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE,
+        this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE
       )
       .subscribe({
         next: (response) => this.userService.issueList.update(() => response),
         error: async (err) => {
           await this.uiService.showToast(
-            'Ocurrió un error al obtener los reportes.',
+            'Ocurrió un error al obtener los reportes.'
           );
         },
         complete: () => {

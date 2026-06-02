@@ -1,7 +1,8 @@
-import { Component, OnInit, output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { IonRippleEffect } from '@ionic/angular/standalone';
 import { Filter } from '@shared/constants/system.constant';
 import {
+  Circle,
   CircleCheck,
   CircleDot,
   CircleX,
@@ -18,14 +19,11 @@ import {
 export class StatusFilterComponent {
   filterSelected = output<Filter>();
   selectedFilter: Filter = 'TODO';
-  pendingIcon = CircleDot;
-  resolvedIcon = CircleCheck;
-  discardedIcon = CircleX;
   filters = [
     {
       value: 'TODO',
       label: 'Todos',
-      icon: null,
+      icon: Circle,
     },
     {
       value: 'PENDIENTE',

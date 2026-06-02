@@ -23,17 +23,18 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
+<ion-content [fullscreen]="true" class="ion-padding-vertical">
   <ion-refresher slot="fixed" (ionRefresh)="refreshUserIssues($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="mb-4">
-    <app-status-filter
-      (filterSelected)="onFilterSelected($event)"
-    ></app-status-filter>
+  <app-status-filter
+    (filterSelected)="onFilterSelected($event)"
+  ></app-status-filter>
+
+  <div class="ion-padding-horizontal">
+    <app-issue-list [issueList]="this.userService.issueList()"></app-issue-list>
   </div>
-  <app-issue-list [issueList]="this.userService.issueList()"></app-issue-list>
 
   @if (canGetMore()) {
   <ion-infinite-scroll (ionInfinite)="getMoreIssues($event)">

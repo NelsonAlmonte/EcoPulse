@@ -13,8 +13,8 @@ export interface GetUserDto {
   id: string;
   name: string;
   last: string;
-  email: string;
-  createdAt: Date;
+  email?: string;
+  createdAt?: Date;
   issues?: number;
   isActive: boolean;
 }

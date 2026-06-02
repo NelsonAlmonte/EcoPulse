@@ -51,7 +51,7 @@ export class ProfilePage {
 
     setTimeout(() => {
       event.target.complete();
-    }, 2000);
+    }, 1500);
   }
 
   getUserProfile(): void {
@@ -75,7 +75,7 @@ export class ProfilePage {
       },
       error: async () => {
         await this.uiService.showToast(
-          'Ocurrió un error al obtener tus datos.',
+          'Ocurrió un error al obtener tus datos.'
         );
       },
       complete: () => this.userService.isLoading.set(false),

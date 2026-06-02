@@ -201,6 +201,8 @@ export class UserIssuesPage {
   }
 
   ionViewWillLeave(): void {
+    this.filter = 'TODO';
+
     this._fetchIssues({
       reset: true,
       amount: this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE,

@@ -52,7 +52,9 @@ export class MapViewComponent implements AfterViewInit {
 
   constructor() {
     effect(() => {
+      console.log('corri');
       this.issueService.order();
+      this.issueService.filter();
 
       const bounds = this.mapService.bounds();
 
@@ -108,7 +110,7 @@ export class MapViewComponent implements AfterViewInit {
       },
       error: async (err) => {
         await this.uiService.showToast(
-          'Ocurrió un error al obtener los reportes.',
+          'Ocurrió un error al obtener los reportes.'
         );
       },
       complete: () => {
@@ -158,14 +160,14 @@ export class MapViewComponent implements AfterViewInit {
           });
         }
       },
-      { injector: this.injector },
+      { injector: this.injector }
     );
   }
 
   async viewIssueDetail(issue?: Issue): Promise<void> {
     if (!issue) {
       await this.uiService.showToast(
-        'Ocurrio un error al ver este reporte, intentelo de nuevo mas tarde.',
+        'Ocurrio un error al ver este reporte, intentelo de nuevo mas tarde.'
       );
       return;
     }
@@ -202,7 +204,7 @@ export class MapViewComponent implements AfterViewInit {
 
     if (!bounds) {
       await this.uiService.showToast(
-        'Ocurrio un error al ver este reporte, intentelo de nuevo mas tarde.',
+        'Ocurrio un error al ver este reporte, intentelo de nuevo mas tarde.'
       );
       return;
     }
