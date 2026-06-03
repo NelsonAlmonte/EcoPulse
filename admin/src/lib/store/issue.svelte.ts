@@ -1,6 +1,7 @@
-import { PUBLIC_API_URL } from '$env/static/public';
 import type { Issue } from '$lib/models/issue.model';
 import type { List } from '$lib/models/response.model';
+import { page } from '$app/state';
+import { PUBLIC_API_URL } from '$env/static/public';
 import { SvelteURL } from 'svelte/reactivity';
 
 class IssueList {
@@ -12,6 +13,7 @@ class IssueList {
 			total: 5
 		}
 	});
+	session = $derived(page.data.session);
 
 	get list() {
 		return this.#issueList;
@@ -27,7 +29,12 @@ class IssueList {
 		apiUrl.searchParams.set('page', currentPage);
 		apiUrl.searchParams.set('amount', amount ?? '5');
 
-		const response = await fetch(apiUrl);
+		const response = await fetch(apiUrl, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${this.session.access_token}`
+			}
+		});
 		const issues = (await response.json()) as List<Issue[]>;
 
 		this.#issueList = issues;

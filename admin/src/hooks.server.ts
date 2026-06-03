@@ -1,4 +1,5 @@
-import { type Handle, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
+import type { Handle, HandleFetch } from '@sveltejs/kit';
 import type { User } from '$lib/models/user.model';
 import { createServerClient } from '@supabase/ssr';
 import { sequence } from '@sveltejs/kit/hooks';
@@ -94,7 +95,11 @@ const authGuard: Handle = async ({ event, resolve }) => {
 		throw redirect(303, '/admin');
 	}
 
-	const res = await event.fetch(new URL(`user/${user.id}`, PUBLIC_API_URL));
+	const res = await event.fetch(new URL(`user/${user.id}`, PUBLIC_API_URL), {
+		headers: {
+			Authorization: `Bearer ${session.access_token}`
+		}
+	});
 
 	if (!res.ok) {
 		console.error('Error al obtener usuario:', res.status);
@@ -114,6 +119,16 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	}
 
 	return resolve(event);
+};
+
+export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
+	const { session } = await event.locals.safeGetSession();
+
+	if (session?.access_token) {
+		request.headers.set('Authorization', `Bearer ${session.access_token}`);
+	}
+
+	return fetch(request);
 };
 
 export const handle: Handle = sequence(supabase, authGuard);

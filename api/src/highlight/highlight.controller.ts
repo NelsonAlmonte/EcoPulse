@@ -16,7 +16,7 @@ import { HighlightDto } from './highlight.dto';
 export class HighlightController {
   constructor(private highlightService: HighlightService) {}
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Post()
   async create(
     @Body() highlightDto: HighlightDto,
@@ -32,7 +32,7 @@ export class HighlightController {
     return highlight;
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Delete(':issueId/:userId')
   async delete(
     @Param('issueId') issueId: string,

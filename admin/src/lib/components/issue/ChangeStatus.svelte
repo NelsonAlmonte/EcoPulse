@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { StatusTypes } from '$lib/types/system.type';
 	import type { Snippet } from 'svelte';
+	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { toastState } from '$lib/store/ui.svelte';
 
@@ -16,6 +17,7 @@
 		children: Snippet<[isLoading: boolean | undefined, status: string]>;
 	} = $props();
 	let isLoading = $state(false);
+	let session = $derived(page.data.session);
 
 	async function changeStatus() {
 		isLoading = true;
@@ -23,7 +25,10 @@
 		const apiUrl = new URL(`issue/${id}`, PUBLIC_API_URL);
 		const response = await fetch(apiUrl, {
 			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${session.access_token}`
+			},
 			body: JSON.stringify({ status: status.toUpperCase() })
 		});
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import type { Category } from '$lib/models/category.model';
 	import { SlidersHorizontal } from '@lucide/svelte';
@@ -33,6 +34,7 @@
 	let allIssues = $state(false);
 	let isLoading = $state(true);
 	let showValidation = $state(false);
+	let session = $derived(page.data.session);
 
 	onMount(async () => {
 		const categories = await getCategories();
@@ -95,7 +97,11 @@
 
 	async function getCategories() {
 		const apiUrl = new URL('category', PUBLIC_API_URL);
-		const response = await fetch(apiUrl);
+		const response = await fetch(apiUrl, {
+			headers: {
+				Authorization: `Bearer ${session.access_token}`
+			}
+		});
 
 		return (await response.json()) as Category[];
 	}

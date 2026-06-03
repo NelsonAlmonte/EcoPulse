@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { Button } from 'flowbite-svelte';
 	import CategoryModal from './CategoryModal.svelte';
 	import { PUBLIC_API_URL } from '$env/static/public';
@@ -8,6 +9,7 @@
 		$props();
 	let isModalOpen = $state(false);
 	let isLoading = $state(false);
+	let session = $derived(page.data.session);
 
 	async function updateCategory(updatedName: string, updatedIcon: string) {
 		isLoading = true;
@@ -16,7 +18,8 @@
 		const response = await fetch(apiUrl, {
 			method: 'PUT',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${session.access_token}`
 			},
 			body: JSON.stringify({ name: updatedName, icon: updatedIcon })
 		});

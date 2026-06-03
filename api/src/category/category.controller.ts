@@ -23,13 +23,13 @@ import { List } from 'src/util/interfaces/response.dto';
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get()
   async categories(): Promise<Category[]> {
     return await this.categoryService.getCategories();
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get('list')
   async categoriesList(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -53,13 +53,13 @@ export class CategoryController {
     return categoriesList;
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get(':id')
   async subject(@Param('id') id: string): Promise<Category> {
     return await this.categoryService.getCategory(id);
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Post()
   async create(
     @Body() createCategoryDto: Prisma.CategoryCreateInput,
@@ -76,7 +76,7 @@ export class CategoryController {
     return category;
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Put(':id')
   async update(
     @Body() updateCategoryDto: Prisma.CategoryUpdateInput,
@@ -96,7 +96,7 @@ export class CategoryController {
     return category;
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Delete(':id')
   async delete(
     @Param('id') id: string,

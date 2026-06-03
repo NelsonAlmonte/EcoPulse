@@ -31,6 +31,7 @@ export class UserController {
     private issueService: IssueService,
   ) {}
 
+  @UseGuards(SupabaseAuthGuard)
   @Get('list')
   async usersList(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -54,7 +55,7 @@ export class UserController {
     return usersList;
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get(':user/issues')
   async issuesByUser(
     @Param('user') userId: string,
@@ -104,7 +105,7 @@ export class UserController {
     return issueList;
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get('count')
   async countUsers(
     @Query('isActive', new ParseBoolPipe({ optional: true }))
@@ -117,13 +118,12 @@ export class UserController {
     return this.userService.countUsers(where);
   }
 
-  // @UseGuards(SupabaseAuthGuard)
   @Get(':id')
   async user(@Param('id') id: string): Promise<GetUserDto | null> {
     return await this.userService.getUser(id);
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Put(':id')
   async update(
     @Body() updateUserDto: UpdateUserDto,
@@ -138,13 +138,13 @@ export class UserController {
     return updatedUser;
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get(':user/issues/count')
   async countUserIssues(@Param('user') userId: string): Promise<number> {
     return await this.userService.countUserIssues(userId);
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get(':user/highlights/given')
   async highlightsGiven(
     @Param('user') userId: string,
@@ -177,13 +177,13 @@ export class UserController {
     return highlightList;
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get(':user/highlights/given/count')
   async countHighlightsGiven(@Param('user') userId: string): Promise<number> {
     return await this.userService.countHighlightsGiven(userId);
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get(':user/highlights/received/count')
   async countHighlightsReceived(
     @Param('user') userId: string,

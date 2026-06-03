@@ -1,10 +1,11 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { StatisticService } from './statistic.service';
 import { Statistic } from './statistic.dto';
 import { CategoryService } from 'src/category/category.service';
 import { Prisma, Status } from '@prisma/client';
 import { Bounds } from 'src/issue/issue.params';
 import { buildDateFilter } from 'src/util/functions/filter.functions';
+import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 
 interface WhereParams {
   status?: string;
@@ -22,6 +23,7 @@ export class StatisticController {
     private categoryService: CategoryService,
   ) {}
 
+  @UseGuards(SupabaseAuthGuard)
   @Get('status')
   async status(
     @Query('defined_date') defined_date?: string,
@@ -65,6 +67,7 @@ export class StatisticController {
     }) as Statistic[];
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Get('category')
   async category(
     @Query('defined_date') defined_date?: string,
@@ -106,6 +109,7 @@ export class StatisticController {
     })) as Statistic[];
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Get('date')
   async date(
     @Query('defined_date') defined_date?: string,

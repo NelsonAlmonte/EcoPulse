@@ -1,6 +1,6 @@
 import type { LayoutServerLoad } from './$types';
-import { PUBLIC_API_URL } from '$env/static/public';
 import type { User } from '$lib/models/user.model';
+import { PUBLIC_API_URL } from '$env/static/public';
 
 export const load: LayoutServerLoad = async ({ fetch, locals: { safeGetSession }, cookies }) => {
 	const { session } = await safeGetSession();
@@ -10,6 +10,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals: { safeGetSession }
 		const userResponse = await fetch(new URL(`user/${session.user.id}`, PUBLIC_API_URL));
 
 		if (!userResponse.ok) {
+			//TODO: Mostrar error en login
 			console.error('Error al obtener usuario:', userResponse.status);
 		}
 

@@ -1,6 +1,7 @@
-import { PUBLIC_API_URL } from '$env/static/public';
 import type { Category } from '$lib/models/category.model';
 import type { List } from '$lib/models/response.model';
+import { page } from '$app/state';
+import { PUBLIC_API_URL } from '$env/static/public';
 import { SvelteURL } from 'svelte/reactivity';
 
 class CategoryList {
@@ -12,6 +13,7 @@ class CategoryList {
 			total: 5
 		}
 	});
+	session = $derived(page.data.session);
 
 	get list() {
 		return this.#categoryList;
@@ -27,7 +29,12 @@ class CategoryList {
 		apiUrl.searchParams.set('page', currentPage);
 		apiUrl.searchParams.set('amount', amount ?? '5');
 
-		const response = await fetch(apiUrl);
+		const response = await fetch(apiUrl, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${this.session.access_token}`
+			}
+		});
 		const categories = (await response.json()) as List<Category[]>;
 
 		this.#categoryList = categories;

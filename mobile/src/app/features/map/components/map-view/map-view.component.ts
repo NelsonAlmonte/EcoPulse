@@ -52,7 +52,6 @@ export class MapViewComponent implements AfterViewInit {
 
   constructor() {
     effect(() => {
-      console.log('corri');
       this.issueService.order();
       this.issueService.filter();
 

@@ -78,7 +78,7 @@
 	<Heading tag="h6">Métricas clave</Heading>
 </div>
 <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-	{#each insights as insight}
+	{#each insights as insight (insight.icon)}
 		<Insight insightProps={insight} />
 	{/each}
 </div>

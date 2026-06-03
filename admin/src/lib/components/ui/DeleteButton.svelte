@@ -1,9 +1,10 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { toastState } from '$lib/store/ui.svelte';
 	import { CircleAlert } from '@lucide/svelte';
 	import { Button, Modal, Spinner } from 'flowbite-svelte';
-	import type { Snippet } from 'svelte';
 
 	let {
 		endpoint,
@@ -13,12 +14,18 @@
 	}: { endpoint: string; id: string; onDeleted(): void; children: Snippet<[]> } = $props();
 	let isConfirmationModalOpen = $state(false);
 	let isLoading = $state(false);
+	let session = $derived(page.data.session);
 
 	async function deleteItem() {
 		isLoading = true;
 
 		const apiUrl = new URL(`${endpoint}/${id}`, PUBLIC_API_URL);
-		const response = await fetch(apiUrl, { method: 'DELETE' });
+		const response = await fetch(apiUrl, {
+			method: 'DELETE',
+			headers: {
+				Authorization: `Bearer ${session.access_token}`
+			}
+		});
 
 		if (!response.ok) {
 			toastState.trigger({

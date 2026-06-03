@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { PlusIcon } from '@lucide/svelte';
 	import { Button } from 'flowbite-svelte';
 	import CategoryModal from './CategoryModal.svelte';
@@ -8,6 +9,7 @@
 	let { onSuccess }: { onSuccess(): void } = $props();
 	let isModalOpen = $state(false);
 	let isLoading = $state(false);
+	let session = $derived(page.data.session);
 
 	async function saveCategory(name: string, icon: string) {
 		isLoading = true;
@@ -16,7 +18,8 @@
 		const response = await fetch(apiUrl, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${session.access_token}`
 			},
 			body: JSON.stringify({ name, icon })
 		});

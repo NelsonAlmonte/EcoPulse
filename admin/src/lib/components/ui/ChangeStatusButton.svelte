@@ -1,9 +1,10 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { toastState } from '$lib/store/ui.svelte';
 	import { CircleAlert } from '@lucide/svelte';
 	import { Button, Modal, Spinner } from 'flowbite-svelte';
-	import type { Snippet } from 'svelte';
 
 	let {
 		endpoint,
@@ -15,6 +16,7 @@
 		$props();
 	let isConfirmationModalOpen = $state(false);
 	let isLoading = $state(false);
+	let session = $derived(page.data.session);
 
 	async function changeStatus() {
 		isLoading = true;
@@ -22,7 +24,10 @@
 		const apiUrl = new URL(`${endpoint}/${id}`, PUBLIC_API_URL);
 		const response = await fetch(apiUrl, {
 			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${session.access_token}`
+			},
 			body: JSON.stringify({ isActive: !status })
 		});
 

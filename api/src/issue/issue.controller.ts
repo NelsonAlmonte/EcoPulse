@@ -39,7 +39,7 @@ import {
 export class IssueController {
   constructor(private issueService: IssueService) {}
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get()
   async issues(): Promise<Issue[] | null> {
     const issues = await this.issueService.getIssues();
@@ -52,6 +52,7 @@ export class IssueController {
     }));
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Get('list')
   async issuesList(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -96,7 +97,7 @@ export class IssueController {
     return issueList;
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get('in-bound')
   async issuesInBounds(
     @Query('north') north: string,
@@ -174,6 +175,7 @@ export class IssueController {
     return issueList;
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Get('coords')
   async issuesCoordinates(
     @Query('status') status?: string,
@@ -207,7 +209,7 @@ export class IssueController {
     return issueList;
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get('count')
   async countIssues(@Query('status') status?: Status): Promise<number | null> {
     const where: Prisma.IssueWhereInput = {
@@ -217,7 +219,7 @@ export class IssueController {
     return this.issueService.countIssues(where);
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get(':issueId/:userId')
   async issue(
     @Param('issueId') issueId: string,
@@ -235,7 +237,7 @@ export class IssueController {
     };
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Post()
   async create(
     @Body() createIssueDto: CreateIssueDto,
@@ -267,7 +269,7 @@ export class IssueController {
     };
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Put(':id')
   async update(
     @Body() updateIssueDto: UpdateIssueDto,
@@ -296,7 +298,7 @@ export class IssueController {
     };
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Issue | BadRequestException> {
     const issue = await this.issueService.deleteIssue(id);
@@ -311,7 +313,7 @@ export class IssueController {
     };
   }
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Post('upload')
   @UseInterceptors(FileInterceptor('photo'))
   async uploadPhoto(
