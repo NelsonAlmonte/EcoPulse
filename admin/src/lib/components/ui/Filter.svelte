@@ -173,7 +173,12 @@
 	}
 </script>
 
-<Button onclick={() => (isModalOpen = true)} color="alternative" pill>
+<Button
+	onclick={() => (isModalOpen = true)}
+	color="alternative"
+	class="cursor-pointer bg-white"
+	pill
+>
 	<SlidersHorizontal class="me-2" size="20" />
 	Filtros
 </Button>

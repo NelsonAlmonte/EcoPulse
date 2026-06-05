@@ -26,6 +26,7 @@ import {
 } from 'src/issue/issue.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 import { List } from 'src/util/interfaces/response.dto';
 import { Bounds } from './issue.params';
 import { PaginationParams } from 'src/util/interfaces/response.params';
@@ -52,7 +53,7 @@ export class IssueController {
     }));
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard, AdminGuard)
   @Get('list')
   async issuesList(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -269,7 +270,7 @@ export class IssueController {
     };
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard, AdminGuard)
   @Put(':id')
   async update(
     @Body() updateIssueDto: UpdateIssueDto,
@@ -298,7 +299,7 @@ export class IssueController {
     };
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard, AdminGuard)
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Issue | BadRequestException> {
     const issue = await this.issueService.deleteIssue(id);

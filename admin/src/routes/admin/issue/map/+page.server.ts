@@ -2,6 +2,7 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import type { PageServerLoad } from './$types';
 import type { Issue } from '$lib/models/issue.model';
 import type { List } from '$lib/models/response.model';
+import { parseResponse } from '$lib/utils/parseResponse';
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
 	const apiUrl = new URL('issue/in-bound', PUBLIC_API_URL);
@@ -34,7 +35,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	apiUrl.searchParams.set('zoom', mapParams.zoom);
 
 	const response = await fetch(apiUrl);
-	const issues = (await response.json()) as List<Issue[]>;
+	const issues = await parseResponse<List<Issue[]>>(response);
 
 	return { issues, pagination, mapParams };
 };

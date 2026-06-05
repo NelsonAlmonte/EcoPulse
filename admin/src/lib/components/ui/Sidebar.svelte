@@ -14,7 +14,7 @@
 	import { sidebarState } from '$lib/store/ui.svelte';
 	import { beforeNavigate } from '$app/navigation';
 
-	let activeUrl = $state(page.url.pathname);
+	let activeUrl = $derived(page.url.pathname);
 	$effect(() => {
 		activeUrl = page.url.pathname;
 	});

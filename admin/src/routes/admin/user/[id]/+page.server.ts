@@ -3,6 +3,7 @@ import type { List } from '$lib/models/response.model';
 import type { User } from '$lib/models/user.model';
 import type { Issue } from '$lib/models/issue.model';
 import type { PageServerLoad } from './$types';
+import { parseResponse } from '$lib/utils/parseResponse';
 
 export const load: PageServerLoad = async ({ params, fetch, url }) => {
 	let apiUrls = [
@@ -23,10 +24,10 @@ export const load: PageServerLoad = async ({ params, fetch, url }) => {
 		return value;
 	});
 
-	const [userResponse, issuesResponse] = await Promise.all(apiUrls.map((url) => fetch(url)));
+	const [user, issues] = await Promise.all(apiUrls.map((url) => fetch(url).then(parseResponse)));
 
 	return {
-		user: (await userResponse.json()) as User,
-		issues: (await issuesResponse.json()) as List<Issue[]>
+		user: user as User,
+		issues: issues as List<Issue[]>
 	};
 };

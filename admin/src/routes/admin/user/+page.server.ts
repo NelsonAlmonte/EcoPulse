@@ -2,6 +2,7 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import type { User } from '$lib/models/user.model';
 import type { List } from '$lib/models/response.model';
 import type { PageServerLoad } from './$types';
+import { parseResponse } from '$lib/utils/parseResponse';
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
 	const apiUrl = new URL('user/list', PUBLIC_API_URL);
@@ -14,7 +15,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	apiUrl.searchParams.set('amount', pagination.amount);
 
 	const response = await fetch(apiUrl);
-	const users: List<User[]> = await response.json();
+	const users = await parseResponse<List<User[]>>(response);
 
 	return { users, pagination };
 };

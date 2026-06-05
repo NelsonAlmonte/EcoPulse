@@ -29,6 +29,8 @@ export class SupabaseAuthGuard implements CanActivate {
 
       if (payload.aud !== 'authenticated') throw new UnauthorizedException();
 
+      request.user = payload;
+
       return true;
     } catch (err) {
       throw new UnauthorizedException('Token inválido o expirado');

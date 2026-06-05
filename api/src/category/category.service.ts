@@ -8,7 +8,11 @@ export class CategoryService {
   constructor(private prisma: PrismaService) {}
 
   async getCategories(): Promise<Category[]> {
-    return this.prisma.category.findMany();
+    return this.prisma.category.findMany({
+      where: {
+        isActive: true,
+      },
+    });
   }
 
   async getCategory(id: string): Promise<Category> {

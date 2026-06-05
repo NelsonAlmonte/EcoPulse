@@ -2,6 +2,7 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import type { Issue } from '$lib/models/issue.model';
 import type { List } from '$lib/models/response.model';
 import type { PageServerLoad } from './$types';
+import { parseResponse } from '$lib/utils/parseResponse';
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
 	const apiUrl = new URL('issue/coords', PUBLIC_API_URL);
@@ -13,7 +14,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	apiUrl.searchParams.set('all', url.searchParams.get('all') ?? '');
 
 	const response = await fetch(apiUrl);
-	const issues = (await response.json()) as List<Pick<Issue, 'latitude' | 'longitude'>[]>;
+	const issues = await parseResponse<List<Pick<Issue, 'latitude' | 'longitude'>[]>>(response);
 
 	return { issues };
 };

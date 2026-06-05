@@ -15,7 +15,7 @@ import {
 import { CategoryService } from './category.service';
 import { Category, Prisma } from '@prisma/client';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
-import { PaginationParams } from 'src/util/interfaces/response.params';
+import { AdminGuard } from 'src/auth/admin.guard';
 import { buildPaginationParams } from 'src/util/functions/pagination.functions';
 import { List } from 'src/util/interfaces/response.dto';
 
@@ -29,7 +29,7 @@ export class CategoryController {
     return await this.categoryService.getCategories();
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard, AdminGuard)
   @Get('list')
   async categoriesList(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -59,7 +59,7 @@ export class CategoryController {
     return await this.categoryService.getCategory(id);
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard, AdminGuard)
   @Post()
   async create(
     @Body() createCategoryDto: Prisma.CategoryCreateInput,
@@ -76,7 +76,7 @@ export class CategoryController {
     return category;
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard, AdminGuard)
   @Put(':id')
   async update(
     @Body() updateCategoryDto: Prisma.CategoryUpdateInput,
@@ -96,7 +96,7 @@ export class CategoryController {
     return category;
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard, AdminGuard)
   @Delete(':id')
   async delete(
     @Param('id') id: string,

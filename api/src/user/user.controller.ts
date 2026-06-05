@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 import { GetIssueDto } from 'src/issue/issue.dto';
 import { GetUserDto, UpdateUserDto } from './user.dto';
 import { List } from 'src/util/interfaces/response.dto';
@@ -31,7 +32,7 @@ export class UserController {
     private issueService: IssueService,
   ) {}
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard, AdminGuard)
   @Get('list')
   async usersList(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
