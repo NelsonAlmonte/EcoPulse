@@ -27,6 +27,7 @@ import { importLibrary } from '@googlemaps/js-api-loader';
 import { MapService } from '@core/services/map.service';
 import { UiService } from '@core/services/ui.service';
 import { Bounds } from '@shared/models/user.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-map-view',
@@ -45,6 +46,8 @@ export class MapViewComponent implements AfterViewInit {
   authService = inject(AuthService);
   uiService = inject(UiService);
   renderer = inject(Renderer2);
+  activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
   @ViewChild('map') mapRef!: ElementRef<Element>;
   map!: google.maps.Map;
   markers = new Map<google.maps.marker.AdvancedMarkerElement, Issue>();
@@ -63,11 +66,30 @@ export class MapViewComponent implements AfterViewInit {
     });
   }
 
-  async ngAfterViewInit() {
+  async ngAfterViewInit(): Promise<void> {
     await this.initMap();
+
+    this.activatedRoute.queryParamMap.subscribe(async (params) => {
+      const lat = params.get('lat');
+      const lng = params.get('lng');
+
+      if (!lat || !lng) return;
+
+      this.map.setCenter({
+        lat: Number(lat),
+        lng: Number(lng),
+      });
+
+      this.map.setZoom(17);
+
+      await this.router.navigate([], {
+        queryParams: {},
+        replaceUrl: true,
+      });
+    });
   }
 
-  async initMap() {
+  async initMap(): Promise<void> {
     const mapElement = this.mapRef.nativeElement as google.maps.MapElement;
     const position = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
@@ -226,7 +248,7 @@ export class MapViewComponent implements AfterViewInit {
     this.markers.clear();
   }
 
-  private getBreakpoint(comment?: string): number {
+  getBreakpoint(comment?: string): number {
     const BASE = 0.41;
 
     if (!comment) return BASE;

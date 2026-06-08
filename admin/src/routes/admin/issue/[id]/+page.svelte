@@ -98,7 +98,7 @@
 						onChanged={() => invalidateAll()}
 					/>
 				</Dropdown>
-				<DeleteButton endpoint="issue" id={data.issue.id} onDeleted={() => goto('/issue')}>
+				<DeleteButton endpoint="issue" id={data.issue.id} onDeleted={() => goto('/admin/issue')}>
 					<DropdownItem class="rounded-lg text-base hover:bg-red-100 hover:text-red-700"
 						>Eliminar</DropdownItem
 					>

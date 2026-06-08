@@ -27,6 +27,7 @@ import { AuthService } from '@core/services/auth.service';
 import { switchMap, tap } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UiService } from '@core/services/ui.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-issue-detail',
@@ -50,6 +51,7 @@ export class IssueDetailComponent {
   toastController = inject(ToastController);
   loadingController = inject(LoadingController);
   sanitizer = inject(DomSanitizer);
+  router = inject(Router);
   issue = input.required<Issue | null>();
   DEFAULT_STATUS = DEFAULT_STATUS;
   checkCircle = CheckCircleIcon;
@@ -62,6 +64,12 @@ export class IssueDetailComponent {
       text: 'Ver imágen completa',
       data: {
         action: 'view',
+      },
+    },
+    {
+      text: 'Ver reporte en el mapa',
+      data: {
+        action: 'map',
       },
     },
     {
@@ -117,7 +125,7 @@ export class IssueDetailComponent {
     );
   }
 
-  async handleOptions(event: CustomEvent<OverlayEventDetail>) {
+  async handleOptions(event: CustomEvent<OverlayEventDetail>): Promise<void> {
     const selectedOption = event.detail.data;
 
     if (!selectedOption) return;
@@ -133,12 +141,16 @@ export class IssueDetailComponent {
         await this.deleteIssue(this.issueData!.id);
         break;
 
+      case 'map':
+        this.viewIssueInMap();
+        break;
+
       default:
         break;
     }
   }
 
-  async deleteIssue(id: string) {
+  async deleteIssue(id: string): Promise<void> {
     const actionSheet = await this.actionSheetController.create({
       header: '¿Desea eliminar este reporte?',
       cssClass: 'action-sheet',
@@ -225,5 +237,14 @@ export class IssueDetailComponent {
     });
 
     await modal.present();
+  }
+
+  viewIssueInMap(): void {
+    this.router.navigate(['/tabs/map'], {
+      queryParams: {
+        lat: this.issueData!.latitude,
+        lng: this.issueData!.longitude,
+      },
+    });
   }
 }
