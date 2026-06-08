@@ -48,7 +48,9 @@
 		userList.list = data.users;
 	});
 
-	userList.list = data.users;
+	$effect(() => {
+		userList.list = data.users;
+	})
 
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>
@@ -97,15 +99,15 @@
 						<td class="bg-gray-50 px-6 py-4 dark:bg-gray-800"> {user.issues} </td>
 						<td class="px-6 py-4">
 							{#if user.isActive === true}
-								<Status status={'activo'} />
+								<Status status="activo" />
 							{:else}
-								<Status status={'desactivado'} />
+								<Status status="desactivado" />
 							{/if}
 						</td>
 						<td class="flex gap-x-2 bg-gray-50 px-6 py-4 dark:bg-gray-800">
 							<Button href="user/{user.id}?all=1" color="alternative" pill>Ver</Button>
 							<ChangeStatusButton
-								endpoint={'user'}
+								endpoint="user"
 								id={user.id}
 								status={user.isActive}
 								onChaged={() => userList.refresh(currentPage.toString(), currentAmount.toString())}

@@ -22,13 +22,11 @@
 		onOperation(name: string, icon: string): void | Promise<void>;
 		onClose(): void;
 	} = $props();
-	let categoryName = $state(initialName);
-	let iconToSearch = $state(initialIcon);
 	let iconToSave = $state('');
 	let lucideIcons = lucideIconsRaw as Record<string, string>;
 	let allIconNames = Object.keys(lucideIcons);
 	let icons = $derived.by(() => {
-		const term = iconToSearch.toLowerCase().trim();
+		const term = initialIcon.toLowerCase().trim();
 
 		return allIconNames.filter((name) => name.toLowerCase().includes(term)).slice(0, 32);
 	});
@@ -57,7 +55,7 @@
 				placeholder="Punto de basura, lampara caida, señalización faltante, etc"
 				autocomplete="off"
 				required
-				bind:value={categoryName}
+				bind:value={initialName}
 			/>
 		</Label>
 		<Label class="space-y-2">
@@ -70,7 +68,7 @@
 				autocomplete="off"
 				required
 				clearable
-				bind:value={iconToSearch}
+				bind:value={initialIcon}
 			/>
 		</Label>
 		<Popover
@@ -86,7 +84,7 @@
 							class="flex cursor-pointer justify-center rounded-lg bg-gray-50 p-3 hover:bg-gray-100 dark:bg-gray-700"
 							type="button"
 							onclick={() => {
-								iconToSearch = icon;
+								initialIcon = icon;
 								iconToSave = lucideIcons[icon];
 							}}
 						>
@@ -103,7 +101,7 @@
 		</Popover>
 		<div class="flex shrink-0 items-center justify-end space-x-3 rtl:space-x-reverse">
 			<Button color="alternative" onclick={() => (isModalOpen = false)}>Cerrar</Button>
-			<Button color="emerald" onclick={() => onOperation(categoryName, iconToSave)}>
+			<Button color="emerald" onclick={() => onOperation(initialName, iconToSave)}>
 				{#if isLoading}
 					<Spinner class="me-3" size="4" />
 					Cargando...

@@ -77,9 +77,9 @@
 				<dt class="mb-2 text-lg font-medium text-gray-900">Estado</dt>
 				<dd class="font-medium capitalize text-gray-500">
 					{#if data.user.isActive === true}
-						<Status status={'activo'} />
+						<Status status="activo" />
 					{:else}
-						<Status status={'desactivado'} />
+						<Status status="desactivado" />
 					{/if}
 				</dd>
 			</div>

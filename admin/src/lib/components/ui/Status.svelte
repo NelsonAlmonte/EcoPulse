@@ -31,7 +31,7 @@
 			icon: 'CircleX'
 		}
 	];
-	let currentStatus = $state<StatusOption>(statusOptions[0]);
+	let currentStatus = $derived<StatusOption>(statusOptions[0]);
 
 	$effect(() => {
 		currentStatus = statusOptions.find((option) => option.label === status)!;

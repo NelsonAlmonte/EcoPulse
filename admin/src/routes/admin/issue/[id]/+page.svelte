@@ -62,10 +62,10 @@
 				<Status status={data.issue.status.toLocaleLowerCase()} />
 				<span class="text-gray-700">
 					reportado {relativeTime(data.issue.createdAt)} por
-					<span class="font-medium text-gray-900 hover:underline">
+					<a href="/admin/user/{data.issue.user.id}" class="font-medium text-gray-900 hover:underline">
 						{data.issue.user.name}
 						{data.issue.user.last}
-					</span>
+					</a>
 				</span>
 			</div>
 		</div>

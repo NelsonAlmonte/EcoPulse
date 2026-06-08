@@ -17,7 +17,9 @@
 		Math.ceil(data.issues.pagination.total / data.issues.pagination.amount)
 	);
 
-	issueList.list = data.issues;
+	$effect(() => {
+		issueList.list = data.issues;
+	})
 
 	function handlePageChange(page: number) {
 		currentPage = page;

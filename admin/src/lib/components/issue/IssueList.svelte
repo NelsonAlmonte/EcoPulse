@@ -8,7 +8,7 @@
 	import Alert from '$lib/components/ui/Alert.svelte';
 
 	let currentPage = $derived(issueList.list.pagination.page);
-	let currentAmount = $derived(issueList.list.pagination.amount);
+	// let currentAmount = $derived(issueList.list.pagination.amount);
 	let totalPages = $derived(
 		Math.ceil(issueList.list.pagination.total / issueList.list.pagination.amount)
 	);

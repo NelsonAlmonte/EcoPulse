@@ -6,10 +6,9 @@
 		SidebarDropdownWrapper,
 		Drawer,
 		SidebarWrapper,
-		Button,
 		NavBrand
 	} from 'flowbite-svelte';
-	import { ChartArea, FileSearch, House, Settings, Users, XIcon } from '@lucide/svelte';
+	import { ChartArea, FileSearch, House, Settings, Users } from '@lucide/svelte';
 	import { page } from '$app/state';
 	import { sidebarState } from '$lib/store/ui.svelte';
 	import { beforeNavigate } from '$app/navigation';
@@ -24,7 +23,7 @@
 	});
 </script>
 
-<Drawer bind:open={sidebarState.canShow} class="w-64 bg-gray-50 p-0 dark:bg-gray-800">
+<Drawer bind:open={sidebarState.canShow} class="w-64 bg-gray-50 p-0 dark:bg-gray-800" >
 	<div class="flex justify-between px-6 py-4">
 		<NavBrand href="/">
 			<img src="/img/logo.png" alt="Flowbite Svelte" class="h-6 w-6" />
@@ -32,14 +31,6 @@
 				>EcoPulse</span
 			>
 		</NavBrand>
-		<Button
-			class="cursor-pointer p-2!"
-			size="lg"
-			color="light"
-			onclick={() => (sidebarState.canShow = false)}
-		>
-			<XIcon class="h-4 w-4 text-gray-950" />
-		</Button>
 	</div>
 	<Sidebar disableBreakpoints={true} class="top-16" {activeUrl}>
 		<SidebarWrapper class="overflow-y-auto rounded-sm px-3 py-0 dark:bg-gray-800">
