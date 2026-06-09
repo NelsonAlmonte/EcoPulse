@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { LoadingController, ToastController } from '@ionic/angular/standalone';
 
 @Injectable({
@@ -7,11 +7,12 @@ import { LoadingController, ToastController } from '@ionic/angular/standalone';
 export class UiService {
   toastController = inject(ToastController);
   loadingController = inject(LoadingController);
+  hasConnection = signal<boolean | null>(null);
   loading?: HTMLIonLoadingElement;
 
   async showLoading(
     message = 'Cargando...',
-    cssClass = 'loading',
+    cssClass = 'loading'
   ): Promise<void> {
     if (this.loading) return;
 

@@ -73,65 +73,66 @@
   <ion-toolbar>
     <div class="flex justify-between w-full ion-padding">
       @if (currentSegment === "photo") {
-        <button
-          type="button"
-          class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center ion-activatable relative overflow-hidden"
-          (click)="cancel()"
-        >
-          <ion-ripple-effect></ion-ripple-effect>
-          <lucide-angular
-            class="me-0.5"
-            [img]="cancelIcon"
-            size="18"
-          ></lucide-angular>
-          Cancelar
-        </button>
+      <button
+        type="button"
+        class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center ion-activatable relative overflow-hidden"
+        (click)="cancel()"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        <lucide-angular
+          class="me-0.5"
+          [img]="cancelIcon"
+          size="18"
+        ></lucide-angular>
+        Cancelar
+      </button>
       } @else {
-        <button
-          type="button"
-          class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center ion-activatable relative overflow-hidden"
-          (click)="back()"
-        >
-          <ion-ripple-effect></ion-ripple-effect>
-          <lucide-angular
-            class="me-0.5"
-            [img]="prevIcon"
-            size="18"
-          ></lucide-angular>
-          Anterior
-        </button>
-      }
-      @if (currentSegment === "categories") {
-        <button
-          type="button"
-          class="md-primary md-on-primary focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center send-report-button ion-activatable relative overflow-hidden"
-          [disabled]="!selectedCategory"
-          (click)="sendReport()"
-        >
-          @if (selectedCategory) {
-            <ion-ripple-effect></ion-ripple-effect>
-          }
-          <lucide-angular
-            class="me-0.5"
-            [img]="sendIcon"
-            size="18"
-          ></lucide-angular>
-          Enviar reporte
-        </button>
+      <button
+        type="button"
+        class="md-secondary-container md-on-secondary-container focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center ion-activatable relative overflow-hidden"
+        (click)="back()"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        <lucide-angular
+          class="me-0.5"
+          [img]="prevIcon"
+          size="18"
+        ></lucide-angular>
+        Anterior
+      </button>
+      } @if (currentSegment === "categories") {
+      <button
+        type="button"
+        class="md-primary md-on-primary focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center send-report-button ion-activatable relative overflow-hidden"
+        [disabled]="!selectedCategory"
+        (click)="uiService.hasConnection() ? sendReport() : saveOfflineReport()"
+      >
+        @if (selectedCategory) {
+        <ion-ripple-effect></ion-ripple-effect>
+        }
+
+        <lucide-angular
+          class="me-0.5"
+          [img]="uiService.hasConnection() ? sendIcon : saveIcon"
+          size="18"
+        ></lucide-angular>
+
+        {{ uiService.hasConnection() ? "Enviar reporte" : "Guardar reporte" }}
+      </button>
       } @else {
-        <button
-          type="button"
-          class="md-primary md-on-primary focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center ion-activatable relative overflow-hidden"
-          (click)="next()"
-        >
-          <ion-ripple-effect></ion-ripple-effect>
-          Siguiente
-          <lucide-angular
-            class="ms-0.5"
-            [img]="nextIcon"
-            size="18"
-          ></lucide-angular>
-        </button>
+      <button
+        type="button"
+        class="md-primary md-on-primary focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center ion-activatable relative overflow-hidden"
+        (click)="next()"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        Siguiente
+        <lucide-angular
+          class="ms-0.5"
+          [img]="nextIcon"
+          size="18"
+        ></lucide-angular>
+      </button>
       }
     </div>
   </ion-toolbar>

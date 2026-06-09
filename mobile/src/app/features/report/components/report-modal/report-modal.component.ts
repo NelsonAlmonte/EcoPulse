@@ -33,12 +33,14 @@ import {
   ImageIcon,
   LucideAngularModule,
   MapPinIcon,
+  SaveIcon,
   SendIcon,
 } from 'lucide-angular';
 import { UserService } from '@core/services/user.service';
 import { Issue } from '@shared/models/issue.model';
 import { List } from '@shared/models/response.model';
 import { UiService } from '@core/services/ui.service';
+import { OfflineService } from '@core/services/offline.service';
 
 @Component({
   selector: 'app-report-modal',
@@ -67,6 +69,7 @@ export class ReportModalComponent {
   authService = inject(AuthService);
   userService = inject(UserService);
   uiService = inject(UiService);
+  offlineService = inject(OfflineService);
   modalController = inject(ModalController);
   toastController = inject(ToastController);
   photo = input.required<string>();
@@ -77,6 +80,7 @@ export class ReportModalComponent {
   nextIcon = ArrowRightIcon;
   prevIcon = ArrowLeftIcon;
   sendIcon = SendIcon;
+  saveIcon = SaveIcon;
   cancelIcon = BanIcon;
   photoIcon = ImageIcon;
   placeIcon = MapPinIcon;
@@ -119,27 +123,12 @@ export class ReportModalComponent {
   async sendReport(): Promise<void> {
     await this.uiService.showLoading('Enviando reporte...');
 
-    const coordinates = await Geolocation.getCurrentPosition({
-      enableHighAccuracy: true,
-    });
-    const { latitude, longitude } =
-      this.getRandomCoordinatesInDominicanRepublic();
-    const issue: CreateIssueDto = {
-      photo: '',
-      status: DEFAULT_STATUS,
-      latitude: latitude,
-      longitude: longitude,
-      // latitude: coordinates.coords.latitude,
-      // longitude: coordinates.coords.longitude,
-      comment: this.comment,
-      category: this.selectedCategory!,
-      user: this.authService.loggedUserData()!.id,
-    };
+    const issue = await this.buildIssue();
     const formData = new FormData();
 
     formData.append(
       'photo',
-      this.dataUrlToFile(this.photo().toString(), `issue-${uuidv4()}.jpg`),
+      this.dataUrlToFile(this.photo().toString(), `issue-${uuidv4()}.jpg`)
     );
 
     this.issueService
@@ -151,10 +140,12 @@ export class ReportModalComponent {
           return this.issueService.createIssue(issue);
         }),
         catchError((err) => {
+          this.offlineService.saveOfflineIssue(issue);
+
           return from(this.uiService.hideLoading()).pipe(
-            switchMap(() => this.handleError(err)),
+            switchMap(() => this.handleError(err))
           );
-        }),
+        })
       )
       .subscribe(async (response) => {
         await this.uiService.hideLoading();
@@ -162,7 +153,7 @@ export class ReportModalComponent {
         this.modalController.dismiss(response, 'confirm');
 
         this.userService.issueList.update((current) =>
-          this.updateUserIssues(current, response),
+          this.updateUserIssues(current, response)
         );
         this.userService.counters.update((current) => ({
           ...current,
@@ -170,16 +161,53 @@ export class ReportModalComponent {
         }));
 
         await this.uiService.showToast(
-          'Tu reporte se ha enviado correctamente.',
+          'Tu reporte se ha enviado correctamente.'
         );
       });
+  }
+
+  async saveOfflineReport(): Promise<void> {
+    await this.uiService.showLoading('Guardando reporte...');
+
+    const issue = await this.buildIssue();
+
+    this.offlineService.saveOfflineIssue(issue);
+
+    await this.uiService.hideLoading();
+
+    this.modalController.dismiss(issue, 'confirm');
+
+    await this.uiService.showToast(
+      'Reporte guardado correctamente. Se enviará cuando vuelvas a tener conexión.'
+    );
+  }
+
+  async buildIssue(): Promise<CreateIssueDto> {
+    const coordinates = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true,
+    });
+    const { latitude, longitude } =
+      this.getRandomCoordinatesInDominicanRepublic();
+    const issue: CreateIssueDto = {
+      photo: this.photo().toString(),
+      status: DEFAULT_STATUS,
+      latitude: latitude,
+      longitude: longitude,
+      // latitude: coordinates.coords.latitude,
+      // longitude: coordinates.coords.longitude,
+      comment: this.comment,
+      category: this.selectedCategory!,
+      user: this.authService.loggedUserData()!.id,
+    };
+
+    return issue;
   }
 
   updateUserIssues(currentData: List<Issue[]>, response: Issue) {
     const updatedData = [
       response,
       ...(currentData.data!.length >= 3
-        ? (currentData.data!.slice(0, -1) ?? [])
+        ? currentData.data!.slice(0, -1) ?? []
         : currentData.data!),
     ];
 
@@ -233,22 +261,15 @@ export class ReportModalComponent {
     return from(
       this.toastController
         .create({
-          message: 'Ocurrió un error al enviar tu reporte.',
+          message:
+            'Ocurrió un error al enviar tu reporte. Pero se guardo localmente en tu dispositivo.',
           duration: 4000,
           position: 'bottom',
           animated: true,
-          buttons: [
-            {
-              text: 'Reintentar',
-              side: 'end',
-              handler: () => {
-                this.sendReport();
-                return false;
-              },
-            },
-          ],
         })
-        .then((toast) => toast.present()),
+        .then((toast) => {
+          toast.present();
+        })
     ).pipe(switchMap(() => throwError(() => error)));
   }
 }

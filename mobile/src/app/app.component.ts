@@ -16,11 +16,13 @@ export class AppComponent implements OnInit {
     const initialStatus = await Network.getStatus();
 
     this.wasConnected = initialStatus.connected;
+    this.uiService.hasConnection.set(initialStatus.connected);
 
     Network.addListener('networkStatusChange', async (status) => {
       if (this.wasConnected === status.connected) return;
 
       this.wasConnected = status.connected;
+      this.uiService.hasConnection.set(status.connected);
 
       if (!status.connected) {
         await this.uiService.showToast('No tienes conexión a internet.');

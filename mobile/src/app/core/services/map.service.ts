@@ -15,7 +15,7 @@ export class MapService {
 
   async createMap(
     el: google.maps.MapElement,
-    options: google.maps.MapOptions,
+    options: google.maps.MapOptions
   ): Promise<google.maps.Map> {
     const { Map } = await importLibrary('maps');
     return new Map(el, options);

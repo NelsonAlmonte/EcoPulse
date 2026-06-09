@@ -8,7 +8,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { CategoryService } from '@core/services/category.service';
 import { IonRippleEffect } from '@ionic/angular/standalone';
-import { LucideAngularModule } from 'lucide-angular';
+import { FolderOpenIcon, LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-category-list',
@@ -23,9 +23,25 @@ export class CategoryListComponent implements OnInit {
   selectedCategory = output<string>();
   selectedElement: HTMLDivElement | null = null;
   selectedCategoryId: string | null = null;
+  emptyIcon = FolderOpenIcon;
 
   ngOnInit(): void {
-    this.categoryService.getCategories();
+    const cachedCategories = localStorage.getItem('categories');
+
+    if (cachedCategories) {
+      this.categoryService.categories.set(JSON.parse(cachedCategories));
+    }
+
+    this.categoryService.getCategories().subscribe({
+      next: (categories) => {
+        this.categoryService.categories.set(categories);
+
+        localStorage.setItem('categories', JSON.stringify(categories));
+      },
+      error: () => {
+        console.error('No se pudieron obtener las categorías.');
+      },
+    });
   }
 
   selectCategory(id: string): void {

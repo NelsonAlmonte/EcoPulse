@@ -9,17 +9,22 @@ import {
 import { Geolocation } from '@capacitor/geolocation';
 import { importLibrary } from '@googlemaps/js-api-loader';
 import { MapService } from '@core/services/map.service';
+import { UiService } from '@core/services/ui.service';
+import { LucideAngularModule, MapPinOff } from 'lucide-angular';
 
 @Component({
   selector: 'app-location-preview',
   templateUrl: './location-preview.component.html',
   styleUrls: ['./location-preview.component.css'],
+  imports: [LucideAngularModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class LocationPreviewComponent implements AfterViewInit {
   @ViewChild('map') mapRef!: ElementRef<Element>;
   mapService = inject(MapService);
+  uiService = inject(UiService);
   map!: google.maps.Map;
+  emptyIcon = MapPinOff;
 
   async ngAfterViewInit() {
     await this.initMap();

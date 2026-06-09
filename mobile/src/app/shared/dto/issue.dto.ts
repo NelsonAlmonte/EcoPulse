@@ -7,3 +7,8 @@ export interface CreateIssueDto {
   category: string;
   user: string;
 }
+
+export interface OfflineIssue {
+  localId: string;
+  issue: CreateIssueDto;
+}
