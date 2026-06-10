@@ -7,9 +7,9 @@ import {
   ModalController,
   ToastController,
 } from '@ionic/angular/standalone';
-import { RelativeTimePipe } from '@shared/pipes/relative-time.pipe';
 import { DEFAULT_STATUS } from '@shared/constants/system.constant';
 import { Issue } from '@shared/models/issue.model';
+import { IssueCardComponent } from '@features/report/components/issue-card/issue-card.component';
 import { HighlightButtonComponent } from '@features/report/components/highlight-button/highlight-button.component';
 import { IssuePhotoComponent } from '@features/report/components/issue-photo/issue-photo.component';
 import { IssueDetailLoadingComponent } from '@shared/components/issue-detail-loading/issue-detail-loading.component';
@@ -36,9 +36,9 @@ import { Router } from '@angular/router';
   imports: [
     IonRippleEffect,
     LucideAngularModule,
+    IssueCardComponent,
     HighlightButtonComponent,
     IssueDetailLoadingComponent,
-    RelativeTimePipe,
   ],
 })
 export class IssueDetailComponent {

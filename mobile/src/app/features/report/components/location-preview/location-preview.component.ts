@@ -11,12 +11,13 @@ import { importLibrary } from '@googlemaps/js-api-loader';
 import { MapService } from '@core/services/map.service';
 import { UiService } from '@core/services/ui.service';
 import { LucideAngularModule, MapPinOff } from 'lucide-angular';
+import { AlertComponent } from '@shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-location-preview',
   templateUrl: './location-preview.component.html',
   styleUrls: ['./location-preview.component.css'],
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, AlertComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class LocationPreviewComponent implements AfterViewInit {

@@ -60,6 +60,35 @@
   </div>
 
   <div
+    class="flex items-center justify-between p-4 ion-activatable relative overflow-hidden"
+    (click)="navigate('/offline-issues')"
+  >
+    <ion-ripple-effect></ion-ripple-effect>
+    <div class="flex items-center justify-start">
+      <div class="me-4">
+        <lucide-angular
+          [img]="savedIssuesIcon"
+          size="22"
+          class="category-icon md-on-surface"
+        ></lucide-angular>
+      </div>
+      <div>
+        <p class="text-md font-semibold md-on-surface">Reportes guardados</p>
+        <p class="text-sm font-medium md-on-surface-variant">
+          Reportes guardados sin conexión
+        </p>
+      </div>
+    </div>
+    @if (offlineService.issues().length) {
+    <ion-badge
+      class="md-error md-on-error rounded-xl py-0.5 px-2 font-medium"
+      color="danger"
+      >{{ offlineService.issues().length }}</ion-badge
+    >
+    }
+  </div>
+
+  <div
     class="flex items-center justify-start p-4 ion-activatable relative overflow-hidden"
     (click)="logout()"
   >

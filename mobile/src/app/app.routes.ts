@@ -43,4 +43,8 @@ export const routes: Routes = [
       ),
     canActivate: [authGuard],
   },
+  {
+    path: 'offline-issues',
+    loadComponent: () => import('./features/profile/pages/offline-issues/offline-issues.page').then( m => m.OfflineIssuesPage)
+  },
 ];

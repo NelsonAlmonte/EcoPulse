@@ -21,27 +21,28 @@ export class AuthService {
   login(loginUserDto: LoginUserDto): Observable<AuthResponseDto> {
     return this.apiService.doPost<AuthResponseDto, LoginUserDto>(
       `${this.URL}/login`,
-      loginUserDto,
+      loginUserDto
     );
   }
 
   signup(signupUserDto: SignupUserDto): Observable<AuthResponseDto> {
     return this.apiService.doPost<AuthResponseDto, SignupUserDto>(
       `${this.URL}/signup`,
-      signupUserDto,
+      signupUserDto
     );
   }
 
   refreshSession(
-    refreshToken: RefreshUserSessionDto,
+    refreshToken: RefreshUserSessionDto
   ): Observable<AuthResponseDto> {
     return this.apiService.doPost<AuthResponseDto, RefreshUserSessionDto>(
       `${this.URL}/refresh`,
-      refreshToken,
+      refreshToken
     );
   }
 
   logout(): void {
+    //TODO: Remover issues de localstorage
     localStorage.removeItem('auth');
     this.router.navigate(['/login']);
   }

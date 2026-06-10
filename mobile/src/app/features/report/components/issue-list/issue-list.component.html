@@ -1,23 +1,21 @@
-@if (this.userService.isLoading() || this.issueService.isLoading()) {
-  <div class="flex flex-col space-y-4">
-    <app-issue-detail-loading></app-issue-detail-loading>
-    <app-issue-detail-loading></app-issue-detail-loading>
-    <app-issue-detail-loading></app-issue-detail-loading>
-  </div>
-}
-@if (issueList()!.data.length) {
-  @for (issue of issueList()!.data; track issue.id) {
-    <app-issue-detail [issue]="issue"></app-issue-detail>
-  }
-} @else {
-  <div
-    class="md-surface-container-high md-on-surface-variant flex flex-col items-center justify-center space-y-3 rounded-2xl p-6 text-center"
-  >
-    <lucide-angular [img]="emptyIcon" size="50"></lucide-angular>
-    <span class="text-xl font-semibold">Sin reportes aún</span>
-    <span class="text-md font-medium"
-      >Cuando encuentres un problema o situación que debamos atender, repórtalo
-      desde la página de reportes.</span
-    >
-  </div>
-}
+@if (userService.isLoading() || issueService.isLoading()) {
+<div class="flex flex-col space-y-4">
+  <app-issue-detail-loading class="mb-4"></app-issue-detail-loading>
+  <app-issue-detail-loading class="mb-4"></app-issue-detail-loading>
+  <app-issue-detail-loading class="mb-4"></app-issue-detail-loading>
+</div>
+} @else if (!uiService.hasConnection() && !issueList()?.data?.length) {
+<app-alert
+  [icon]="noConnectionIcon"
+  [title]="'Sin conexión'"
+  [content]="'Conéctate a internet para cargar los reportes.'"
+></app-alert>
+} @else if (!issueList()?.data?.length) {
+<app-alert
+  [icon]="emptyIcon"
+  [title]="'Sin reportes'"
+  [content]="'Todavía no hay reportes para mostrar.'"
+></app-alert>
+} @else { @for (issue of issueList()?.data; track issue.id) {
+<app-issue-detail [issue]="issue"></app-issue-detail>
+} }

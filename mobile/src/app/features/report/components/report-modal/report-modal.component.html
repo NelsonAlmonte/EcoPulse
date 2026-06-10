@@ -105,7 +105,7 @@
         type="button"
         class="md-primary md-on-primary focus:outline-none font-medium rounded-2xl text-sm p-4 text-center inline-flex items-center send-report-button ion-activatable relative overflow-hidden"
         [disabled]="!selectedCategory"
-        (click)="uiService.hasConnection() ? sendReport() : saveOfflineReport()"
+        (click)="uiService.hasConnection() ? sendIssue() : saveOfflineIssue()"
       >
         @if (selectedCategory) {
         <ion-ripple-effect></ion-ripple-effect>

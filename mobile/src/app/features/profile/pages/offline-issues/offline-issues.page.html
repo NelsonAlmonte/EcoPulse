@@ -1,0 +1,22 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start" class="ion-padding">
+      <a
+        class="md-on-surface focus:outline-none rounded-2xl ion-activatable relative overflow-hidden"
+        routerLink="/tabs/profile"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        <lucide-angular [img]="backIcon" size="24"></lucide-angular>
+      </a>
+    </ion-buttons>
+    <ion-title class="font-semibold">Reportes guardados</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="ion-padding-horizontal">
+    @for (issue of offlineService.issues(); track issue.localId) {
+    <app-offline-issue-detail [issue]="issue"></app-offline-issue-detail>
+    }
+  </div>
+</ion-content>

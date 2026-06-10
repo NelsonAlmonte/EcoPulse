@@ -24,6 +24,13 @@
         aria-hidden="true"
         [name]="selectedTab === 'profile' ? 'person' : 'person-outline' "
       ></ion-icon>
+      @if (offlineService.issues().length) {
+      <ion-badge
+        class="md-error md-on-error py-0.5 px-1.5 font-medium"
+        color="danger"
+        >{{offlineService.issues().length}}</ion-badge
+      >
+      }
       <ion-label>Perfil</ion-label>
     </ion-tab-button>
   </ion-tab-bar>

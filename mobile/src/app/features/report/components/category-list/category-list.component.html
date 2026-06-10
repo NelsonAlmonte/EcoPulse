@@ -1,13 +1,11 @@
 @if (!categoryService.categories().length) {
-<div
-  class="md-surface-container-high md-on-surface-variant flex flex-col items-center justify-center space-y-3 rounded-2xl p-6 text-center"
->
-  <lucide-angular [img]="emptyIcon" size="50"></lucide-angular>
-  <span class="text-xl font-semibold">Sin categorias</span>
-  <span class="text-md font-medium"
-    >Conéctate a internet para descargar las categorías por primera vez.</span
-  >
-</div>
+<app-alert
+  [icon]="emptyIcon"
+  [title]="'Sin categorias'"
+  [content]="
+    'Conéctate a internet para descargar las categorías por primera vez.'
+  "
+></app-alert>
 } @if (categoryService.categories().length) {
 <div class="grid grid-cols-2 gap-1 ion-margin-vertical">
   @for (category of categoryService.categories(); track $index) {

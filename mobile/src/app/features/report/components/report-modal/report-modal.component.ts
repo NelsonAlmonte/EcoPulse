@@ -120,7 +120,7 @@ export class ReportModalComponent {
     return { latitude, longitude };
   }
 
-  async sendReport(): Promise<void> {
+  async sendIssue(): Promise<void> {
     await this.uiService.showLoading('Enviando reporte...');
 
     const issue = await this.buildIssue();
@@ -166,7 +166,7 @@ export class ReportModalComponent {
       });
   }
 
-  async saveOfflineReport(): Promise<void> {
+  async saveOfflineIssue(): Promise<void> {
     await this.uiService.showLoading('Guardando reporte...');
 
     const issue = await this.buildIssue();
@@ -178,7 +178,7 @@ export class ReportModalComponent {
     this.modalController.dismiss(issue, 'confirm');
 
     await this.uiService.showToast(
-      'Reporte guardado correctamente. Se enviará cuando vuelvas a tener conexión.'
+      'Reporte guardado correctamente. Podrás enviarlo cuando tengas conexión a Internet.'
     );
   }
 
@@ -262,7 +262,7 @@ export class ReportModalComponent {
       this.toastController
         .create({
           message:
-            'Ocurrió un error al enviar tu reporte. Pero se guardo localmente en tu dispositivo.',
+            'Ocurrió un error al enviar tu reporte. Pero se guardo en tu dispositivo.',
           duration: 4000,
           position: 'bottom',
           animated: true,

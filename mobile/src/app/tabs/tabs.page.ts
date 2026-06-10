@@ -4,12 +4,14 @@ import {
   inject,
   ViewChild,
 } from '@angular/core';
+import { OfflineService } from '@core/services/offline.service';
 import {
   IonTabs,
   IonTabBar,
   IonTabButton,
   IonIcon,
   IonLabel,
+  IonBadge,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -25,10 +27,11 @@ import {
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.css'],
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonBadge],
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
+  offlineService = inject(OfflineService);
   @ViewChild('tabs') tabs!: IonTabs;
   selectedTab: string | undefined = 'map';
 

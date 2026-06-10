@@ -57,18 +57,22 @@ export class HighlightButtonComponent {
 
     this.issue().hasCurrentUserHighlight = true;
 
-    this.highlightService.createHighlight(dto).subscribe(async (result) => {
-      if (!result) {
-        await this.handleError(result);
+    this.highlightService.createHighlight(dto).subscribe({
+      next: () => {
+        this.userService.counters.update((current) => ({
+          ...current,
+          highlightsGiven: current.highlightsGiven + 1,
+        }));
+
+        this.renderer.setProperty(button, 'disabled', false);
+      },
+      error: async (err) => {
+        await this.handleError(err);
+
         this.issue().hasCurrentUserHighlight = false;
-      }
-
-      this.renderer.setProperty(button, 'disabled', false);
-
-      this.userService.counters.update((current) => ({
-        ...current,
-        highlightsGiven: current.highlightsGiven + 1,
-      }));
+        this.renderer.setProperty(button, 'disabled', false);
+        this.updateHighlightCounter(-1);
+      },
     });
   }
 
@@ -77,24 +81,28 @@ export class HighlightButtonComponent {
 
     this.issue().hasCurrentUserHighlight = false;
 
-    this.highlightService.deleteHighlight(dto).subscribe(async (result) => {
-      if (!result) {
-        await this.handleError(result);
+    this.highlightService.deleteHighlight(dto).subscribe({
+      next: () => {
+        this.userService.counters.update((current) => ({
+          ...current,
+          highlightsGiven: current.highlightsGiven - 1,
+        }));
+
+        this.renderer.setProperty(button, 'disabled', false);
+      },
+      error: async (err) => {
+        await this.handleError(err);
+
         this.issue().hasCurrentUserHighlight = true;
-      }
-
-      this.renderer.setProperty(button, 'disabled', false);
-
-      this.userService.counters.update((current) => ({
-        ...current,
-        highlightsGiven: current.highlightsGiven - 1,
-      }));
+        this.renderer.setProperty(button, 'disabled', false);
+        this.updateHighlightCounter(1);
+      },
     });
   }
 
   private async handleError(error: any): Promise<void> {
     await this.uiService.showToast(
-      'Ocurrió un error al resaltar este reporte.',
+      'Ocurrió un error al resaltar este reporte.'
     );
   }
 
@@ -106,13 +114,13 @@ export class HighlightButtonComponent {
     this.renderer.setProperty(el, 'innerText', updated.toString());
   }
 
-  addCounter(): void {
-    this.updateHighlightCounter(1);
-  }
+  // addCounter(): void {
+  //   this.updateHighlightCounter(1);
+  // }
 
-  deductCounter(): void {
-    this.updateHighlightCounter(-1);
-  }
+  // deductCounter(): void {
+  //   this.updateHighlightCounter(-1);
+  // }
 
   animateButton(button: HTMLButtonElement): void {
     button.classList.remove('animate-pop');

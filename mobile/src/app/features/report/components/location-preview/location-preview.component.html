@@ -2,16 +2,13 @@
   @if (uiService.hasConnection() === null) {
   <p>Cargado...</p>
   } @else if (!uiService.hasConnection()) {
-  <div
-    class="md-surface-container-high md-on-surface-variant flex flex-col items-center justify-center space-y-3 rounded-2xl p-6 text-center"
-  >
-    <lucide-angular [img]="emptyIcon" size="50"></lucide-angular>
-    <span class="text-xl font-semibold"> No se puede cargar el mapa </span>
-    <span class="text-md font-medium">
-      Conéctate a internet para visualizar el mapa. Tu ubicación seguirá
-      obteniéndose automáticamente.
-    </span>
-  </div>
+  <app-alert
+    [icon]="emptyIcon"
+    [title]="'No se puede cargar el mapa'"
+    [content]="
+      'Conéctate a internet para visualizar el mapa. Tu ubicación seguirá obteniéndose automáticamente.'
+    "
+  ></app-alert>
   }
   <div
     [class]="

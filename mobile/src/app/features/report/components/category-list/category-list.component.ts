@@ -9,16 +9,19 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { CategoryService } from '@core/services/category.service';
 import { IonRippleEffect } from '@ionic/angular/standalone';
 import { FolderOpenIcon, LucideAngularModule } from 'lucide-angular';
+import { AlertComponent } from '@shared/components/alert/alert.component';
+import { UiService } from '@core/services/ui.service';
 
 @Component({
   selector: 'app-category-list',
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.css'],
-  imports: [IonRippleEffect, LucideAngularModule],
+  imports: [IonRippleEffect, LucideAngularModule, AlertComponent],
   encapsulation: ViewEncapsulation.None,
 })
 export class CategoryListComponent implements OnInit {
   categoryService = inject(CategoryService);
+  uiService = inject(UiService);
   sanitizer = inject(DomSanitizer);
   selectedCategory = output<string>();
   selectedElement: HTMLDivElement | null = null;
@@ -38,8 +41,10 @@ export class CategoryListComponent implements OnInit {
 
         localStorage.setItem('categories', JSON.stringify(categories));
       },
-      error: () => {
-        console.error('No se pudieron obtener las categorías.');
+      error: async () => {
+        await this.uiService.showToast(
+          'No tienes conexión a internet. Se usarán las categorías guardadas en el dispositivo.'
+        );
       },
     });
   }
