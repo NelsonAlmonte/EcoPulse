@@ -1,8 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
-  IonActionSheet,
   IonButtons,
   IonContent,
   IonHeader,
@@ -10,10 +10,10 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
-import { RouterLink } from '@angular/router';
 import { OfflineService } from '@core/services/offline.service';
 import { OfflineIssueDetailComponent } from '@features/report/components/offline-issue-detail/offline-issue-detail.component';
+import { AlertComponent } from '@shared/components/alert/alert.component';
+import { ArrowLeft, FolderOpenIcon, LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-offline-issues',
@@ -27,17 +27,16 @@ import { OfflineIssueDetailComponent } from '@features/report/components/offline
     IonToolbar,
     IonButtons,
     IonRippleEffect,
-    IonActionSheet,
     OfflineIssueDetailComponent,
+    AlertComponent,
     CommonModule,
     FormsModule,
     RouterLink,
     LucideAngularModule,
   ],
 })
-export class OfflineIssuesPage implements OnInit {
+export class OfflineIssuesPage {
   offlineService = inject(OfflineService);
   backIcon = ArrowLeft;
-
-  ngOnInit() {}
+  emptyIcon = FolderOpenIcon;
 }

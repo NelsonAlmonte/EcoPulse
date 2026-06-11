@@ -13,10 +13,15 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <div class="ion-padding-horizontal">
-    @for (issue of offlineService.issues(); track issue.localId) {
-    <app-offline-issue-detail [issue]="issue"></app-offline-issue-detail>
-    }
-  </div>
+<ion-content [fullscreen]="true" class="ion-padding">
+  @if (offlineService.issues().length) { @for (issue of offlineService.issues();
+  track issue.id) {
+  <app-offline-issue-detail [issue]="issue"></app-offline-issue-detail>
+  } } @else {
+  <app-alert
+    [icon]="emptyIcon"
+    [title]="'Sin reportes'"
+    [content]="'Todavía no hay reportes para mostrar.'"
+  ></app-alert>
+  }
 </ion-content>

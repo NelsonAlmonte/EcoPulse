@@ -10,7 +10,6 @@ import {
 import { AuthService } from '@core/services/auth.service';
 import { HighlightService } from '@core/services/highlight.service';
 import { UiService } from '@core/services/ui.service';
-import { UserService } from '@core/services/user.service';
 import { ToastController } from '@ionic/angular/standalone';
 import { HighlightDto } from '@shared/dto/highlight.dto';
 import { Issue } from '@shared/models/issue.model';
@@ -27,7 +26,6 @@ export class HighlightButtonComponent {
   renderer = inject(Renderer2);
   highlightService = inject(HighlightService);
   authService = inject(AuthService);
-  userService = inject(UserService);
   uiService = inject(UiService);
   toastController = inject(ToastController);
   @ViewChild('highlightsCount') highlightsCount!: ElementRef<HTMLSpanElement>;
@@ -59,11 +57,6 @@ export class HighlightButtonComponent {
 
     this.highlightService.createHighlight(dto).subscribe({
       next: () => {
-        this.userService.counters.update((current) => ({
-          ...current,
-          highlightsGiven: current.highlightsGiven + 1,
-        }));
-
         this.renderer.setProperty(button, 'disabled', false);
       },
       error: async (err) => {
@@ -83,11 +76,6 @@ export class HighlightButtonComponent {
 
     this.highlightService.deleteHighlight(dto).subscribe({
       next: () => {
-        this.userService.counters.update((current) => ({
-          ...current,
-          highlightsGiven: current.highlightsGiven - 1,
-        }));
-
         this.renderer.setProperty(button, 'disabled', false);
       },
       error: async (err) => {
@@ -113,14 +101,6 @@ export class HighlightButtonComponent {
 
     this.renderer.setProperty(el, 'innerText', updated.toString());
   }
-
-  // addCounter(): void {
-  //   this.updateHighlightCounter(1);
-  // }
-
-  // deductCounter(): void {
-  //   this.updateHighlightCounter(-1);
-  // }
 
   animateButton(button: HTMLButtonElement): void {
     button.classList.remove('animate-pop');

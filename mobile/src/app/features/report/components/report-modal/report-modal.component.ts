@@ -22,8 +22,6 @@ import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
 import { CategoryListComponent } from '@features/report/components/category-list/category-list.component';
 import { LocationPreviewComponent } from '@features/report/components/location-preview/location-preview.component';
-import { CreateIssueDto } from '@shared/dto/issue.dto';
-import { DEFAULT_STATUS } from '@shared/constants/system.constant';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AlertTriangleIcon,
@@ -37,10 +35,15 @@ import {
   SendIcon,
 } from 'lucide-angular';
 import { UserService } from '@core/services/user.service';
-import { Issue } from '@shared/models/issue.model';
-import { List } from '@shared/models/response.model';
 import { UiService } from '@core/services/ui.service';
 import { OfflineService } from '@core/services/offline.service';
+import { Issue } from '@shared/models/issue.model';
+import { List } from '@shared/models/response.model';
+import { dataUrlToFile } from '@shared/utils/file.util';
+import { Category } from '@shared/models/category.model';
+import { CreateIssueDto } from '@shared/dto/issue.dto';
+import { DEFAULT_STATUS } from '@shared/constants/system.constant';
+import { User } from '@shared/models/user.model';
 
 @Component({
   selector: 'app-report-modal',
@@ -74,7 +77,7 @@ export class ReportModalComponent {
   toastController = inject(ToastController);
   photo = input.required<string>();
   comment: string = '';
-  selectedCategory: string | null = null;
+  selectedCategory: Category | null = null;
   currentSegment: string = 'photo';
   segments: string[] = ['photo', 'location', 'categories'];
   nextIcon = ArrowRightIcon;
@@ -128,7 +131,7 @@ export class ReportModalComponent {
 
     formData.append(
       'photo',
-      this.dataUrlToFile(this.photo().toString(), `issue-${uuidv4()}.jpg`)
+      dataUrlToFile(this.photo().toString(), `issue-${uuidv4()}.jpg`)
     );
 
     this.issueService
@@ -140,7 +143,7 @@ export class ReportModalComponent {
           return this.issueService.createIssue(issue);
         }),
         catchError((err) => {
-          this.offlineService.saveOfflineIssue(issue);
+          this.saveOfflineIssue();
 
           return from(this.uiService.hideLoading()).pipe(
             switchMap(() => this.handleError(err))
@@ -155,10 +158,6 @@ export class ReportModalComponent {
         this.userService.issueList.update((current) =>
           this.updateUserIssues(current, response)
         );
-        this.userService.counters.update((current) => ({
-          ...current,
-          issues: current.issues + 1,
-        }));
 
         await this.uiService.showToast(
           'Tu reporte se ha enviado correctamente.'
@@ -170,12 +169,42 @@ export class ReportModalComponent {
     await this.uiService.showLoading('Guardando reporte...');
 
     const issue = await this.buildIssue();
+    let user = this.userService.user();
 
-    this.offlineService.saveOfflineIssue(issue);
+    if (!user) {
+      const rawUser = localStorage.getItem('user');
+
+      if (!rawUser) {
+        await this.uiService.showToast(
+          'Ocurrió un error al obtener tu información.'
+        );
+        return;
+      }
+
+      user = JSON.parse(rawUser) as User;
+    }
+
+    const offlineIssue: Issue = {
+      id: uuidv4(),
+      photo: issue.photo,
+      status: issue.status,
+      latitude: issue.latitude,
+      longitude: issue.latitude,
+      comment: issue.comment,
+      categoryId: issue.category,
+      userId: user.id,
+      category: this.selectedCategory!,
+      createdAt: new Date().toISOString(),
+      user,
+      highlights: 0,
+      hasCurrentUserHighlight: false,
+    };
+
+    this.offlineService.saveOfflineIssue(offlineIssue);
 
     await this.uiService.hideLoading();
 
-    this.modalController.dismiss(issue, 'confirm');
+    this.modalController.dismiss(offlineIssue, 'confirm');
 
     await this.uiService.showToast(
       'Reporte guardado correctamente. Podrás enviarlo cuando tengas conexión a Internet.'
@@ -196,7 +225,7 @@ export class ReportModalComponent {
       // latitude: coordinates.coords.latitude,
       // longitude: coordinates.coords.longitude,
       comment: this.comment,
-      category: this.selectedCategory!,
+      category: this.selectedCategory!.id,
       user: this.authService.loggedUserData()!.id,
     };
 
@@ -215,24 +244,6 @@ export class ReportModalComponent {
       ...currentData,
       data: updatedData,
     };
-  }
-
-  dataUrlToFile(dataUrl: string, filename: string): File {
-    if (!dataUrl.startsWith('data:')) {
-      throw new Error('El string proporcionado no es un DataURL válido.');
-    }
-
-    const [metadata, base64] = dataUrl.split(',');
-    const mime = metadata.split(':')[1].split(';')[0];
-
-    const binary = atob(base64);
-    const array = new Uint8Array(binary.length);
-
-    for (let i = 0; i < binary.length; i++) {
-      array[i] = binary.charCodeAt(i);
-    }
-
-    return new File([array], filename, { type: mime });
   }
 
   next(): void {

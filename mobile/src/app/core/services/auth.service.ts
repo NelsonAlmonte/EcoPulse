@@ -42,8 +42,9 @@ export class AuthService {
   }
 
   logout(): void {
-    //TODO: Remover issues de localstorage
     localStorage.removeItem('auth');
+    localStorage.removeItem('user');
+    localStorage.removeItem('issues');
     this.router.navigate(['/login']);
   }
 

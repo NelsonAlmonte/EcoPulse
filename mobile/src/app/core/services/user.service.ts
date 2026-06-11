@@ -4,15 +4,19 @@ import { Issue } from '@shared/models/issue.model';
 import { environment } from 'src/environments/environment';
 import { User, Counters } from '@shared/models/user.model';
 import { UpdateUserDto } from '@shared/dto/user.dto';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable, tap } from 'rxjs';
 import { List } from '@shared/models/response.model';
 import { Filter } from '@shared/constants/system.constant';
+import { AuthService } from './auth.service';
+import { UiService } from './ui.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   apiService = inject(ApiService);
+  authService = inject(AuthService);
+  uiService = inject(UiService);
   issueList = signal<List<Issue[]>>({
     data: [],
     pagination: {
@@ -68,13 +72,13 @@ export class UserService {
     return this.apiService.doFetch<string>(`${this.URL}/${id}/issues/count`);
   }
 
-  counthighlightsGiven(id: string): Observable<string> {
+  countHighlightsGiven(id: string): Observable<string> {
     return this.apiService.doFetch<string>(
       `${this.URL}/${id}/highlights/given/count`
     );
   }
 
-  counthighlightsReceived(id: string): Observable<string> {
+  countHighlightsReceived(id: string): Observable<string> {
     return this.apiService.doFetch<string>(
       `${this.URL}/${id}/highlights/received/count`
     );
@@ -118,5 +122,29 @@ export class UserService {
       highlightsReceived: 0,
     });
     this.isLoading.set(false);
+  }
+
+  loadProfile(userId: string): Observable<{
+    user: User;
+    highlightsGiven: string;
+    highlightsReceived: string;
+  }> {
+    return forkJoin({
+      user: this.getUser(userId),
+      highlightsGiven: this.countHighlightsGiven(userId),
+      highlightsReceived: this.countHighlightsReceived(userId),
+    }).pipe(
+      tap((response) => {
+        this.user.set(response.user);
+
+        this.counters.set({
+          issues: Number(response.user.issues),
+          highlightsGiven: Number(response.highlightsGiven),
+          highlightsReceived: Number(response.highlightsReceived),
+        });
+
+        localStorage.setItem('user', JSON.stringify(response.user));
+      })
+    );
   }
 }

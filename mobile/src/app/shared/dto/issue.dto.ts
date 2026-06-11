@@ -6,6 +6,7 @@ export interface CreateIssueDto {
   comment?: string;
   category: string;
   user: string;
+  createdAt?: string;
 }
 
 export interface OfflineIssue {

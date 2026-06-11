@@ -15,7 +15,6 @@ import { ProfileDetailComponent } from '@features/profile/components/profile-det
 import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
 import { UiService } from '@core/services/ui.service';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -41,7 +40,7 @@ export class ProfilePage {
   uiService = inject(UiService);
 
   ionViewWillEnter(): void {
-    if (!this.userService.user()) {
+    if (this.uiService.hasConnection()) {
       this.getUserProfile();
     }
   }
@@ -59,20 +58,7 @@ export class ProfilePage {
 
     this.userService.isLoading.set(true);
 
-    forkJoin({
-      user: this.userService.getUser(userId),
-      issues: this.userService.countUserIssues(userId),
-      highlightsGiven: this.userService.counthighlightsGiven(userId),
-      highlightsReceived: this.userService.counthighlightsReceived(userId),
-    }).subscribe({
-      next: (response) => {
-        this.userService.user.set(response.user);
-        this.userService.counters.set({
-          issues: Number(response.issues),
-          highlightsGiven: Number(response.highlightsGiven),
-          highlightsReceived: Number(response.highlightsReceived),
-        });
-      },
+    this.userService.loadProfile(userId).subscribe({
       error: async () => {
         await this.uiService.showToast(
           'Ocurrió un error al obtener tus datos.'

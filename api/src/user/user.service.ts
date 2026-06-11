@@ -160,6 +160,9 @@ export class UserService {
       where: {
         id,
       },
+      omit: {
+        password: true,
+      },
       include: {
         _count: {
           select: {

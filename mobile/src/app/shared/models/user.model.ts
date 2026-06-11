@@ -5,6 +5,7 @@ export interface User {
   email: string;
   createdAt: string;
   isActive: boolean;
+  issues: number;
 }
 
 export interface Counters {

@@ -255,6 +255,7 @@ export class IssueController {
         connect: { id: createIssueDto.category },
       },
       user: { connect: { id: createIssueDto.user } },
+      createdAt: createIssueDto.createdAt,
     };
     const createdIssue = await this.issueService.createIssue(issue);
 

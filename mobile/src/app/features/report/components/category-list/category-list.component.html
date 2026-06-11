@@ -12,8 +12,8 @@
   <button
     type="button"
     class="flex justify-start items-center px-3 py-4 rounded-2xl font-medium border category-item ion-activatable relative overflow-hidden"
-    [class.selected]="selectedCategoryId === category.id"
-    (click)="selectCategory(category.id)"
+    [class.selected]="selectedCategory?.id === category.id"
+    (click)="onSelectedCategory(category)"
   >
     <ion-ripple-effect></ion-ripple-effect>
     <div class="me-2">

@@ -1,33 +1,27 @@
 import { Injectable, signal } from '@angular/core';
-import { CreateIssueDto, OfflineIssue } from '@shared/dto/issue.dto';
-import { v4 as uuidv4 } from 'uuid';
+import { Issue } from '@shared/models/issue.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OfflineService {
-  issues = signal<OfflineIssue[]>([]);
+  issues = signal<Issue[]>([]);
 
   constructor() {
     this.getOfflineIssues();
   }
 
-  saveOfflineIssue(issue: CreateIssueDto): void {
-    const issues: OfflineIssue[] = JSON.parse(
-      localStorage.getItem('issues') ?? '[]'
-    );
+  saveOfflineIssue(issue: Issue): void {
+    const issues: Issue[] = JSON.parse(localStorage.getItem('issues') ?? '[]');
 
-    issues.push({
-      localId: uuidv4(),
-      issue,
-    });
+    issues.push(issue);
 
     localStorage.setItem('issues', JSON.stringify(issues));
 
     this.issues.set(issues);
   }
 
-  getOfflineIssues(): OfflineIssue[] {
+  getOfflineIssues(): Issue[] {
     const issues = JSON.parse(localStorage.getItem('issues') ?? '[]');
 
     this.issues.set(issues);
@@ -35,10 +29,8 @@ export class OfflineService {
     return issues;
   }
 
-  removeOfflineIssue(localId: string): void {
-    const issues = this.getOfflineIssues().filter(
-      (issue) => issue.localId !== localId
-    );
+  removeOfflineIssue(id: string): void {
+    const issues = this.getOfflineIssues().filter((issue) => issue.id !== id);
 
     localStorage.setItem('issues', JSON.stringify(issues));
 

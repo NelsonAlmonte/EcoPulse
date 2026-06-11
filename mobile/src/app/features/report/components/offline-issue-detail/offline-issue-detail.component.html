@@ -1,3 +1,17 @@
-<p>
-  offline-issue-detail works!
-</p>
+<app-issue-card [issue]="issue()">
+  <button
+    id="open-options-{{ issue().id }}"
+    class="rounded-full md-on-primary bg-white/20 p-2 z-50 ion-activatable relative overflow-hidden"
+  >
+    <ion-ripple-effect></ion-ripple-effect>
+    <lucide-angular [img]="optionsIcon" size="22"></lucide-angular>
+  </button>
+</app-issue-card>
+
+<ion-action-sheet
+  trigger="open-options-{{ issue().id }}"
+  header="Acciones"
+  class="action-sheet"
+  [buttons]="actionSheetButtons"
+  (didDismiss)="handleOptions($event)"
+></ion-action-sheet>

@@ -20,6 +20,8 @@ import {
 import { AuthService } from '@core/services/auth.service';
 import { environment } from 'src/environments/environment';
 import { UiService } from '@core/services/ui.service';
+import { switchMap, tap } from 'rxjs';
+import { UserService } from '@core/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -38,6 +40,7 @@ import { UiService } from '@core/services/ui.service';
 export class LoginPage implements OnInit {
   authService = inject(AuthService);
   uiService = inject(UiService);
+  userService = inject(UserService);
   router = inject(Router);
   fb = inject(FormBuilder);
   toastController = inject(ToastController);
@@ -54,20 +57,30 @@ export class LoginPage implements OnInit {
   async login(): Promise<void> {
     await this.uiService.showLoading('Iniciando sesión...');
 
-    this.authService.login(this.loginForm.getRawValue()).subscribe({
-      next: async (response) => {
-        await this.uiService.hideLoading();
+    this.authService
+      .login(this.loginForm.getRawValue())
+      .pipe(
+        tap((auth) => {
+          localStorage.setItem('auth', JSON.stringify(auth));
+        }),
+        switchMap(() =>
+          this.userService.loadProfile(this.authService.loggedUserData()!.id)
+        )
+      )
+      .subscribe({
+        next: async () => {
+          await this.uiService.hideLoading();
 
-        localStorage.setItem('auth', JSON.stringify(response));
+          this.router.navigate(['/']);
+        },
+        error: async (err) => {
+          await this.uiService.hideLoading();
 
-        this.router.navigate(['/']);
-      },
-      error: async (err: HttpErrorResponse) => {
-        await this.uiService.hideLoading();
-
-        await this.uiService.showToast(err.error.message);
-      },
-    });
+          await this.uiService.showToast(
+            err.error?.message ?? 'Ocurrió un error.'
+          );
+        },
+      });
   }
 
   async forgotPassword(): Promise<void> {

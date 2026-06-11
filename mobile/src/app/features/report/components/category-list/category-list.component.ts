@@ -11,6 +11,7 @@ import { IonRippleEffect } from '@ionic/angular/standalone';
 import { FolderOpenIcon, LucideAngularModule } from 'lucide-angular';
 import { AlertComponent } from '@shared/components/alert/alert.component';
 import { UiService } from '@core/services/ui.service';
+import { Category } from '@shared/models/category.model';
 
 @Component({
   selector: 'app-category-list',
@@ -23,9 +24,9 @@ export class CategoryListComponent implements OnInit {
   categoryService = inject(CategoryService);
   uiService = inject(UiService);
   sanitizer = inject(DomSanitizer);
-  selectedCategory = output<string>();
+  selectCategory = output<Category>();
   selectedElement: HTMLDivElement | null = null;
-  selectedCategoryId: string | null = null;
+  selectedCategory: Category | null = null;
   emptyIcon = FolderOpenIcon;
 
   ngOnInit(): void {
@@ -49,8 +50,8 @@ export class CategoryListComponent implements OnInit {
     });
   }
 
-  selectCategory(id: string): void {
-    this.selectedCategoryId = id;
-    this.selectedCategory.emit(id);
+  onSelectedCategory(category: Category): void {
+    this.selectedCategory = category;
+    this.selectCategory.emit(category);
   }
 }
