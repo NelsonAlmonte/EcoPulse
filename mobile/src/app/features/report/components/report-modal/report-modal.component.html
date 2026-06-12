@@ -137,3 +137,11 @@
     </div>
   </ion-toolbar>
 </ion-footer>
+@if (!uiService.hasConnection()) {
+<app-banner
+  [title]="'Sin conexión'"
+  [content]="
+    'Puedes seguir reportando. Los nuevos reportes se guardarán en tu dispositivo.'
+  "
+></app-banner>
+}

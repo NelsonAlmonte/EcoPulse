@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   createComponent,
-  CUSTOM_ELEMENTS_SCHEMA,
   effect,
   ElementRef,
   EnvironmentInjector,
@@ -33,7 +32,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-map-view',
   templateUrl: './map-view.component.html',
   styleUrls: ['./map-view.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [IonProgressBar],
 })
 export class MapViewComponent implements AfterViewInit {

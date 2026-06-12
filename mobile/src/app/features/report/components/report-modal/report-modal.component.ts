@@ -22,6 +22,7 @@ import { IssueService } from '@core/services/issue.service';
 import { AuthService } from '@core/services/auth.service';
 import { CategoryListComponent } from '@features/report/components/category-list/category-list.component';
 import { LocationPreviewComponent } from '@features/report/components/location-preview/location-preview.component';
+import { BannerComponent } from '@shared/components/banner/banner.component';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AlertTriangleIcon,
@@ -63,6 +64,7 @@ import { User } from '@shared/models/user.model';
     IonRippleEffect,
     CategoryListComponent,
     LocationPreviewComponent,
+    BannerComponent,
     FormsModule,
     LucideAngularModule,
   ],
@@ -189,7 +191,7 @@ export class ReportModalComponent {
       photo: issue.photo,
       status: issue.status,
       latitude: issue.latitude,
-      longitude: issue.latitude,
+      longitude: issue.longitude,
       comment: issue.comment,
       categoryId: issue.category,
       userId: user.id,

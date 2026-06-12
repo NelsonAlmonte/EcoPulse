@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   Component,
-  CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   inject,
   ViewChild,
@@ -18,7 +17,6 @@ import { AlertComponent } from '@shared/components/alert/alert.component';
   templateUrl: './location-preview.component.html',
   styleUrls: ['./location-preview.component.css'],
   imports: [LucideAngularModule, AlertComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class LocationPreviewComponent implements AfterViewInit {
   @ViewChild('map') mapRef!: ElementRef<Element>;

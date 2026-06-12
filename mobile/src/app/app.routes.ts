@@ -16,14 +16,14 @@ export const routes: Routes = [
     path: 'signup',
     loadComponent: () =>
       import('./features/auth/pages/signup/signup.page').then(
-        (m) => m.SignupPage,
+        (m) => m.SignupPage
       ),
   },
   {
     path: 'edit-profile',
     loadComponent: () =>
       import('./features/profile/pages/edit-profile/edit-profile.page').then(
-        (m) => m.EditProfilePage,
+        (m) => m.EditProfilePage
       ),
     canActivate: [authGuard],
   },
@@ -31,20 +31,23 @@ export const routes: Routes = [
     path: 'user-issues',
     loadComponent: () =>
       import('./features/profile/pages/user-issues/user-issues.page').then(
-        (m) => m.UserIssuesPage,
+        (m) => m.UserIssuesPage
       ),
     canActivate: [authGuard],
   },
   {
     path: 'highlights-given',
     loadComponent: () =>
-      import('./features/profile/pages/highlights-given/highlights-given.page').then(
-        (m) => m.HighlightsGivenPage,
-      ),
+      import(
+        './features/profile/pages/highlights-given/highlights-given.page'
+      ).then((m) => m.HighlightsGivenPage),
     canActivate: [authGuard],
   },
   {
     path: 'offline-issues',
-    loadComponent: () => import('./features/profile/pages/offline-issues/offline-issues.page').then( m => m.OfflineIssuesPage)
+    loadComponent: () =>
+      import(
+        './features/profile/pages/offline-issues/offline-issues.page'
+      ).then((m) => m.OfflineIssuesPage),
   },
 ];

@@ -332,7 +332,7 @@ ion-modal.issue-photo-modal::part(backdrop) {
 
 ion-modal {
   --background: var(--md-sys-color-surface-container-high);
-  --border-radius: 24px;
+  --border-radius: 16px 16px 0px 0px;
 }
 
 ion-modal.report-modal {

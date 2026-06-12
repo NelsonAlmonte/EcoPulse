@@ -54,7 +54,10 @@ export class ReportPage {
   arrowRight = ArrowRight;
 
   ionViewWillEnter(): void {
-    if (!this.userService.issueList().data.length) {
+    if (
+      !this.userService.issueList().data.length &&
+      this.uiService.hasConnection()
+    ) {
       this.userService.isLoading.set(true);
 
       this.userService
@@ -117,7 +120,7 @@ export class ReportPage {
       )
       .subscribe({
         next: (response) => this.userService.issueList.update(() => response),
-        error: async (err) => {
+        error: async () => {
           await this.uiService.showToast(
             'Ocurrió un error al obtener los reportes.'
           );
