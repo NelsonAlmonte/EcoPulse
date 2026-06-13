@@ -7,9 +7,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
-  IonBackButton,
   IonButtons,
   IonContent,
   IonFooter,
@@ -25,6 +24,7 @@ import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
 import { UiService } from '@core/services/ui.service';
 import {
+  ArrowLeft,
   CheckCircleIcon,
   LucideAngularModule,
   UserCogIcon,
@@ -40,7 +40,6 @@ import {
     IonTitle,
     IonToolbar,
     IonButtons,
-    IonBackButton,
     IonInput,
     IonFooter,
     IonRippleEffect,
@@ -48,6 +47,7 @@ import {
     FormsModule,
     ReactiveFormsModule,
     LucideAngularModule,
+    RouterLink,
   ],
 })
 export class EditProfilePage implements OnInit {
@@ -58,6 +58,7 @@ export class EditProfilePage implements OnInit {
   uiService = inject(UiService);
   toastController = inject(ToastController);
   userForm!: FormGroup;
+  backIcon = ArrowLeft;
   editProfileIcon = UserCogIcon;
   completeEditProfileIcon = CheckCircleIcon;
 
@@ -69,6 +70,8 @@ export class EditProfilePage implements OnInit {
   }
 
   async updateUser(): Promise<void> {
+    if (!this.uiService.hasConnection()) return;
+
     const loggedUserData = this.authService.loggedUserData()!;
     const formValue = this.userForm.getRawValue();
     const updateUserDto: UpdateUserDto = {
@@ -76,27 +79,19 @@ export class EditProfilePage implements OnInit {
       last: formValue.last,
     };
 
-    this.userService
-      .updateUser(loggedUserData.id, updateUserDto)
-      .subscribe(async (result) => {
-        //TODO: error handle
-        // if (result.error) {
-        //   console.log(result.error);
-        //   toast = await this.toastController.create({
-        //     message: 'Ocurrió un error al actualizar tu perfil.',
-        //     duration: 4000,
-        //     position: 'bottom',
-        //     animated: true,
-        //   });
-
-        //   return;
-        // }
-
+    this.userService.updateUser(loggedUserData.id, updateUserDto).subscribe({
+      next: async (result) => {
         this.userService.user.set(result);
 
         await this.uiService.showToast('Tu perfil se actualizo correctamente.');
 
         this.router.navigate(['/tabs/profile']);
-      });
+      },
+      error: async () => {
+        await this.uiService.showToast(
+          'Ocurrió un error al actualizar tu perfil.'
+        );
+      },
+    });
   }
 }

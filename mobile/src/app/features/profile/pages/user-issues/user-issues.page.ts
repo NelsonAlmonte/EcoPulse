@@ -100,6 +100,8 @@ export class UserIssuesPage {
     onComplete?: () => void;
     reset?: boolean;
   }): void {
+    if (!this.uiService.hasConnection()) return;
+
     const {
       page = 1,
       amount = 5,

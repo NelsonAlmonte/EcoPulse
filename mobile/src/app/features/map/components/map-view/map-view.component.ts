@@ -27,12 +27,14 @@ import { MapService } from '@core/services/map.service';
 import { UiService } from '@core/services/ui.service';
 import { Bounds } from '@shared/models/user.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AlertComponent } from '@shared/components/alert/alert.component';
+import { MapPinOff } from 'lucide-angular';
 
 @Component({
   selector: 'app-map-view',
   templateUrl: './map-view.component.html',
   styleUrls: ['./map-view.component.css'],
-  imports: [IonProgressBar],
+  imports: [IonProgressBar, AlertComponent],
 })
 export class MapViewComponent implements AfterViewInit {
   injector = inject(Injector);
@@ -50,6 +52,7 @@ export class MapViewComponent implements AfterViewInit {
   map!: google.maps.Map;
   markers = new Map<google.maps.marker.AdvancedMarkerElement, Issue>();
   isLoading = signal(false);
+  emptyIcon = MapPinOff;
 
   constructor() {
     effect(() => {
@@ -65,6 +68,7 @@ export class MapViewComponent implements AfterViewInit {
   }
 
   async ngAfterViewInit(): Promise<void> {
+    if (!this.uiService.hasConnection()) return;
     await this.initMap();
 
     this.activatedRoute.queryParamMap.subscribe(async (params) => {
@@ -119,6 +123,7 @@ export class MapViewComponent implements AfterViewInit {
 
   fetchIssues(bounds: Bounds): void {
     if (!bounds) return;
+    if (!this.uiService.hasConnection()) return;
 
     this.issueService.isLoading.set(true);
     this.isLoading.set(true);
@@ -128,8 +133,12 @@ export class MapViewComponent implements AfterViewInit {
         this.issueService.issueList.set(response);
       },
       error: async (err) => {
+        this.issueService.isLoading.set(false);
+        this.isLoading.set(false);
+
         await this.uiService.showToast(
-          'Ocurrió un error al obtener los reportes.'
+          'Ocurrió un error al obtener los reportes.',
+          'dynamic-issues-modal-button'
         );
       },
       complete: () => {
@@ -211,8 +220,7 @@ export class MapViewComponent implements AfterViewInit {
       next: (response) => {
         this.issueService.issue.set(response);
       },
-      error: async (err) => {
-        console.log(err);
+      error: async () => {
         await this.uiService.showToast('Ocurrio un error al ver este reporte.');
       },
     });
@@ -223,7 +231,8 @@ export class MapViewComponent implements AfterViewInit {
 
     if (!bounds) {
       await this.uiService.showToast(
-        'Ocurrio un error al ver este reporte, intentelo de nuevo mas tarde.'
+        'Ocurrio un error al ver este reporte, intentelo de nuevo mas tarde.',
+        'dynamic-issues-modal-button'
       );
       return;
     }

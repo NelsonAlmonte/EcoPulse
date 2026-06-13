@@ -411,3 +411,8 @@ ion-refresher
   ) {
   color: var(--md-sys-color-primary) !important;
 }
+
+ion-toast {
+  --background: var(--md-sys-color-inverse-surface);
+  --color: var(--md-sys-color-inverse-on-surface);
+}

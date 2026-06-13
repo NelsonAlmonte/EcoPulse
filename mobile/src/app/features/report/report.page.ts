@@ -90,7 +90,8 @@ export class ReportPage {
       this.openReportModal(dataUrl);
     } catch (error) {
       await this.uiService.showToast(
-        'Ocurrio un error al abrir la cámara. Intentalo de nuevo.'
+        'Ocurrio un error al abrir la cámara. Intentalo de nuevo.',
+        'take-picture-button'
       );
     }
   }
@@ -122,7 +123,8 @@ export class ReportPage {
         next: (response) => this.userService.issueList.update(() => response),
         error: async () => {
           await this.uiService.showToast(
-            'Ocurrió un error al obtener los reportes.'
+            'Ocurrió un error al obtener los reportes.',
+            'take-picture-button'
           );
         },
         complete: () => {

@@ -26,6 +26,8 @@ export class LocationPreviewComponent implements AfterViewInit {
   emptyIcon = MapPinOff;
 
   async ngAfterViewInit() {
+    if (!this.uiService.hasConnection()) return;
+
     await this.initMap();
   }
 

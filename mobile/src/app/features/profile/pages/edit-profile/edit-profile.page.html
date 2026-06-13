@@ -1,7 +1,13 @@
 <ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+    <ion-buttons slot="start" class="ion-padding">
+      <a
+        class="md-on-surface focus:outline-none rounded-2xl ion-activatable relative overflow-hidden"
+        routerLink="/tabs/profile"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        <lucide-angular [img]="backIcon" size="24"></lucide-angular>
+      </a>
     </ion-buttons>
     <ion-title class="font-semibold">Editar perfil</ion-title>
   </ion-toolbar>
@@ -10,6 +16,7 @@
 <ion-content [fullscreen]="true">
   <div class="flex items-center justify-center">
     <div class="rounded-2xl md-surface-container p-8 w-full ion-margin">
+      <span class="text-lg font-semibold">Tu nombre</span>
       <form class="max-w-sm mx-auto my-5" [formGroup]="userForm">
         <div class="mb-5">
           <ion-input
@@ -42,10 +49,10 @@
         type="submit"
         class="focus:outline-none font-medium rounded-2xl text-base p-4 text-center inline-flex items-center justify-center w-full ion-activatable relative overflow-hidden"
         [ngClass]="{
-              'md-primary md-on-primary': userForm.valid,
-              'md-tertiary md-on-tertiary': !userForm.valid
+              'md-primary md-on-primary': userForm.valid || uiService.hasConnection(),
+              'md-tertiary md-on-tertiary': !userForm.valid || !uiService.hasConnection()
             }"
-        [disabled]="!userForm.valid"
+        [disabled]="!userForm.valid && !uiService.hasConnection()"
         (click)="updateUser()"
       >
         @if (userForm.valid) {

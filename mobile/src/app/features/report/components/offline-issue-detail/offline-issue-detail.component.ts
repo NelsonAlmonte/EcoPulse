@@ -14,7 +14,7 @@ import { Issue } from '@shared/models/issue.model';
 import { OverlayEventDetail } from '@ionic/core';
 import { IssueService } from '@core/services/issue.service';
 import { UiService } from '@core/services/ui.service';
-import { catchError, switchMap, tap, throwError } from 'rxjs';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { OfflineService } from '@core/services/offline.service';
 import { dataUrlToFile } from '@shared/utils/file.util';
 import { UserService } from '@core/services/user.service';
@@ -86,6 +86,13 @@ export class OfflineIssueDetailComponent {
   }
 
   async sendIssue(issue: Issue): Promise<void> {
+    if (!this.uiService.hasConnection()) {
+      await this.uiService.showToast(
+        'Necesitas una conexión a internet para realizar esta acción.'
+      );
+      return;
+    }
+
     await this.uiService.showLoading('Enviando reporte...');
 
     const formData = new FormData();

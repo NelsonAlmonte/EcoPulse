@@ -36,16 +36,13 @@ export class CategoryListComponent implements OnInit {
       this.categoryService.categories.set(JSON.parse(cachedCategories));
     }
 
+    if (!this.uiService.hasConnection()) return;
+
     this.categoryService.getCategories().subscribe({
       next: (categories) => {
         this.categoryService.categories.set(categories);
 
         localStorage.setItem('categories', JSON.stringify(categories));
-      },
-      error: async () => {
-        await this.uiService.showToast(
-          'No tienes conexión a internet. Se usarán las categorías guardadas en el dispositivo.'
-        );
       },
     });
   }

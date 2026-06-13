@@ -3,6 +3,7 @@
     class="inline-flex items-center rounded-full p-2 highlight-button"
     (click)="manageHighlight($event)"
     [class.highlighted]="issue().hasCurrentUserHighlight"
+    [disabled]="!uiService.hasConnection()"
   >
     <lucide-angular
       class="me-0.5"

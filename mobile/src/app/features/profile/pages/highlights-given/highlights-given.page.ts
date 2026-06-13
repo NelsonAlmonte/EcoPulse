@@ -92,6 +92,8 @@ export class HighlightsGivenPage {
     onSuccess?: (response: List<Issue[]>) => void;
     onComplete?: () => void;
   }): void {
+    if (!this.uiService.hasConnection()) return;
+
     const {
       page = 1,
       amount = 5,
@@ -191,6 +193,7 @@ export class HighlightsGivenPage {
 
   ionViewWillLeave(): void {
     this.filter = 'TODO';
+    if (!this.uiService.hasConnection()) return;
 
     this.userService.isLoading.set(true);
     this.canGetMore.set(true);

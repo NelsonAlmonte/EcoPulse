@@ -162,7 +162,8 @@ export class ReportModalComponent {
         );
 
         await this.uiService.showToast(
-          'Tu reporte se ha enviado correctamente.'
+          'Tu reporte se ha enviado correctamente.',
+          'take-picture-button'
         );
       });
   }
@@ -178,7 +179,8 @@ export class ReportModalComponent {
 
       if (!rawUser) {
         await this.uiService.showToast(
-          'Ocurrió un error al obtener tu información.'
+          'Ocurrió un error al obtener tu información.',
+          'report-modal-footer'
         );
         return;
       }
@@ -209,7 +211,8 @@ export class ReportModalComponent {
     this.modalController.dismiss(offlineIssue, 'confirm');
 
     await this.uiService.showToast(
-      'Reporte guardado correctamente. Podrás enviarlo cuando tengas conexión a Internet.'
+      'Reporte guardado correctamente. Podrás enviarlo cuando tengas conexión a Internet.',
+      'take-picture-button'
     );
   }
 
@@ -279,6 +282,7 @@ export class ReportModalComponent {
           duration: 4000,
           position: 'bottom',
           animated: true,
+          positionAnchor: 'report-modal-footer',
         })
         .then((toast) => {
           toast.present();

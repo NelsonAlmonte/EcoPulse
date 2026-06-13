@@ -32,13 +32,17 @@ export class UiService {
     this.loading = undefined;
   }
 
-  async showToast(message: string, color?: string): Promise<void> {
+  async showToast(
+    message: string,
+    positionAnchor: string | undefined = undefined
+  ): Promise<void> {
     const toast = await this.toastController.create({
       message,
       duration: 4000,
       position: 'bottom',
       animated: true,
-      color,
+      layout: 'stacked',
+      positionAnchor,
     });
 
     await toast.present();
