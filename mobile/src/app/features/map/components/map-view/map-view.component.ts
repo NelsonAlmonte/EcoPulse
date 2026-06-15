@@ -7,6 +7,7 @@ import {
   EnvironmentInjector,
   inject,
   Injector,
+  OnInit,
   Renderer2,
   signal,
   ViewChild,
@@ -15,6 +16,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { Issue } from '@shared/models/issue.model';
 import {
   IonProgressBar,
+  IonRippleEffect,
   ModalController,
   ToastController,
 } from '@ionic/angular/standalone';
@@ -25,6 +27,7 @@ import { AuthService } from '@core/services/auth.service';
 import { importLibrary } from '@googlemaps/js-api-loader';
 import { MapService } from '@core/services/map.service';
 import { UiService } from '@core/services/ui.service';
+import { LocationService } from '@core/services/location.service';
 import { Bounds } from '@shared/models/user.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertComponent } from '@shared/components/alert/alert.component';
@@ -34,9 +37,9 @@ import { MapPinOff } from 'lucide-angular';
   selector: 'app-map-view',
   templateUrl: './map-view.component.html',
   styleUrls: ['./map-view.component.css'],
-  imports: [IonProgressBar, AlertComponent],
+  imports: [IonProgressBar, IonRippleEffect, AlertComponent],
 })
-export class MapViewComponent implements AfterViewInit {
+export class MapViewComponent implements AfterViewInit, OnInit {
   injector = inject(Injector);
   environmentInjector = inject(EnvironmentInjector);
   mapService = inject(MapService);
@@ -45,6 +48,7 @@ export class MapViewComponent implements AfterViewInit {
   issueService = inject(IssueService);
   authService = inject(AuthService);
   uiService = inject(UiService);
+  locationService = inject(LocationService);
   renderer = inject(Renderer2);
   activatedRoute = inject(ActivatedRoute);
   router = inject(Router);
@@ -67,8 +71,13 @@ export class MapViewComponent implements AfterViewInit {
     });
   }
 
+  async ngOnInit(): Promise<void> {
+    await this.locationService.initialize();
+  }
+
   async ngAfterViewInit(): Promise<void> {
     if (!this.uiService.hasConnection()) return;
+
     await this.initMap();
 
     this.activatedRoute.queryParamMap.subscribe(async (params) => {
@@ -93,9 +102,15 @@ export class MapViewComponent implements AfterViewInit {
 
   async initMap(): Promise<void> {
     const mapElement = this.mapRef.nativeElement as google.maps.MapElement;
-    const position = await Geolocation.getCurrentPosition({
-      enableHighAccuracy: true,
-    });
+
+    const position = await this.locationService.getCurrentPosition();
+
+    if (!position) {
+      await this.uiService.showToast('No se pudo obtener tu ubicación.');
+
+      return;
+    }
+
     const options = {
       mapId: 'explore-map',
       center: {
@@ -132,7 +147,7 @@ export class MapViewComponent implements AfterViewInit {
       next: (response) => {
         this.issueService.issueList.set(response);
       },
-      error: async (err) => {
+      error: async () => {
         this.issueService.isLoading.set(false);
         this.isLoading.set(false);
 
@@ -267,5 +282,15 @@ export class MapViewComponent implements AfterViewInit {
     const lines = Math.ceil(comment.length / charsPerLine);
 
     return Math.min(BASE + lines * 0.04, 0.75);
+  }
+
+  async gotoSettings(): Promise<void> {
+    const opened = await this.locationService.openAppSettings();
+
+    if (!opened) {
+      await this.uiService.showToast(
+        'Ocurrió un error al abrir la configuración.'
+      );
+    }
   }
 }

@@ -37,11 +37,13 @@
   <div class="fixed bottom-22 right-0 z-50 ion-padding-end">
     <button
       type="button"
-      class="md-primary md-on-primary focus:outline-none font-bold rounded-2xl text-sm p-4 text-center inline-flex items-center shadow-xl ion-activatable relative overflow-hidden"
+      class="md-primary md-on-primary focus:outline-none font-bold rounded-2xl text-sm p-4 text-center inline-flex items-center shadow-xl ion-activatable relative overflow-hidden disabled:opacity-50"
       (click)="takePicture()"
       id="take-picture-button"
     >
+      @if (locationService.hasLocationPermission()) {
       <ion-ripple-effect></ion-ripple-effect>
+      }
       <lucide-angular
         class="me-1"
         [img]="cameraIcon"

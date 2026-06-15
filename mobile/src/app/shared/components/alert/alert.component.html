@@ -4,4 +4,5 @@
   <lucide-angular [img]="icon()" size="50"></lucide-angular>
   <span class="text-xl font-semibold">{{ title() }}</span>
   <span class="text-md font-medium">{{ content() }}</span>
+  <ng-content select="[permission]"></ng-content>
 </div>

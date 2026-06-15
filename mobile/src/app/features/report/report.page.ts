@@ -20,6 +20,7 @@ import { LocationPreviewComponent } from '@features/report/components/location-p
 import { IssueListComponent } from '@features/report/components/issue-list/issue-list.component';
 import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
+import { LocationService } from '@core/services/location.service';
 import { UiService } from '@core/services/ui.service';
 import { ArrowRight, CameraIcon, LucideAngularModule } from 'lucide-angular';
 
@@ -47,6 +48,7 @@ export class ReportPage {
   authService = inject(AuthService);
   userService = inject(UserService);
   uiService = inject(UiService);
+  locationService = inject(LocationService);
   modalController = inject(ModalController);
   toastController = inject(ToastController);
   router = inject(Router);
@@ -73,6 +75,15 @@ export class ReportPage {
   }
 
   async takePicture(): Promise<void> {
+    if (!this.locationService.hasLocationPermission()) {
+      await this.uiService.showToast(
+        'Debes aceptar los permisos de ubicación para poder realizar reportes.',
+        'take-picture-button'
+      );
+
+      return;
+    }
+
     try {
       const image = await Camera.takePhoto({
         quality: 40,

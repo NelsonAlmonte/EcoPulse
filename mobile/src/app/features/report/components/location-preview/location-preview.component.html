@@ -9,10 +9,38 @@
       'Conéctate a internet para visualizar el mapa. Tu ubicación seguirá obteniéndose automáticamente.'
     "
   ></app-alert>
+  } @else if (!locationService.hasLocationPermission()) {
+  <app-alert
+    [icon]="emptyIcon"
+    [title]="'No se puede cargar el mapa'"
+    [content]="
+      'Debes aceptar los permisos de ubicación para poder visualizar el mapa.'
+    "
+  >
+    <div class="flex flex-col space-y-3 w-full" permission>
+      <button
+        class="md-primary md-on-primary focus:outline-none font-bold rounded-2xl text-sm p-4 flex justify-center items-center ion-activatable relative overflow-hidden w-full"
+        (click)="locationService.requestPermission()"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        Permitir ubicación
+      </button>
+
+      <button
+        class="md-secondary-container md-on-secondary-container focus:outline-none font-bold rounded-2xl text-sm p-4 flex justify-center items-center ion-activatable relative overflow-hidden w-full"
+        (click)="gotoSettings()"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        Abrir configuración
+      </button>
+    </div>
+  </app-alert>
   }
   <div
     [class]="
-      uiService.hasConnection() ? 'block w-full h-60 rounded-2xl' : 'hidden'
+      uiService.hasConnection() && locationService.hasLocationPermission()
+        ? 'block w-full h-60 rounded-2xl'
+        : 'hidden'
     "
     #map
   ></div>

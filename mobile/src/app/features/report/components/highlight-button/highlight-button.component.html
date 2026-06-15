@@ -1,6 +1,6 @@
 <div class="flex content-center items-center">
   <button
-    class="inline-flex items-center rounded-full p-2 highlight-button"
+    class="inline-flex items-center rounded-full p-2 highlight-button disabled:opacity-70"
     (click)="manageHighlight($event)"
     [class.highlighted]="issue().hasCurrentUserHighlight"
     [disabled]="!uiService.hasConnection()"

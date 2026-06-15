@@ -35,6 +35,7 @@
     "@ionic/angular": "^8.8.8",
     "@ionic/pwa-elements": "^3.4.0",
     "@tailwindcss/postcss": "^4.1.11",
+    "capacitor-native-settings": "^8.1.0",
     "ionicons": "^7.0.0",
     "lucide-angular": "^0.525.0",
     "postcss": "^8.5.6",
