@@ -22,6 +22,7 @@ import { environment } from 'src/environments/environment';
 import { UiService } from '@core/services/ui.service';
 import { switchMap, tap } from 'rxjs';
 import { UserService } from '@core/services/user.service';
+import { AuthResponseDto } from '@shared/dto/auth.dto';
 
 @Component({
   selector: 'app-login',
@@ -61,7 +62,15 @@ export class LoginPage implements OnInit {
       .login(this.loginForm.getRawValue())
       .pipe(
         tap((auth) => {
-          localStorage.setItem('auth', JSON.stringify(auth));
+          const response: AuthResponseDto = {
+            id: auth.user.id,
+            email: auth.user.email!,
+            access_token: auth.session.access_token,
+            refresh_token: auth.session.refresh_token,
+            expires_at: auth.session.expires_at!,
+          };
+
+          localStorage.setItem('auth', JSON.stringify(response));
         }),
         switchMap(() =>
           this.userService.loadProfile(this.authService.loggedUserData()!.id)

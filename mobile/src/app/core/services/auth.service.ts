@@ -8,7 +8,8 @@ import {
   SignupUserDto,
 } from '@shared/dto/auth.dto';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { from, Observable, of, switchMap, throwError } from 'rxjs';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable({
   providedIn: 'root',
@@ -17,11 +18,29 @@ export class AuthService {
   private apiService = inject(ApiService);
   private router = inject(Router);
   private URL = `${environment.apiUrl}auth`;
+  private supabase!: SupabaseClient;
 
-  login(loginUserDto: LoginUserDto): Observable<AuthResponseDto> {
-    return this.apiService.doPost<AuthResponseDto, LoginUserDto>(
-      `${this.URL}/login`,
-      loginUserDto
+  constructor() {
+    this.supabase = createClient(
+      environment.supabaseUrl,
+      environment.supabasePublishableKey
+    );
+  }
+
+  login(loginUserDto: LoginUserDto) {
+    return from(
+      this.supabase.auth.signInWithPassword({
+        email: loginUserDto.email,
+        password: loginUserDto.password,
+      })
+    ).pipe(
+      switchMap(({ data, error }) => {
+        if (error) {
+          return throwError(() => error);
+        }
+
+        return of(data);
+      })
     );
   }
 

@@ -13,11 +13,6 @@ import { UiService } from '@core/services/ui.service';
 import { LucideAngularModule, MapPinOff } from 'lucide-angular';
 import { AlertComponent } from '@shared/components/alert/alert.component';
 import { LocationService } from '@core/services/location.service';
-import {
-  NativeSettings,
-  AndroidSettings,
-  IOSSettings,
-} from 'capacitor-native-settings';
 
 @Component({
   selector: 'app-location-preview',

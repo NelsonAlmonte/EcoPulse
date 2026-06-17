@@ -20,7 +20,7 @@
     "module": "es2020",
     "lib": ["es2018", "dom", "ES2020.Intl"],
     "useDefineForClassFields": false,
-		"types": ["google.maps"],
+		"types": ["node", "google.maps"],
     "paths": {
       "@features/*": ["./src/app/features/*"],
       "@shared/*": ["./src/app/shared/*"],

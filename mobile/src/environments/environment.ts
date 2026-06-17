@@ -9,6 +9,8 @@ export const environment = {
   publicBucketUrl:
     'https://ypuxysyaytkaaxfumcpl.supabase.co/storage/v1/object/public/',
   forgotPasswordUrl: 'http://localhost:5173/auth/reset-password',
+  supabaseUrl: 'https://ypuxysyaytkaaxfumcpl.supabase.co',
+  supabasePublishableKey: 'sb_publishable_dWN07JppMALEyxqQt7XnUQ_--vLCot9',
 };
 
 /*

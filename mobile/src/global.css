@@ -323,6 +323,7 @@ ion-content {
   padding-inline-end: var(--ion-padding, 16px);
   --width: 100%;
   --height: auto;
+  --border-radius: 16px;
 }
 
 ion-modal.issue-photo-modal::part(backdrop) {
