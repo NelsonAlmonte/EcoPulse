@@ -64,7 +64,7 @@ export class ReportPage {
 
       this.userService
         .getUserIssues(
-          this.authService.loggedUserData()!.id,
+          this.authService.user()!.id,
           this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE
         )
         .subscribe((response) => {
@@ -127,7 +127,7 @@ export class ReportPage {
   refreshLatestIssues(event: RefresherCustomEvent): void {
     this.userService
       .getUserIssues(
-        this.authService.loggedUserData()!.id,
+        this.authService.user()!.id,
         this.userService.AMOUNT_OF_ISSUES_IN_REPORT_PAGE
       )
       .subscribe({

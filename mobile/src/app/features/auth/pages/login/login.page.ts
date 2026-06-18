@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { Browser } from '@capacitor/browser';
 import {
@@ -20,9 +19,8 @@ import {
 import { AuthService } from '@core/services/auth.service';
 import { environment } from 'src/environments/environment';
 import { UiService } from '@core/services/ui.service';
-import { switchMap, tap } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { UserService } from '@core/services/user.service';
-import { AuthResponseDto } from '@shared/dto/auth.dto';
 
 @Component({
   selector: 'app-login',
@@ -50,7 +48,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
   }
@@ -58,22 +56,13 @@ export class LoginPage implements OnInit {
   async login(): Promise<void> {
     await this.uiService.showLoading('Iniciando sesión...');
 
-    this.authService
-      .login(this.loginForm.getRawValue())
-      .pipe(
-        tap((auth) => {
-          const response: AuthResponseDto = {
-            id: auth.user.id,
-            email: auth.user.email!,
-            access_token: auth.session.access_token,
-            refresh_token: auth.session.refresh_token,
-            expires_at: auth.session.expires_at!,
-          };
+    const loggedUser = this.loginForm.getRawValue();
 
-          localStorage.setItem('auth', JSON.stringify(response));
-        }),
+    this.authService
+      .login(loggedUser.email, loggedUser.password)
+      .pipe(
         switchMap(() =>
-          this.userService.loadProfile(this.authService.loggedUserData()!.id)
+          this.userService.loadProfile(this.authService.user()!.id)
         )
       )
       .subscribe({
@@ -84,10 +73,7 @@ export class LoginPage implements OnInit {
         },
         error: async (err) => {
           await this.uiService.hideLoading();
-
-          await this.uiService.showToast(
-            err.error?.message ?? 'Ocurrió un error.'
-          );
+          await this.uiService.showToast('Credenciales invalidas.');
         },
       });
   }

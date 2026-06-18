@@ -54,7 +54,7 @@ export class ProfilePage {
   }
 
   getUserProfile(): void {
-    const userId = this.authService.loggedUserData()!.id;
+    const userId = this.authService.user()!.id;
 
     this.userService.isLoading.set(true);
 

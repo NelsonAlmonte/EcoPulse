@@ -40,7 +40,7 @@ export class HighlightButtonComponent {
     const delta = isHighlighted ? -1 : 1;
     const highlightDto: HighlightDto = {
       issueId: this.issue().id,
-      userId: this.authService.loggedUserData()!.id,
+      userId: this.authService.user()!.id,
     };
 
     isHighlighted

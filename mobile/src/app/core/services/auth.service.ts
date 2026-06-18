@@ -1,37 +1,42 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { ApiService } from '@core/services/api.service';
-import {
-  AuthResponseDto,
-  LoginUserDto,
-  RefreshUserSessionDto,
-  SignupUserDto,
-} from '@shared/dto/auth.dto';
 import { Router } from '@angular/router';
-import { from, Observable, of, switchMap, throwError } from 'rxjs';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { from, of, switchMap, throwError } from 'rxjs';
+import {
+  createClient,
+  Session,
+  SupabaseClient,
+  User,
+} from '@supabase/supabase-js';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiService = inject(ApiService);
   private router = inject(Router);
-  private URL = `${environment.apiUrl}auth`;
-  private supabase!: SupabaseClient;
+  supabase!: SupabaseClient;
+  accessToken = signal<string | null>(null);
+  session = signal<Session | null>(null);
+  user = signal<User | null>(null);
 
   constructor() {
     this.supabase = createClient(
       environment.supabaseUrl,
       environment.supabasePublishableKey
     );
+
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      this.session.set(session);
+      this.accessToken.set(session?.access_token ?? null);
+      this.user.set(session?.user ?? null);
+    });
   }
 
-  login(loginUserDto: LoginUserDto) {
+  login(email: string, password: string) {
     return from(
       this.supabase.auth.signInWithPassword({
-        email: loginUserDto.email,
-        password: loginUserDto.password,
+        email,
+        password,
       })
     ).pipe(
       switchMap(({ data, error }) => {
@@ -44,51 +49,29 @@ export class AuthService {
     );
   }
 
-  signup(signupUserDto: SignupUserDto): Observable<AuthResponseDto> {
-    return this.apiService.doPost<AuthResponseDto, SignupUserDto>(
-      `${this.URL}/signup`,
-      signupUserDto
-    );
-  }
+  signup(email: string, password: string) {
+    return from(
+      this.supabase.auth.signUp({
+        email,
+        password,
+      })
+    ).pipe(
+      switchMap(({ data, error }) => {
+        if (error) {
+          return throwError(() => error);
+        }
 
-  refreshSession(
-    refreshToken: RefreshUserSessionDto
-  ): Observable<AuthResponseDto> {
-    return this.apiService.doPost<AuthResponseDto, RefreshUserSessionDto>(
-      `${this.URL}/refresh`,
-      refreshToken
+        return of(data);
+      })
     );
   }
 
   logout(): void {
-    localStorage.removeItem('auth');
     localStorage.removeItem('user');
     localStorage.removeItem('issues');
+
+    this.supabase.auth.signOut();
+
     this.router.navigate(['/login']);
-  }
-
-  loggedUserData(): AuthResponseDto | null {
-    const authData = localStorage.getItem('auth');
-
-    if (!authData) return null;
-
-    try {
-      const parsedData: AuthResponseDto = JSON.parse(authData);
-
-      if (
-        !parsedData.access_token ||
-        typeof parsedData.access_token !== 'string'
-      ) {
-        this.logout();
-        return null;
-      }
-
-      return parsedData;
-    } catch (error) {
-      console.warn('Error parsing auth data:', error);
-
-      this.logout();
-      return null;
-    }
   }
 }

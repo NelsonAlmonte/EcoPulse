@@ -215,7 +215,7 @@ export class MapViewComponent implements AfterViewInit, OnInit {
       return;
     }
 
-    const userId = this.authService.loggedUserData()!.id;
+    const userId = this.authService.user()!.id;
     const modal = await this.modalController.create({
       component: IssueDetailComponent,
       cssClass: 'issue-detail-modal',

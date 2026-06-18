@@ -231,7 +231,7 @@ export class ReportModalComponent {
       // longitude: coordinates.coords.longitude,
       comment: this.comment,
       category: this.selectedCategory!.id,
-      user: this.authService.loggedUserData()!.id,
+      user: this.authService.user()!.id,
     };
 
     return issue;

@@ -80,7 +80,7 @@ export class HighlightsGivenPage {
   orderIcon = ArrowUpDown;
 
   private get userId(): string {
-    return this.authService.loggedUserData()!.id;
+    return this.authService.user()!.id;
   }
 
   private fetchHighlights(options?: {

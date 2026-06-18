@@ -17,6 +17,9 @@ import {
 } from '@ionic/angular/standalone';
 import { AuthService } from '@core/services/auth.service';
 import { UiService } from '@core/services/ui.service';
+import { UserService } from '@core/services/user.service';
+import { CreateUserDto } from '@shared/dto/user.dto';
+import { catchError, switchMap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -36,6 +39,7 @@ import { UiService } from '@core/services/ui.service';
 export class SignupPage implements OnInit {
   authService = inject(AuthService);
   uiService = inject(UiService);
+  userService = inject(UserService);
   router = inject(Router);
   fb = inject(FormBuilder);
   toastController = inject(ToastController);
@@ -46,27 +50,54 @@ export class SignupPage implements OnInit {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
       last: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
   async signup(): Promise<void> {
     await this.uiService.showLoading('Creando cuenta...');
 
-    this.authService.signup(this.signupForm.getRawValue()).subscribe({
-      next: async (response) => {
-        await this.uiService.hideLoading();
+    const signedupUser = this.signupForm.getRawValue();
 
-        localStorage.setItem('auth', JSON.stringify(response));
+    this.authService
+      .signup(signedupUser.email, signedupUser.password)
+      .pipe(
+        catchError((error) => {
+          if (error.message?.includes('already registered')) {
+            return throwError(() => 'Ya existe una cuenta con ese correo.');
+          }
 
-        this.router.navigate(['/']);
-      },
-      error: async (err) => {
-        await this.uiService.hideLoading();
+          return throwError(() => 'Ocurrió un error durante el registro.');
+        }),
+        switchMap((data) => {
+          const userToBeCreated: CreateUserDto = {
+            id: data.user!.id,
+            name: signedupUser.name,
+            last: signedupUser.last,
+            email: signedupUser.email,
+            password: signedupUser.password,
+          };
 
-        await this.uiService.showToast(err.error.message);
-      },
-    });
+          return this.userService.createUser(userToBeCreated).pipe(
+            catchError(() => {
+              return throwError(
+                () =>
+                  'La cuenta fue creada, pero ocurrió un error al guardar el perfil.'
+              );
+            })
+          );
+        })
+      )
+      .subscribe({
+        next: async () => {
+          await this.uiService.hideLoading();
+          this.router.navigate(['/']);
+        },
+        error: async (message) => {
+          await this.uiService.hideLoading();
+          await this.uiService.showToast(message);
+        },
+      });
   }
 }

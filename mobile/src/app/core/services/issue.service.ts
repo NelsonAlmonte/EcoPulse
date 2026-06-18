@@ -59,7 +59,7 @@ export class IssueService {
       west: String(bounds.west),
       page: String(page),
       amount: '10',
-      userId: this.authService.loggedUserData()!.id,
+      userId: this.authService.user()!.id,
       order: this.order(),
     });
 

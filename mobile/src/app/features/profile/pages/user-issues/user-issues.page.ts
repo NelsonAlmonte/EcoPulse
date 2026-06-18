@@ -118,13 +118,7 @@ export class UserIssuesPage {
     }
 
     this.userService
-      .getUserIssues(
-        this.authService.loggedUserData()!.id,
-        amount,
-        page,
-        orderBy,
-        filter
-      )
+      .getUserIssues(this.authService.user()!.id, amount, page, orderBy, filter)
       .subscribe({
         next: (response) => {
           if (onSuccess) {

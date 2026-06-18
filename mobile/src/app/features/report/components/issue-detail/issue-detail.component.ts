@@ -87,7 +87,7 @@ export class IssueDetailComponent {
   }
 
   private _hasIssueOwnership(): boolean {
-    const userData = this.authService.loggedUserData();
+    const userData = this.authService.user();
 
     if (!userData) {
       this.authService.logout();
@@ -200,7 +200,7 @@ export class IssueDetailComponent {
             }),
             switchMap(() =>
               this.userService.getUserIssues(
-                this.authService.loggedUserData()!.id,
+                this.authService.user()!.id,
                 this.AMOUNT_OF_ISSUES
               )
             )

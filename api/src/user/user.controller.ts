@@ -7,6 +7,7 @@ import {
   Param,
   ParseBoolPipe,
   ParseIntPipe,
+  Post,
   Put,
   Query,
   UseGuards,
@@ -23,7 +24,7 @@ import {
   buildFilterParams,
   buildOrderParam,
 } from 'src/util/functions/filter.functions';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
@@ -190,5 +191,22 @@ export class UserController {
     @Param('user') userId: string,
   ): Promise<number> {
     return await this.userService.countHighlightsReceived(userId);
+  }
+
+  @Post()
+  async create(
+    @Body() createUserDto: Prisma.UserCreateInput,
+  ): Promise<User | BadRequestException> {
+    const user = await this.userService.createUser({
+      ...createUserDto,
+      role: 'USER',
+      isActive: true,
+    });
+
+    if (!user) {
+      throw new BadRequestException('Error al crear el usuario.');
+    }
+
+    return user;
   }
 }

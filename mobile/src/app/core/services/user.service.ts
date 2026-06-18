@@ -3,7 +3,7 @@ import { ApiService } from '@core/services/api.service';
 import { Issue } from '@shared/models/issue.model';
 import { environment } from 'src/environments/environment';
 import { User, Counters } from '@shared/models/user.model';
-import { UpdateUserDto } from '@shared/dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from '@shared/dto/user.dto';
 import { forkJoin, Observable, tap } from 'rxjs';
 import { List } from '@shared/models/response.model';
 import { Filter } from '@shared/constants/system.constant';
@@ -66,6 +66,10 @@ export class UserService {
       `${this.URL}/${id}`,
       updateUserDto
     );
+  }
+
+  createUser(createUserDto: CreateUserDto): Observable<User> {
+    return this.apiService.doPost<User>(`${this.URL}`, createUserDto);
   }
 
   countUserIssues(id: string): Observable<string> {

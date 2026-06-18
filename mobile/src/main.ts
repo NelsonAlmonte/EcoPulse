@@ -19,7 +19,6 @@ import {
   withFetch,
   withInterceptors,
 } from '@angular/common/http';
-import { refreshTokenInterceptorInterceptor } from '@core/interceptors/refresh-token-interceptor-interceptor';
 import { addTokenToHeaderInterceptor } from '@core/interceptors/add-token-to-header-interceptor';
 
 defineCustomElements(window);
@@ -33,10 +32,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(
       withFetch(),
-      withInterceptors([
-        addTokenToHeaderInterceptor,
-        refreshTokenInterceptorInterceptor,
-      ])
+      withInterceptors([addTokenToHeaderInterceptor])
     ),
   ],
 });

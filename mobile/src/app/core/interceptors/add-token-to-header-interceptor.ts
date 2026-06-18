@@ -4,12 +4,12 @@ import { AuthService } from '@core/services/auth.service';
 
 export const addTokenToHeaderInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const loggedUserData = authService.loggedUserData();
+  const token = authService.accessToken();
 
-  if (loggedUserData) {
+  if (token) {
     req = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${loggedUserData.access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   }

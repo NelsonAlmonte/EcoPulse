@@ -16,8 +16,7 @@ export class NotificationService {
       environment.supabasePublishableKey,
       {
         // accessToken: this.authService.loggedUserData()!.access_token,
-        accessToken: async () =>
-          this.authService.loggedUserData()!.access_token,
+        accessToken: async () => this.authService.session()!.access_token,
       }
     );
   }

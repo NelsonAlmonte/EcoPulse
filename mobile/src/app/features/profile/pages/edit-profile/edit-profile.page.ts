@@ -72,26 +72,29 @@ export class EditProfilePage implements OnInit {
   async updateUser(): Promise<void> {
     if (!this.uiService.hasConnection()) return;
 
-    const loggedUserData = this.authService.loggedUserData()!;
     const formValue = this.userForm.getRawValue();
     const updateUserDto: UpdateUserDto = {
       name: formValue.name,
       last: formValue.last,
     };
 
-    this.userService.updateUser(loggedUserData.id, updateUserDto).subscribe({
-      next: async (result) => {
-        this.userService.user.set(result);
+    this.userService
+      .updateUser(this.authService.user()!.id, updateUserDto)
+      .subscribe({
+        next: async (result) => {
+          this.userService.user.set(result);
 
-        await this.uiService.showToast('Tu perfil se actualizo correctamente.');
+          await this.uiService.showToast(
+            'Tu perfil se actualizo correctamente.'
+          );
 
-        this.router.navigate(['/tabs/profile']);
-      },
-      error: async () => {
-        await this.uiService.showToast(
-          'Ocurrió un error al actualizar tu perfil.'
-        );
-      },
-    });
+          this.router.navigate(['/tabs/profile']);
+        },
+        error: async () => {
+          await this.uiService.showToast(
+            'Ocurrió un error al actualizar tu perfil.'
+          );
+        },
+      });
   }
 }

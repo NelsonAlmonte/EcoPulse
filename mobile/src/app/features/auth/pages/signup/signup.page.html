@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true">
   <div
     class="auth-background"
-    style="background-image: url(&quot;assets/img/auth-background.jpg&quot;)"
+    style="background-image: url('assets/img/auth-background.jpg')"
   >
     <div class="flex h-screen items-center justify-center">
       <div class="mx-4 rounded-2xl md-surface-container p-8 shadow">
@@ -57,6 +57,7 @@
               type="password"
               name="password"
               formControlName="password"
+              helperText="La contraseña debe tener al menos 8 caracteres"
             ></ion-input>
           </div>
           <button
