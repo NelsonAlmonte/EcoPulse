@@ -50,7 +50,6 @@ export class UserService {
         category: true,
         user: {
           omit: {
-            password: true,
             role: true,
             email: true,
             createdAt: true,
@@ -104,7 +103,6 @@ export class UserService {
             category: true,
             user: {
               omit: {
-                password: true,
                 role: true,
                 email: true,
                 createdAt: true,
@@ -162,9 +160,6 @@ export class UserService {
       where: {
         id,
       },
-      omit: {
-        password: true,
-      },
       include: {
         _count: {
           select: {
@@ -191,7 +186,6 @@ export class UserService {
         id,
       },
       omit: {
-        password: true,
         role: true,
       },
     });

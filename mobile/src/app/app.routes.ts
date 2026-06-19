@@ -49,9 +49,14 @@ export const routes: Routes = [
       import(
         './features/profile/pages/offline-issues/offline-issues.page'
       ).then((m) => m.OfflineIssuesPage),
+    canActivate: [authGuard],
   },
   {
     path: 'notifications',
-    loadComponent: () => import('./features/profile/pages/notifications/notifications.page').then( m => m.NotificationsPage)
+    loadComponent: () =>
+      import('./features/profile/pages/notifications/notifications.page').then(
+        (m) => m.NotificationsPage
+      ),
+    canActivate: [authGuard],
   },
 ];

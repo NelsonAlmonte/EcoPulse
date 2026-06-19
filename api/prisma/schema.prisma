@@ -23,39 +23,40 @@ enum Status {
 }
 
 model User {
-  id         String      @id @default(cuid())
-  name       String
-  last       String
-  email      String      @unique
-  password   String
-  createdAt  DateTime    @default(now())
-  isActive   Boolean     @default(true)
-  role       Role        @default(USER)
-  issues     Issue[]
-  highlights Highlight[]
+  id            String         @id @default(uuid())
+  name          String
+  last          String
+  email         String         @unique
+  createdAt     DateTime       @default(now())
+  isActive      Boolean        @default(true)
+  role          Role           @default(USER)
+  issues        Issue[]
+  highlights    Highlight[]
+  notifications Notification[]
 }
 
 model Issue {
-  id         String      @id @default(cuid())
-  photo      String
-  status     Status      @default(PENDIENTE)
-  latitude   Float
-  longitude  Float
-  comment    String?
-  category   Category    @relation(fields: [categoryId], references: [id])
-  categoryId String
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  createdAt  DateTime    @default(now())
-  highlights Highlight[]
+  id            String         @id @default(uuid())
+  photo         String
+  status        Status         @default(PENDIENTE)
+  latitude      Float
+  longitude     Float
+  comment       String?
+  category      Category       @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  createdAt     DateTime       @default(now())
+  highlights    Highlight[]
+  notifications Notification[]
 }
 
 model Category {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   name      String
   icon      String
   createdAt DateTime @default(now())
-  isActive   Boolean     @default(true)
+  isActive  Boolean  @default(true)
   issues    Issue[]
 }
 
@@ -67,4 +68,15 @@ model Highlight {
   createdAt DateTime @default(now())
 
   @@id([issueId, userId])
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  recipientId String
+  user        User     @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  issueId     String
+  issue       Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  statusFrom  Status
+  statusTo    Status
+  createdAt   DateTime @default(now())
 }

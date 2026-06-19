@@ -69,6 +69,12 @@ export class LoginPage implements OnInit {
         next: async () => {
           await this.uiService.hideLoading();
 
+          const {
+            data: { session },
+          } = await this.authService.supabase.auth.getSession();
+
+          this.authService.supabase.realtime.setAuth(session!.access_token);
+
           this.router.navigate(['/']);
         },
         error: async (err) => {

@@ -1,13 +1,17 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
   IonContent,
   IonHeader,
   IonTitle,
   IonToolbar,
+  IonButtons,
+  IonRippleEffect,
 } from '@ionic/angular/standalone';
 import { NotificationService } from '@core/services/notification.service';
+import { AuthService } from '@core/services/auth.service';
+import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-notifications',
@@ -19,16 +23,31 @@ import { NotificationService } from '@core/services/notification.service';
     IonHeader,
     IonTitle,
     IonToolbar,
+    IonButtons,
+    IonRippleEffect,
+    LucideAngularModule,
     CommonModule,
-    FormsModule,
+    RouterLink,
   ],
 })
 export class NotificationsPage implements OnInit {
   notificationService = inject(NotificationService);
+  authService = inject(AuthService);
+  backIcon = ArrowLeft;
 
-  constructor() {}
+  constructor() {
+    effect(async () => {
+      const userId = this.authService.user()?.id;
+
+      if (userId) {
+        await this.notificationService.startListening();
+      }
+    });
+  }
 
   ngOnInit() {
-    this.notificationService.foo();
+    // console.log('abri el canal');
+    // if (userId) {
+    // }
   }
 }

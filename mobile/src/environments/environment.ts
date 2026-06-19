@@ -7,10 +7,10 @@ export const environment = {
   googleMapsApiKey: 'AIzaSyCNsKl8JuAYqzyMkcWy2Nspr9IPvg_jSNA',
   apiUrl: 'http://localhost:3000/',
   publicBucketUrl:
-    'https://ypuxysyaytkaaxfumcpl.supabase.co/storage/v1/object/public/',
+    'https://fjspordcnfubfezttyvt.supabase.co/storage/v1/object/public/',
   forgotPasswordUrl: 'http://localhost:5173/auth/reset-password',
-  supabaseUrl: 'https://ypuxysyaytkaaxfumcpl.supabase.co',
-  supabasePublishableKey: 'sb_publishable_dWN07JppMALEyxqQt7XnUQ_--vLCot9',
+  supabaseUrl: 'https://fjspordcnfubfezttyvt.supabase.co',
+  supabasePublishableKey: 'sb_publishable_arvw9ZlO_u7UGw_BspGexw_GvJRNj-A',
 };
 
 /*

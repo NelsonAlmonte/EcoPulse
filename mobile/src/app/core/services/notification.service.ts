@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { environment } from 'src/environments/environment';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -8,35 +7,32 @@ import { AuthService } from './auth.service';
 })
 export class NotificationService {
   authService = inject(AuthService);
-  supabase?: SupabaseClient;
+  private channel?: RealtimeChannel;
 
-  constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabasePublishableKey,
-      {
-        // accessToken: this.authService.loggedUserData()!.access_token,
-        accessToken: async () => this.authService.session()!.access_token,
-      }
-    );
-  }
-  foo() {
-    // const foo = this.supabase!.auth.getUser(
-    //   this.authService.loggedUserData()!.access_token
-    // );
+  async startListening() {
+    if (this.channel) this.stopListening();
 
-    // console.log(foo);
-    const changes = this.supabase!.channel('schema-db-changes')
+    this.channel = this.authService.supabase
+      .channel(`schema-db-changes`)
       .on(
         'postgres_changes',
         {
-          event: 'INSERT', // Listen only to INSERTs
+          event: 'INSERT',
           schema: 'public',
-          table: 'notifications',
-          filter: `recipient_id=eq.566dd7ce-dbc8-416b-bf29-8dce970b8094`,
+          table: 'Notification',
+          // filter: `recipient_id=eq.${userId}`,
         },
-        (payload) => console.log(payload)
+        (payload) => {
+          console.log(payload);
+        }
       )
-      .subscribe();
+      .subscribe((status, err) => {
+        console.log('STATUS', status);
+        console.log('ERROR', err);
+      });
+  }
+
+  stopListening(): void {
+    this.channel?.unsubscribe();
   }
 }

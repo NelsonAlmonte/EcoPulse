@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Camera, CameraDirection } from '@capacitor/camera';
 import {
   IonContent,
@@ -11,6 +11,7 @@ import {
   IonRippleEffect,
   IonTitle,
   IonToolbar,
+  IonButtons,
   ModalController,
   RefresherCustomEvent,
   ToastController,
@@ -22,7 +23,12 @@ import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
 import { LocationService } from '@core/services/location.service';
 import { UiService } from '@core/services/ui.service';
-import { ArrowRight, CameraIcon, LucideAngularModule } from 'lucide-angular';
+import {
+  ArrowRight,
+  BellIcon,
+  CameraIcon,
+  LucideAngularModule,
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-report',
@@ -36,12 +42,14 @@ import { ArrowRight, CameraIcon, LucideAngularModule } from 'lucide-angular';
     IonTitle,
     IonRefresher,
     IonRefresherContent,
+    IonButtons,
     CommonModule,
     FormsModule,
     LocationPreviewComponent,
     IssueListComponent,
     IonRippleEffect,
     LucideAngularModule,
+    RouterLink,
   ],
 })
 export class ReportPage {
@@ -54,6 +62,7 @@ export class ReportPage {
   router = inject(Router);
   cameraIcon = CameraIcon;
   arrowRight = ArrowRight;
+  notificationIcon = BellIcon;
 
   ionViewWillEnter(): void {
     if (

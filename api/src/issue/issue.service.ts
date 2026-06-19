@@ -36,7 +36,6 @@ export class IssueService {
         category: true,
         user: {
           omit: {
-            password: true,
             role: true,
           },
         },
@@ -56,7 +55,6 @@ export class IssueService {
         category: true,
         user: {
           omit: {
-            password: true,
             role: true,
           },
         },
@@ -75,7 +73,6 @@ export class IssueService {
       category: true,
       user: {
         omit: {
-          password: true,
           role: true,
         },
       },
@@ -151,7 +148,6 @@ export class IssueService {
         category: true,
         user: {
           omit: {
-            password: true,
             role: true,
           },
         },
@@ -210,7 +206,6 @@ export class IssueService {
         category: true,
         user: {
           omit: {
-            password: true,
             role: true,
           },
         },
@@ -227,7 +222,6 @@ export class IssueService {
         category: true,
         user: {
           omit: {
-            password: true,
             role: true,
           },
         },
@@ -257,7 +251,7 @@ export class IssueService {
       .upload(file.originalname, file.buffer, {
         contentType: 'image/jpeg',
       });
-
+    console.log(error);
     if (error) return null;
 
     return data;
