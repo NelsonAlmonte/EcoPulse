@@ -8,6 +8,7 @@ import {
   SupabaseClient,
   User,
 } from '@supabase/supabase-js';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -69,6 +70,8 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('user');
     localStorage.removeItem('issues');
+
+    this.supabase.channel(`schema-db-changes`)?.unsubscribe();
 
     this.supabase.auth.signOut();
 

@@ -1,7 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Network } from '@capacitor/network';
 import { UiService } from '@core/services/ui.service';
+import { NotificationService } from '@core/services/notification.service';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,19 @@ import { UiService } from '@core/services/ui.service';
 })
 export class AppComponent implements OnInit {
   uiService = inject(UiService);
+  notificationService = inject(NotificationService);
+  authService = inject(AuthService);
   wasConnected: boolean | null = null;
+
+  constructor() {
+    effect(() => {
+      const userId = this.authService.user()?.id;
+
+      if (userId) {
+        this.notificationService.startListening(userId);
+      }
+    });
+  }
 
   async ngOnInit() {
     const initialStatus = await Network.getStatus();

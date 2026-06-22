@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import {
@@ -9,8 +9,6 @@ import {
   IonButtons,
   IonRippleEffect,
 } from '@ionic/angular/standalone';
-import { NotificationService } from '@core/services/notification.service';
-import { AuthService } from '@core/services/auth.service';
 import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
 
 @Component({
@@ -31,23 +29,7 @@ import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
   ],
 })
 export class NotificationsPage implements OnInit {
-  notificationService = inject(NotificationService);
-  authService = inject(AuthService);
   backIcon = ArrowLeft;
 
-  constructor() {
-    effect(async () => {
-      const userId = this.authService.user()?.id;
-
-      if (userId) {
-        await this.notificationService.startListening();
-      }
-    });
-  }
-
-  ngOnInit() {
-    // console.log('abri el canal');
-    // if (userId) {
-    // }
-  }
+  ngOnInit() {}
 }

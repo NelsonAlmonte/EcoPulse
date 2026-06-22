@@ -76,7 +76,6 @@ export class SignupPage implements OnInit {
             name: signedupUser.name,
             last: signedupUser.last,
             email: signedupUser.email,
-            password: signedupUser.password,
           };
 
           return this.userService.createUser(userToBeCreated).pipe(

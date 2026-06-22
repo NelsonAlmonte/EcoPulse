@@ -9,7 +9,7 @@ export class NotificationService {
   authService = inject(AuthService);
   private channel?: RealtimeChannel;
 
-  async startListening() {
+  startListening(userId: string) {
     if (this.channel) this.stopListening();
 
     this.channel = this.authService.supabase
@@ -20,16 +20,13 @@ export class NotificationService {
           event: 'INSERT',
           schema: 'public',
           table: 'Notification',
-          // filter: `recipient_id=eq.${userId}`,
+          filter: `recipientId=eq.${userId}`,
         },
         (payload) => {
           console.log(payload);
         }
       )
-      .subscribe((status, err) => {
-        console.log('STATUS', status);
-        console.log('ERROR', err);
-      });
+      .subscribe();
   }
 
   stopListening(): void {
