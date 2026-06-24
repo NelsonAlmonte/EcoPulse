@@ -1,6 +1,6 @@
 import { Component, output } from '@angular/core';
 import { IonRippleEffect } from '@ionic/angular/standalone';
-import { Filter } from '@shared/constants/system.constant';
+import { Status } from '@shared/constants/system.constant';
 import {
   Circle,
   CircleCheck,
@@ -17,8 +17,8 @@ import {
   imports: [IonRippleEffect, LucideAngularModule],
 })
 export class StatusFilterComponent {
-  filterSelected = output<Filter>();
-  selectedFilter: Filter = 'TODO';
+  filterSelected = output<Status>();
+  selectedFilter: Status = 'TODO';
   filters = [
     {
       value: 'TODO',
@@ -42,7 +42,7 @@ export class StatusFilterComponent {
     },
   ] as const;
 
-  selectFilter(filter: Filter): void {
+  selectFilter(filter: Status): void {
     this.selectedFilter = filter;
     this.filterSelected.emit(filter);
   }

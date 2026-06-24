@@ -6,7 +6,7 @@ import { User, Counters } from '@shared/models/user.model';
 import { CreateUserDto, UpdateUserDto } from '@shared/dto/user.dto';
 import { forkJoin, Observable, tap } from 'rxjs';
 import { List } from '@shared/models/response.model';
-import { Filter } from '@shared/constants/system.constant';
+import { Status } from '@shared/constants/system.constant';
 import { AuthService } from './auth.service';
 import { UiService } from './ui.service';
 
@@ -40,7 +40,7 @@ export class UserService {
     amount: number = 5,
     page: number = 1,
     order: string = 'createdAt:desc',
-    filter: Filter = 'TODO'
+    filter: Status = 'TODO'
   ): Observable<List<Issue[]>> {
     const params = new URLSearchParams({
       amount: String(amount),
@@ -93,7 +93,7 @@ export class UserService {
     amount: number = 5,
     page: number = 1,
     order: string = 'createdAt:desc',
-    filter: Filter = 'TODO'
+    filter: Status = 'TODO'
   ): Observable<List<Issue[]>> {
     const params = new URLSearchParams({
       amount: String(amount),

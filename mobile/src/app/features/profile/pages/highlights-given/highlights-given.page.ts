@@ -25,7 +25,7 @@ import { AuthService } from '@core/services/auth.service';
 import { ArrowLeft, ArrowUpDown, LucideAngularModule } from 'lucide-angular';
 import { UiService } from '@core/services/ui.service';
 import { OverlayEventDetail } from '@ionic/core';
-import { Filter } from '@shared/constants/system.constant';
+import { Status } from '@shared/constants/system.constant';
 import { List } from '@shared/models/response.model';
 import { Issue } from '@shared/models/issue.model';
 
@@ -75,7 +75,7 @@ export class HighlightsGivenPage {
     },
   ];
   orderBy = 'createdAt:desc';
-  filter: Filter = 'TODO';
+  filter: Status = 'TODO';
   backIcon = ArrowLeft;
   orderIcon = ArrowUpDown;
 
@@ -87,7 +87,7 @@ export class HighlightsGivenPage {
     page?: number;
     amount?: number;
     orderBy?: string;
-    filter?: Filter;
+    filter?: Status;
     reset?: boolean;
     onSuccess?: (response: List<Issue[]>) => void;
     onComplete?: () => void;
@@ -183,7 +183,7 @@ export class HighlightsGivenPage {
     });
   }
 
-  onFilterSelected(filter: Filter): void {
+  onFilterSelected(filter: Status): void {
     this.filter = filter;
 
     this.fetchHighlights({

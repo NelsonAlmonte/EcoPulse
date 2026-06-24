@@ -1,0 +1,11 @@
+<a
+  class="relative md-on-surface focus:outline-none ion-activatable overflow-hidden"
+  routerLink="/notifications"
+  [queryParams]="{ from: from() }"
+>
+  <ion-ripple-effect></ion-ripple-effect>
+  <lucide-angular [img]="notificationIcon" size="24"></lucide-angular>
+  @if (notificationService.hasNewNotification() || hasNewNotification) {
+  <div class="absolute top-0 right-0 w-2 h-2 rounded-full md-error"></div>
+  }
+</a>

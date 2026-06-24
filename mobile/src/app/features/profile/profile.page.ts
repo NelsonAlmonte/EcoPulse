@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -10,8 +10,10 @@ import {
   IonTitle,
   IonToolbar,
   RefresherCustomEvent,
+  IonButtons,
 } from '@ionic/angular/standalone';
 import { ProfileDetailComponent } from '@features/profile/components/profile-detail/profile-detail.component';
+import { NotificationButtonComponent } from '@shared/components/notification-button/notification-button.component';
 import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
 import { UiService } from '@core/services/ui.service';
@@ -28,9 +30,12 @@ import { UiService } from '@core/services/ui.service';
     IonToolbar,
     IonRefresher,
     IonRefresherContent,
+    IonButtons,
     CommonModule,
     FormsModule,
+    RouterModule,
     ProfileDetailComponent,
+    NotificationButtonComponent,
   ],
 })
 export class ProfilePage {

@@ -25,7 +25,7 @@ import { UiService } from '@core/services/ui.service';
 import { ArrowLeft, ArrowUpDown, LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
 import type { OverlayEventDetail } from '@ionic/core';
-import { Filter } from '@shared/constants/system.constant';
+import { Status } from '@shared/constants/system.constant';
 import { List } from '@shared/models/response.model';
 import { Issue } from '@shared/models/issue.model';
 
@@ -87,7 +87,7 @@ export class UserIssuesPage {
     },
   ];
   orderBy = 'createdAt:desc';
-  filter: Filter = 'TODO';
+  filter: Status = 'TODO';
   backIcon = ArrowLeft;
   orderIcon = ArrowUpDown;
 
@@ -95,7 +95,7 @@ export class UserIssuesPage {
     page?: number;
     amount?: number;
     orderBy?: string;
-    filter?: Filter;
+    filter?: Status;
     onSuccess?: (response: List<Issue[]>) => void;
     onComplete?: () => void;
     reset?: boolean;
@@ -188,7 +188,7 @@ export class UserIssuesPage {
     });
   }
 
-  onFilterSelected(filter: Filter): void {
+  onFilterSelected(filter: Status): void {
     this.filter = filter;
 
     this._fetchIssues({

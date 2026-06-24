@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import { ToastController } from '@ionic/angular/standalone';
 import { Bounds } from '@shared/models/user.model';
 import { List } from '@shared/models/response.model';
-import { Filter } from '@shared/constants/system.constant';
+import { Status } from '@shared/constants/system.constant';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -28,7 +28,7 @@ export class IssueService {
   });
   isLoading = signal(false);
   order = signal('highlights:desc');
-  filter = signal<Filter>('TODO');
+  filter = signal<Status>('TODO');
   URL = `${environment.apiUrl}issue`;
 
   createIssue(issue: CreateIssueDto): Observable<Issue> {
