@@ -24,6 +24,9 @@ export class NotificationService {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 }

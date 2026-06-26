@@ -18,6 +18,7 @@ enum Role {
 
 enum Status {
   PENDIENTE
+  EN_PROCESO
   RESUELTO
   DESCARTADO
 }
@@ -78,5 +79,6 @@ model Notification {
   issue       Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
   statusFrom  Status
   statusTo    Status
+  isRead      Boolean  @default(false)
   createdAt   DateTime @default(now())
 }
