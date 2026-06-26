@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { Notification } from '@prisma/client';
+import { Notification, Prisma } from '@prisma/client';
+import { PaginationParams } from 'src/issue/issue.params';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class NotificationService {
   constructor(private prisma: PrismaService) {}
 
-  async getNotifications(userId: string): Promise<Notification[]> {
+  async getNotifications(
+    pagination: PaginationParams,
+    where?: Prisma.NotificationWhereInput,
+  ): Promise<Notification[]> {
     return this.prisma.notification.findMany({
-      where: {
-        recipientId: userId,
-      },
+      skip: pagination.skip,
+      take: pagination.take,
+      where,
       include: {
         issue: {
           select: {
@@ -28,5 +32,11 @@ export class NotificationService {
         createdAt: 'desc',
       },
     });
+  }
+
+  async countNotifications(
+    where?: Prisma.NotificationWhereInput,
+  ): Promise<number> {
+    return this.prisma.notification.count({ where: where ?? undefined });
   }
 }

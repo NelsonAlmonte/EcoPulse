@@ -1,0 +1,41 @@
+<div class="md-surface-container-high md-on-surface rounded-2xl mb-4 p-4">
+  <div class="flex items-center justify-between font-medium text-sm">
+    <div class="flex items-center justify-start">
+      <div
+        class="md-secondary-container md-on-secondary-container rounded-xl p-2 me-4"
+      >
+        <lucide-angular
+          [img]="statusMap[notification().statusTo].icon"
+          size="22"
+        ></lucide-angular>
+      </div>
+      <div>
+        Tu reporte de
+        <span class="lowercase font-semibold">{{
+          notification().issue.category.name
+        }}</span>
+        ha cambiado de
+        <span class="lowercase font-semibold">{{
+          notification().statusFrom
+        }}</span>
+        a
+        <span class="lowercase font-semibold">{{
+          notification().statusTo
+        }}</span
+        >. <br />
+        <span class="md-on-surface-variant">
+          {{ notification().createdAt | relativeTime : "es-ES" }}
+        </span>
+      </div>
+    </div>
+    <div>
+      <button
+        id="open-options-{{ notification().id }}"
+        class="rounded-full md-on-surface p-2 z-50 ion-activatable relative overflow-hidden"
+      >
+        <ion-ripple-effect class="md-on-surface"></ion-ripple-effect>
+        <lucide-angular [img]="optionsIcon" size="22"></lucide-angular>
+      </button>
+    </div>
+  </div>
+</div>

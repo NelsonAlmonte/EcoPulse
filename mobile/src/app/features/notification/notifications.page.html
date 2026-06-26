@@ -1,0 +1,46 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start" class="ion-padding">
+      <a
+        class="md-on-surface focus:outline-none rounded-2xl ion-activatable relative overflow-hidden"
+        [routerLink]="pageFrom"
+      >
+        <ion-ripple-effect></ion-ripple-effect>
+        <lucide-angular [img]="backIcon" size="24"></lucide-angular>
+      </a>
+    </ion-buttons>
+    <ion-title class="font-semibold">Notificaciones</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Notificaciones</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  @if (notificationService.isLoading()) {
+  <div class="flex flex-col space-y-4">
+    <app-issue-detail-loading class="mb-4"></app-issue-detail-loading>
+    <app-issue-detail-loading class="mb-4"></app-issue-detail-loading>
+    <app-issue-detail-loading class="mb-4"></app-issue-detail-loading>
+  </div>
+  } @else if (!uiService.hasConnection() &&
+  !notificationService.notificationList().data.length) {
+  <app-alert
+    [icon]="noConnectionIcon"
+    [title]="'Sin conexión'"
+    [content]="'Conéctate a internet para cargar los reportes.'"
+  ></app-alert>
+  } @else if (!notificationService.notificationList().data.length) {
+  <app-alert
+    [icon]="emptyIcon"
+    [title]="'Sin reportes'"
+    [content]="'Todavía no hay reportes para mostrar.'"
+  ></app-alert>
+  } @else { @for (notification of notificationService.notificationList().data;
+  track notification.id) {
+  <app-notification-item [notification]="notification"></app-notification-item>
+  } }
+</ion-content>

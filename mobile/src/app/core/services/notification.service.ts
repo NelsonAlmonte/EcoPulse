@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Notification } from '@shared/models/notification.model';
 import { ApiService } from './api.service';
 import { environment } from 'src/environments/environment';
+import { List } from '@shared/models/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,14 @@ import { environment } from 'src/environments/environment';
 export class NotificationService {
   authService = inject(AuthService);
   apiService = inject(ApiService);
-  notifications = signal<Notification[]>([]);
+  notificationList = signal<List<Notification[]>>({
+    data: [],
+    pagination: {
+      page: 1,
+      amount: 5,
+      total: 5,
+    },
+  });
   hasNewNotification = signal(false);
   isLoading = signal(false);
   private channel?: RealtimeChannel;
@@ -48,7 +56,29 @@ export class NotificationService {
     this.channel?.unsubscribe();
   }
 
-  getNotifications(userId: string): Observable<Notification[]> {
-    return this.apiService.doFetch<Notification[]>(`${this.URL}/${userId}`);
+  getNotifications(
+    userId: string,
+    amount: number = 5,
+    page: number = 1
+  ): Observable<List<Notification[]>> {
+    const params = new URLSearchParams({
+      amount: String(amount),
+      page: String(page),
+    });
+
+    return this.apiService.doFetch<List<Notification[]>>(
+      `${this.URL}/${userId}?${params}`
+    );
+  }
+
+  resetSignals(): void {
+    this.notificationList.set({
+      data: [],
+      pagination: {
+        page: 1,
+        amount: 5,
+        total: 5,
+      },
+    });
   }
 }

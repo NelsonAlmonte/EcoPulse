@@ -9,10 +9,18 @@ import {
   IonButtons,
   IonRippleEffect,
 } from '@ionic/angular/standalone';
-import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
+import {
+  ArrowLeft,
+  FolderOpenIcon,
+  LucideAngularModule,
+  WifiOffIcon,
+} from 'lucide-angular';
 import { NotificationService } from '@core/services/notification.service';
 import { AuthService } from '@core/services/auth.service';
 import { UiService } from '@core/services/ui.service';
+import { IssueDetailLoadingComponent } from '@shared/components/issue-detail-loading/issue-detail-loading.component';
+import { AlertComponent } from '@shared/components/alert/alert.component';
+import { NotificationItemComponent } from './components/notification-item/notification-item.component';
 
 @Component({
   selector: 'app-notifications',
@@ -29,6 +37,9 @@ import { UiService } from '@core/services/ui.service';
     LucideAngularModule,
     CommonModule,
     RouterLink,
+    IssueDetailLoadingComponent,
+    AlertComponent,
+    NotificationItemComponent,
   ],
 })
 export class NotificationsPage implements OnInit {
@@ -38,6 +49,8 @@ export class NotificationsPage implements OnInit {
   uiService = inject(UiService);
   pageFrom = '';
   backIcon = ArrowLeft;
+  noConnectionIcon = WifiOffIcon;
+  emptyIcon = FolderOpenIcon;
 
   async ngOnInit() {
     this.route.queryParamMap.subscribe((params) => {
@@ -52,11 +65,11 @@ export class NotificationsPage implements OnInit {
 
     localStorage.removeItem('hasNewNotification');
 
-    await this.getNotification();
+    await this.getNotifications();
   }
 
-  async getNotification(): Promise<void> {
-    this.notificationService.notifications.set([]);
+  async getNotifications(): Promise<void> {
+    this.notificationService.resetSignals();
     this.notificationService.isLoading.set(true);
 
     const user = this.authService.user();
@@ -69,7 +82,8 @@ export class NotificationsPage implements OnInit {
 
     this.notificationService.getNotifications(user.id).subscribe({
       next: (response) => {
-        this.notificationService.notifications.set(response);
+        this.notificationService.notificationList.set(response);
+        console.log(response);
       },
       error: async () => {
         await this.uiService.showToast(
