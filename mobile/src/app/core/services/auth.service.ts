@@ -8,7 +8,6 @@ import {
   SupabaseClient,
   User,
 } from '@supabase/supabase-js';
-import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',

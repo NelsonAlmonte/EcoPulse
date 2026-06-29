@@ -12,7 +12,7 @@
     <div class="absolute inset-0 flex items-end justify-start p-4">
       <div class="flex items-center justify-start md-on-primary">
         <div
-          class="me-2 p-2 rounded-full md-secondary-container md-on-secondary-container"
+          class="me-2 p-2 rounded-xl md-secondary-container md-on-secondary-container"
         >
           <div
             class="h-6 w-6"
@@ -35,11 +35,11 @@
   <div class="px-4 py-6">
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-start">
-        <lucide-angular
-          class="me-1 md-on-surface-variant"
-          [img]="userIcon"
-          size="36"
-        ></lucide-angular>
+        <div
+          class="rounded-xl md-secondary-container md-on-secondary-container p-2 me-2"
+        >
+          <lucide-angular [img]="userIcon" size="24"></lucide-angular>
+        </div>
         <div class="flex flex-col">
           <span class="md-on-surface font-semibold">
             {{ issue().user.name + " " + issue().user.last }}

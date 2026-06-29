@@ -1,12 +1,15 @@
 <div class="md-surface-container-high md-on-surface rounded-2xl mb-4 p-4">
   <div class="flex items-center justify-between font-medium text-sm">
     <div class="flex items-center justify-start">
+      @if (!notification().isRead) {
+      <div class="size-2 rounded-full md-primary me-2 shrink-0"></div>
+      }
       <div
         class="md-secondary-container md-on-secondary-container rounded-xl p-2 me-4"
       >
         <lucide-angular
           [img]="statusMap[notification().statusTo].icon"
-          size="22"
+          size="24"
         ></lucide-angular>
       </div>
       <div>
@@ -16,11 +19,11 @@
         }}</span>
         ha cambiado de
         <span class="lowercase font-semibold">{{
-          notification().statusFrom
+          notification().statusFrom.replace("_", " ")
         }}</span>
         a
         <span class="lowercase font-semibold">{{
-          notification().statusTo
+          notification().statusTo.replace("_", " ")
         }}</span
         >. <br />
         <span class="md-on-surface-variant">
@@ -32,6 +35,7 @@
       <button
         id="open-options-{{ notification().id }}"
         class="rounded-full md-on-surface p-2 z-50 ion-activatable relative overflow-hidden"
+        (click)="openOptions()"
       >
         <ion-ripple-effect class="md-on-surface"></ion-ripple-effect>
         <lucide-angular [img]="optionsIcon" size="22"></lucide-angular>

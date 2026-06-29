@@ -5,6 +5,7 @@ import {
   Circle,
   CircleCheck,
   CircleDot,
+  CircleEllipsis,
   CircleX,
   LucideAngularModule,
 } from 'lucide-angular';
@@ -29,6 +30,11 @@ export class StatusFilterComponent {
       value: 'PENDIENTE',
       label: 'Pendientes',
       icon: CircleDot,
+    },
+    {
+      value: 'EN_PROCESO',
+      label: 'En proceso',
+      icon: CircleEllipsis,
     },
     {
       value: 'RESUELTO',

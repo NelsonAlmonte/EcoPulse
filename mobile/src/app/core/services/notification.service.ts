@@ -6,6 +6,7 @@ import { Notification } from '@shared/models/notification.model';
 import { ApiService } from './api.service';
 import { environment } from 'src/environments/environment';
 import { List } from '@shared/models/response.model';
+import { UpdateNotificationDto } from '@shared/dto/notification.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -80,5 +81,19 @@ export class NotificationService {
         total: 5,
       },
     });
+  }
+
+  deleteNotification(id: string): Observable<Notification> {
+    return this.apiService.doDelete<Notification>(`${this.URL}/${id}`);
+  }
+
+  toggleReadStatus(
+    id: string,
+    updateNotificationDto: UpdateNotificationDto
+  ): Observable<Notification> {
+    return this.apiService.doPut<Notification, UpdateNotificationDto>(
+      `${this.URL}/${id}`,
+      updateNotificationDto
+    );
   }
 }

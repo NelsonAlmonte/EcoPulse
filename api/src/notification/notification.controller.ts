@@ -1,9 +1,13 @@
 import {
+  BadRequestException,
+  Body,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -12,12 +16,13 @@ import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 import { Notification, Prisma } from '@prisma/client';
 import { buildPaginationParams } from 'src/util/functions/pagination.functions';
 import { List } from 'src/util/interfaces/response.dto';
+import { UpdateNotificationDto } from './notification.dto';
 
 @Controller('notification')
 export class NotificationController {
   constructor(private notificationService: NotificationService) {}
 
-  // @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get(':id')
   async notifications(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -27,10 +32,13 @@ export class NotificationController {
     const where: Prisma.NotificationWhereInput = {
       recipientId: userId,
     };
-    const notifications = await this.notificationService.getNotifications(
-      buildPaginationParams(page, amount),
-      where,
-    );
+    const [notifications, total] = await Promise.all([
+      this.notificationService.getNotifications(
+        buildPaginationParams(page, amount),
+        where,
+      ),
+      this.notificationService.countNotifications(where),
+    ]);
 
     if (!notifications) return null;
 
@@ -39,10 +47,46 @@ export class NotificationController {
       pagination: {
         page: Number(page),
         amount: Number(amount),
-        total: await this.notificationService.countNotifications(where),
+        total,
       },
     };
 
     return notificationList;
+  }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Delete(':id')
+  async delete(
+    @Param('id') id: string,
+  ): Promise<Notification | BadRequestException> {
+    const notification = await this.notificationService.deleteNotification(id);
+
+    if (!notification) {
+      throw new BadRequestException(
+        'Error inesperado al eliminar esta notificación',
+      );
+    }
+
+    return notification;
+  }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Put(':id')
+  async update(
+    @Body() isRead: UpdateNotificationDto,
+    @Param('id') id: string,
+  ): Promise<Notification | BadRequestException> {
+    const updatedIssue = await this.notificationService.toggleReadStatus(
+      isRead,
+      id,
+    );
+
+    if (!updatedIssue) {
+      throw new BadRequestException(
+        'Error inesperado al actualizar esta notificación',
+      );
+    }
+
+    return updatedIssue;
   }
 }

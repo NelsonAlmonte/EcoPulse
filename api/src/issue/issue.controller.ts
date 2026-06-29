@@ -75,11 +75,14 @@ export class IssueController {
       all,
     );
     const orderFilter = buildOrderParam(order);
-    const issues = await this.issueService.getIssuesList(
-      buildPaginationParams(page, amount),
-      where,
-      orderFilter,
-    );
+    const [issues, total] = await Promise.all([
+      this.issueService.getIssuesList(
+        buildPaginationParams(page, amount),
+        where,
+        orderFilter,
+      ),
+      this.issueService.countIssues(where),
+    ]);
 
     if (!issues) return null;
 
@@ -91,7 +94,7 @@ export class IssueController {
       pagination: {
         page: Number(page),
         amount: Number(amount),
-        total: await this.issueService.countIssues(where),
+        total,
       },
     };
 

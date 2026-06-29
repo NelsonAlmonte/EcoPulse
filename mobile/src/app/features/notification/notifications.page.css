@@ -2,3 +2,8 @@ ion-content {
   --background: var(--md-sys-color-surface);
   --color: var(--md-sys-color-on-background);
 }
+
+.more-button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

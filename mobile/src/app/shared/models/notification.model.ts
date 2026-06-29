@@ -1,13 +1,20 @@
 import { Status } from '@shared/constants/system.constant';
 import { Issue } from './issue.model';
+import { Category } from './category.model';
 
 export interface Notification {
   id: string;
   recipientId: string;
   issueId: string;
-  statusFrom: Omit<Status, 'TODO'>;
-  statusTo: Omit<Status, 'TODO'>;
+  statusFrom: NotificationStatus;
+  statusTo: NotificationStatus;
   createdAt: string;
   isRead: boolean;
-  issue: Pick<Issue, 'latitude' | 'longitude' | 'category'>;
+  issue: NotificationIssue;
 }
+
+type NotificationStatus = Exclude<Status, 'TODO'>;
+
+type NotificationIssue = Pick<Issue, 'latitude' | 'longitude'> & {
+  category: Pick<Category, 'name'>;
+};

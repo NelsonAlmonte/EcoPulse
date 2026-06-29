@@ -51,11 +51,23 @@ export class IssueService {
     return this.prisma.issue.findMany({
       skip: pagination.skip,
       take: pagination.take,
+      // omit: {
+      //   latitude: true,
+      //   longitude: true,
+      //   categoryId: true,
+      //   userId: true,
+      // },
       include: {
-        category: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
         user: {
-          omit: {
-            role: true,
+          select: {
+            id: true,
+            name: true,
+            last: true,
           },
         },
       },

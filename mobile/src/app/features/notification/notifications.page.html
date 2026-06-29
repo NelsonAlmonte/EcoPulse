@@ -14,6 +14,9 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshNotifications($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Notificaciones</ion-title>
@@ -21,11 +24,11 @@
   </ion-header>
 
   @if (notificationService.isLoading()) {
-  <div class="flex flex-col space-y-4">
-    <app-issue-detail-loading class="mb-4"></app-issue-detail-loading>
-    <app-issue-detail-loading class="mb-4"></app-issue-detail-loading>
-    <app-issue-detail-loading class="mb-4"></app-issue-detail-loading>
-  </div>
+  <app-notification-loading></app-notification-loading>
+  <app-notification-loading></app-notification-loading>
+  <app-notification-loading></app-notification-loading>
+  <app-notification-loading></app-notification-loading>
+  <app-notification-loading></app-notification-loading>
   } @else if (!uiService.hasConnection() &&
   !notificationService.notificationList().data.length) {
   <app-alert
@@ -42,5 +45,23 @@
   } @else { @for (notification of notificationService.notificationList().data;
   track notification.id) {
   <app-notification-item [notification]="notification"></app-notification-item>
-  } }
+  }
+  <div class="flex flex-col items-center justify-center">
+    @if (isLoading()) {
+    <ion-spinner class="mb-4"></ion-spinner>
+    }
+    <button
+      type="button"
+      class="md-primary md-on-primary focus:outline-none font-bold rounded-2xl text-sm p-4 text-center inline-flex items-center ion-activatable relative overflow-hidden more-button"
+      (click)="getMoreNotifications()"
+      [disabled]="!canGetMore()"
+    >
+      @if (canGetMore()) {
+      <ion-ripple-effect></ion-ripple-effect>
+      }
+      <lucide-angular class="me-1" [img]="moreIcon" size="24"></lucide-angular>
+      <span> Mostrar más </span>
+    </button>
+  </div>
+  }
 </ion-content>
