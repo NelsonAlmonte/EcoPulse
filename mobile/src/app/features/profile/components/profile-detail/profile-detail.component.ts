@@ -8,6 +8,7 @@ import {
   LucideAngularModule,
   StarIcon,
   UserCogIcon,
+  UserIcon,
 } from 'lucide-angular';
 import { ProfileOptionsComponent } from '@features/profile/components/profile-options/profile-options.component';
 import { ProfileCountersComponent } from '@features/profile/components/profile-counters/profile-counters.component';
@@ -28,7 +29,7 @@ import { UserService } from '@core/services/user.service';
 export class ProfileDetailComponent {
   user = input<User | null>();
   userService = inject(UserService);
-  userIcon = CircleUserIcon;
+  userIcon = UserIcon;
   editProfileIcon = UserCogIcon;
   issuesIcon = FileSearchIcon;
   highlightedIcon = StarIcon;

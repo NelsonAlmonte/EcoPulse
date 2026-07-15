@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CircleUserIcon, LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule, User } from 'lucide-angular';
 
 @Component({
   selector: 'app-profile-detail-loading',
@@ -9,5 +9,5 @@ import { CircleUserIcon, LucideAngularModule } from 'lucide-angular';
   imports: [LucideAngularModule],
 })
 export class ProfileDetailLoadingComponent {
-  userIcon = CircleUserIcon;
+  userIcon = User;
 }
