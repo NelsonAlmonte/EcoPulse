@@ -9,13 +9,13 @@ export interface CreateUserDto {
 }
 
 export interface GetUserDto {
-  id: string;
+  id?: string;
   name: string;
   last: string;
   email?: string;
   createdAt?: Date;
   issues?: number;
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 export interface UpdateUserDto {

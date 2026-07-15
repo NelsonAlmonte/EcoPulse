@@ -50,6 +50,12 @@ model Issue {
   createdAt     DateTime       @default(now())
   highlights    Highlight[]
   notifications Notification[]
+
+  @@index([userId, createdAt])
+  @@index([status])
+  @@index([categoryId])
+  @@index([userId])
+  @@index([createdAt])
 }
 
 model Category {
@@ -81,4 +87,8 @@ model Notification {
   statusTo    Status
   isRead      Boolean  @default(false)
   createdAt   DateTime @default(now())
+
+  @@index([recipientId])
+  @@index([recipientId, isRead])
+  @@index([recipientId, createdAt])
 }

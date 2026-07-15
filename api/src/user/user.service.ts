@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
-import { CreateUserDto, GetUserDto, UpdateUserDto } from './user.dto';
-import { GetIssueDto } from 'src/issue/issue.dto';
+import { GetUserDto, UpdateUserDto } from './user.dto';
+import { GetIssueDto, GetIssueListDto } from 'src/issue/issue.dto';
 import { PaginationParams } from 'src/util/interfaces/response.params';
 
 @Injectable()
@@ -41,18 +41,23 @@ export class UserService {
     pagination: PaginationParams,
     where: Prisma.IssueWhereInput,
     order: Prisma.IssueOrderByWithRelationInput[],
-  ): Promise<GetIssueDto[] | null> {
+  ): Promise<GetIssueListDto[] | null> {
     const issues = await this.prisma.issue.findMany({
       skip: pagination.skip,
       take: pagination.take,
       where,
       include: {
-        category: true,
-        user: {
+        category: {
           omit: {
-            role: true,
-            email: true,
+            id: true,
+            isActive: true,
             createdAt: true,
+          },
+        },
+        user: {
+          select: {
+            name: true,
+            last: true,
           },
         },
         highlights: {
@@ -100,12 +105,17 @@ export class UserService {
       include: {
         issue: {
           include: {
-            category: true,
-            user: {
+            category: {
               omit: {
-                role: true,
-                email: true,
+                id: true,
+                isActive: true,
                 createdAt: true,
+              },
+            },
+            user: {
+              select: {
+                name: true,
+                last: true,
               },
             },
             highlights: {

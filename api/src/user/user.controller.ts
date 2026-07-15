@@ -15,7 +15,7 @@ import {
 import { UserService } from './user.service';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 import { AdminGuard } from 'src/auth/admin.guard';
-import { GetIssueDto } from 'src/issue/issue.dto';
+import { GetIssueDto, GetIssueListDto } from 'src/issue/issue.dto';
 import { GetUserDto, UpdateUserDto } from './user.dto';
 import { List } from 'src/util/interfaces/response.dto';
 import { buildPaginationParams } from 'src/util/functions/pagination.functions';
@@ -39,9 +39,10 @@ export class UserController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('amount', new DefaultValuePipe(6), ParseIntPipe) amount: number,
   ): Promise<List<GetUserDto[]> | null> {
-    const users = await this.userService.getUsersList(
-      buildPaginationParams(page, amount),
-    );
+    const [users, total] = await Promise.all([
+      this.userService.getUsersList(buildPaginationParams(page, amount)),
+      this.userService.countUsers(),
+    ]);
 
     if (!users) return null;
 
@@ -50,7 +51,7 @@ export class UserController {
       pagination: {
         page: page,
         amount: amount,
-        total: await this.userService.countUsers(),
+        total,
       },
     };
 
@@ -70,7 +71,7 @@ export class UserController {
     @Query('categories') categories?: string,
     @Query('order') order?: string,
     @Query('all') all?: string,
-  ): Promise<List<GetIssueDto[]> | null> {
+  ): Promise<List<GetIssueListDto[]> | null> {
     const where = buildFilterParams(
       status,
       defined_date,
@@ -83,16 +84,19 @@ export class UserController {
     Object.assign(where, { userId });
 
     const orderFilter = buildOrderParam(order);
-    const issues = await this.userService.getIssues(
-      userId,
-      buildPaginationParams(page, amount),
-      where,
-      orderFilter,
-    );
+    const [issues, total] = await Promise.all([
+      this.userService.getIssues(
+        userId,
+        buildPaginationParams(page, amount),
+        where,
+        orderFilter,
+      ),
+      this.issueService.countIssues(where),
+    ]);
 
     if (!issues) return null;
 
-    const issueList: List<GetIssueDto[]> = {
+    const issueList: List<GetIssueListDto[]> = {
       data: issues.map((issue) => ({
         ...issue,
         photo: `${process.env.PUBLIC_BUCKET_URL}/${issue.photo}`,
@@ -100,7 +104,7 @@ export class UserController {
       pagination: {
         page: Number(page),
         amount: Number(amount),
-        total: await this.issueService.countIssues(where),
+        total,
       },
     };
 
@@ -157,12 +161,15 @@ export class UserController {
   ): Promise<List<GetIssueDto[]>> {
     const where = buildFilterParams(status);
     const orderFilter = buildOrderParam(order);
-    const highlights = await this.userService.getHighlightsGiven(
-      userId,
-      buildPaginationParams(page, amount),
-      where,
-      orderFilter,
-    );
+    const [highlights, total] = await Promise.all([
+      this.userService.getHighlightsGiven(
+        userId,
+        buildPaginationParams(page, amount),
+        where,
+        orderFilter,
+      ),
+      this.userService.countHighlightsGiven(userId),
+    ]);
 
     const highlightList: List<GetIssueDto[]> = {
       data: highlights.map((highlight) => ({
@@ -172,7 +179,7 @@ export class UserController {
       pagination: {
         page: page,
         amount: amount,
-        total: await this.userService.countHighlightsGiven(userId),
+        total,
       },
     };
 

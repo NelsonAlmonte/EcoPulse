@@ -156,11 +156,10 @@ export class IssueController {
     );
 
     const orderFilter = buildOrderParam(order);
-    const issues = await this.issueService.getIssuesInBounds(
-      paginationParams,
-      where,
-      orderFilter,
-    );
+    const [issues, total] = await Promise.all([
+      this.issueService.getIssuesInBounds(paginationParams, where, orderFilter),
+      this.issueService.countIssues(where),
+    ]);
 
     if (!issues) return null;
 
@@ -172,41 +171,7 @@ export class IssueController {
       pagination: {
         page: Number(page),
         amount: Number(amount),
-        total: await this.issueService.countIssues(where),
-      },
-    };
-
-    return issueList;
-  }
-
-  @UseGuards(SupabaseAuthGuard)
-  @Get('coords')
-  async issuesCoordinates(
-    @Query('status') status?: string,
-    @Query('defined_date') defined_date?: string,
-    @Query('start_date') start_date?: string,
-    @Query('end_date') end_date?: string,
-    @Query('categories') categories?: string,
-    @Query('all') all?: string,
-  ): Promise<List<Pick<Issue, 'latitude' | 'longitude'>[]> | null> {
-    const where = buildFilterParams(
-      status,
-      defined_date,
-      start_date,
-      end_date,
-      categories,
-      all,
-    );
-    const issues = await this.issueService.getIssuesCoordinates(where);
-
-    if (!issues) return null;
-
-    const issueList: List<Pick<Issue, 'latitude' | 'longitude'>[]> = {
-      data: issues,
-      pagination: {
-        page: 1,
-        amount: 10,
-        total: await this.issueService.countIssues(where),
+        total,
       },
     };
 

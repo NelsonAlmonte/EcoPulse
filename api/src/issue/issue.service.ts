@@ -82,10 +82,17 @@ export class IssueService {
     order: Prisma.IssueOrderByWithRelationInput[],
   ): Promise<GetIssueListDto[] | null> {
     const include: Prisma.IssueInclude = {
-      category: true,
-      user: {
+      category: {
         omit: {
-          role: true,
+          id: true,
+          isActive: true,
+          createdAt: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+          last: true,
         },
       },
       _count: {
@@ -133,18 +140,6 @@ export class IssueService {
     });
 
     return transformedIssues;
-  }
-
-  getIssuesCoordinates(
-    where: Prisma.IssueWhereInput,
-  ): Promise<Pick<Issue, 'latitude' | 'longitude'>[]> {
-    return this.prisma.issue.findMany({
-      select: {
-        latitude: true,
-        longitude: true,
-      },
-      where,
-    });
   }
 
   countIssues(where?: Prisma.IssueWhereInput): Promise<number> {
