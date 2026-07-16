@@ -36,5 +36,13 @@ export default ts.config(
 				svelteConfig
 			}
 		}
+	},
+	{
+		'svelte/no-navigation-without-resolve': [
+			'error',
+			{
+				ignoreGoto: false
+			}
+		]
 	}
 );

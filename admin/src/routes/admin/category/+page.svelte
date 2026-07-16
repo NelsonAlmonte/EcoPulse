@@ -16,6 +16,9 @@
 	let totalPages = $derived(
 		Math.ceil(data.categories.pagination.total / data.categories.pagination.amount)
 	);
+	$effect(() => {
+		categoryList.list = data.categories;
+	})
 	const pageHeaderProps: PageHeader = {
 		title: 'Listado de categorias',
 		back_url: '/admin/category',
@@ -51,8 +54,6 @@
 		isLoading = false;
 		categoryList.list = data.categories;
 	});
-
-	categoryList.list = data.categories;
 
 	Object.assign(pageHeaderState, pageHeaderProps);
 </script>

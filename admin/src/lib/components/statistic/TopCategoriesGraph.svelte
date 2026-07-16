@@ -13,14 +13,7 @@
 		return category.length === 0;
 	});
 	let isLoading = $state(false);
-	let options: ApexOptions = $state({
-		series: [
-			{
-				name: 'Incidencias',
-				color: '#31C48D',
-				data: category.slice(0, 5).map((val) => val.value)
-			}
-		],
+	const baseOptions: ApexOptions = {
 		chart: {
 			sparkline: {
 				enabled: false
@@ -57,16 +50,7 @@
 			shared: true,
 			intersect: false
 		},
-		xaxis: {
-			categories: category.slice(0, 5).map((val) => val.label),
-			axisTicks: {
-				show: false
-			},
-			axisBorder: {
-				show: false
-			}
-		},
-		yaxis: {
+				yaxis: {
 			labels: {
 				show: true,
 				style: {
@@ -84,6 +68,26 @@
 				top: -20
 			}
 		}
+	}
+	let options = $derived<ApexOptions>({
+		...baseOptions,
+		series: [
+			{
+				name: 'Incidencias',
+				color: '#31C48D',
+				data: category.slice(0, 5).map((val) => val.value)
+			}
+		],
+		xaxis: {
+			categories: category.slice(0, 5).map((val) => val.label),
+			axisTicks: {
+				show: false
+			},
+			axisBorder: {
+				show: false
+			}
+		},
+
 	});
 	const alertProps: AlertProps = {
 		title: 'Sin resultados',

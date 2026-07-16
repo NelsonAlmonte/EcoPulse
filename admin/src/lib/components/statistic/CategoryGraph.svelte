@@ -13,15 +13,8 @@
 		return category.length === 0;
 	});
 	let isLoading = $state(false);
-	let options: ApexOptions = $state({
+	const baseOptions: ApexOptions = {
 		colors: ['#1A56DB'],
-		series: [
-			{
-				name: 'Incidencias',
-				color: '#1A56DB',
-				data: category.map((val) => ({ x: val.label, y: val.value }))
-			}
-		],
 		chart: {
 			type: 'bar',
 			height: '280px',
@@ -95,6 +88,16 @@
 		fill: {
 			opacity: 1
 		}
+	}
+	let options = $derived<ApexOptions>({
+		...baseOptions,
+		series: [
+			{
+				name: 'Incidencias',
+				color: '#1A56DB',
+				data: category.map((val) => ({ x: val.label, y: val.value }))
+			}
+		],
 	});
 	const alertProps: AlertProps = {
 		title: 'Sin resultados',

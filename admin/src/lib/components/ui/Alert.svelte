@@ -3,13 +3,12 @@
 	import { Ban } from '@lucide/svelte';
 
 	let { alertProps }: { alertProps: AlertProps } = $props();
-	const classes = alertProps.classes.join(' ');
 </script>
 
 <div class="flex flex-col items-center justify-center">
 	<div
 		id="alert-additional-content-2"
-		class="{classes} flex flex-col items-center rounded-2xl px-5 py-8 text-center"
+		class="{alertProps.classes.join(' ')} flex flex-col items-center rounded-2xl px-5 py-8 text-center"
 		role="alert"
 	>
 		<div class="mb-2 flex items-center gap-2">

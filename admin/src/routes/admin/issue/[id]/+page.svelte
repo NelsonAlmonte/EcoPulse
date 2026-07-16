@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageHeader } from '$lib/types/ui.type.js';
 	import { goto, invalidateAll } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { Button, Dropdown, DropdownItem, Heading, Modal, Spinner } from 'flowbite-svelte';
 	import { pageHeaderState } from '$lib/store/ui.svelte.js';
 	import IssueMap from '$lib/components/issue/IssueMap.svelte';
@@ -62,7 +63,7 @@
 				<Status status={data.issue.status.toLocaleLowerCase()} />
 				<span class="text-gray-700">
 					reportado {relativeTime(data.issue.createdAt)} por
-					<a href="/admin/user/{data.issue.user.id}" class="font-medium text-gray-900 hover:underline">
+					<a href="/admin/user/{data.issue.userId}?defined_date=90d" class="font-medium text-gray-900 hover:underline" rel="external">
 						{data.issue.user.name}
 						{data.issue.user.last}
 					</a>
@@ -79,6 +80,12 @@
 					<ChevronRight size="20" class="ms-2 text-gray-900  dark:text-white" />
 				</DropdownItem>
 				<Dropdown simple placement="right-start" class="px-2">
+					<ChangeStatus
+						id={data.issue.id}
+						status="EN_PROCESO"
+						children={dropdownItem}
+						onChanged={() => invalidateAll()}
+					/>
 					<ChangeStatus
 						id={data.issue.id}
 						status="DESCARTADO"
@@ -98,7 +105,7 @@
 						onChanged={() => invalidateAll()}
 					/>
 				</Dropdown>
-				<DeleteButton endpoint="issue" id={data.issue.id} onDeleted={() => goto('/admin/issue')}>
+				<DeleteButton endpoint="issue" id={data.issue.id} onDeleted={() => goto(resolve('/admin/issue'))}>
 					<DropdownItem class="rounded-lg text-base hover:bg-red-100 hover:text-red-700"
 						>Eliminar</DropdownItem
 					>
@@ -111,7 +118,7 @@
 	<div class="relative">
 		<img class="h-150 w-100 rounded-xl object-cover" src={data.issue.photo} alt="Foto" />
 		<Button
-			class="absolute start-0 top-0 m-4 cursor-pointer p-2!"
+			class="absolute inset-s-0 top-0 m-4 cursor-pointer p-2!"
 			size="lg"
 			color="light"
 			onclick={() => (isModalOpen = true)}
@@ -126,7 +133,7 @@
 				<dl>
 					{#each data.issueInfoItems as item (item.value)}
 						{#if item.value !== ''}
-							<div class="mb-4 border-b-1 border-b-gray-300 pb-2">
+							<div class="mb-4 border-b border-b-gray-300 pb-2">
 								<dt class="mb-2 text-lg font-medium text-gray-900">{item.label}</dt>
 								<dd class="font-medium text-gray-500 capitalize">{item.value}</dd>
 							</div>

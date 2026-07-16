@@ -22,7 +22,7 @@
 			<div class="mt-8 rounded-2xl border border-gray-200 bg-gray-100 p-4">
 				<p class="mb-2 text-xs font-semibold tracking-wider text-gray-500 uppercase">Detalle</p>
 
-				<p class="text-sm break-words whitespace-pre-wrap text-gray-800">
+				<p class="text-sm wrap-break-word whitespace-pre-wrap text-gray-800">
 					{page?.error?.message}
 				</p>
 			</div>

@@ -11,8 +11,13 @@
 			icon: 'CircleDot'
 		},
 		{
+			label: 'en_proceso',
+			color: 'teal',
+			icon: 'CircleEllipsis'
+		},
+		{
 			label: 'resuelto',
-			color: 'emerald',
+			color: 'sky',
 			icon: 'CircleCheck'
 		},
 		{
@@ -43,5 +48,5 @@
 		{@const Icon = icons[currentStatus.icon]}
 		<Icon size="18" class="me-2" />
 	{/if}
-	{currentStatus.label}
+	{currentStatus.label.replace('_', ' ')}
 </Badge>

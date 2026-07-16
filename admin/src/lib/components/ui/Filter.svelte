@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import type { Category } from '$lib/models/category.model';
@@ -27,6 +28,7 @@
 	let selectedOrder = $state('createdAt:desc');
 	const statusChoices: CheckboxItem[] = [
 		{ value: 'PENDIENTE', label: 'Pendiente' },
+		{ value: 'EN_PROCESO', label: 'En proceso' },
 		{ value: 'RESUELTO', label: 'Resuelto' },
 		{ value: 'DESCARTADO', label: 'Descartado' }
 	];
@@ -190,13 +192,12 @@
 			<AccordionItem>
 				{#snippet header()}Estado{/snippet}
 				<div
-					class="flex w-full items-center justify-between divide-x divide-gray-200 rounded-lg border border-gray-200 sm:flex rtl:divide-x-reverse dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800"
+					class="grid w-full grid-cols-2 gap-4"
 				>
 					<Checkbox
 						inline
 						choices={statusChoices}
 						bind:group={status}
-						classes={{ div: 'p-3 flex-1' }}
 					/>
 				</div>
 			</AccordionItem>

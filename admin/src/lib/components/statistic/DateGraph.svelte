@@ -13,7 +13,7 @@
 		return date.length === 0;
 	});
 	let isLoading = $state(false);
-	let options: ApexOptions = $state({
+	const baseOptions: ApexOptions = {
 		chart: {
 			height: 340,
 			type: 'area',
@@ -46,6 +46,12 @@
 				top: -26
 			}
 		},
+				legend: {
+			show: false
+		},
+	}
+	let options = $derived<ApexOptions>({
+		...baseOptions,
 		series: [
 			{
 				name: 'Incidencias',
@@ -53,9 +59,6 @@
 				color: '#7E3AF2'
 			}
 		],
-		legend: {
-			show: false
-		},
 		xaxis: {
 			categories: date.map((val) => val.label),
 			labels: {
@@ -72,9 +75,6 @@
 				show: false
 			}
 		}
-		// yaxis: {
-		// 	show: false
-		// }
 	});
 	const alertProps: AlertProps = {
 		title: 'Sin resultados',

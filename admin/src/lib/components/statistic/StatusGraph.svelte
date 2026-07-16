@@ -13,9 +13,8 @@
 		return status.every((val) => val.value === 0);
 	});
 	let isLoading = $state(false);
-	let options: ApexOptions = $state({
-		series: status.map((val) => val.value),
-		colors: ['#fcd34d', '#059669', '#dc2626'],
+	const baseOptions: ApexOptions = {
+		colors: ['#fcd34d', '#00bba7', '#059669', '#dc2626'],
 		chart: {
 			height: 280,
 			width: '100%',
@@ -50,9 +49,6 @@
 							show: true,
 							fontFamily: 'Inter, sans-serif',
 							offsetY: -20,
-							formatter: function (value) {
-								return value;
-							}
 						}
 					},
 					size: '80%'
@@ -64,16 +60,24 @@
 				top: -2
 			}
 		},
-		labels: status.map(
-			(val) => val.label.toLowerCase().charAt(0).toUpperCase() + val.label.toLowerCase().slice(1)
-		),
 		dataLabels: {
 			enabled: false
 		},
 		legend: {
 			position: 'bottom',
-			fontFamily: 'Inter, sans-serif'
+			fontFamily: 'Inter, sans-serif',
+			formatter: (value) => {
+				return value.replace('_', ' ')
+			}
 		}
+	}
+	let options = $derived<ApexOptions>({
+		...baseOptions,
+		series: status.map((val) => val.value),
+		labels: status.map(
+			(val) => val.label.toLowerCase().charAt(0).toUpperCase() + val.label.toLowerCase().slice(1)
+		),
+
 	});
 	const alertProps: AlertProps = {
 		title: 'Sin resultados',
@@ -99,11 +103,11 @@
 <Card class="rounded-xl p-4 md:p-6" size="md">
 	<h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Reporte por estados</h5>
 
-	<div class="mt-4 rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
+	<div class="mt-4">
 		{#if !isEmpty}
-			<div class="mb-2 grid grid-cols-3 gap-3">
+			<div class="mb-2 grid grid-cols-2 gap-3">
 				<dl
-					class="flex h-[78px] flex-col items-center justify-center rounded-lg bg-amber-50 dark:bg-gray-600"
+					class="flex h-19.5 flex-col items-center justify-center rounded-lg bg-amber-50 dark:bg-gray-600"
 				>
 					<dt
 						class="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm font-medium text-amber-600 dark:bg-gray-500 dark:text-amber-300"
@@ -113,7 +117,17 @@
 					<dd class="text-sm font-medium text-amber-600 dark:text-amber-300">Pendiente</dd>
 				</dl>
 				<dl
-					class="flex h-[78px] flex-col items-center justify-center rounded-lg bg-emerald-50 dark:bg-gray-600"
+					class="flex h-19.5 flex-col items-center justify-center rounded-lg bg-teal-50 dark:bg-gray-600"
+				>
+					<dt
+						class="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-sm font-medium text-teal-600 dark:bg-gray-500 dark:text-teal-300"
+					>
+						{status.find((val) => val.label === 'EN_PROCESO')!.value}
+					</dt>
+					<dd class="text-sm font-medium text-teal-600 dark:text-teal-300">En proceso</dd>
+				</dl>
+				<dl
+					class="flex h-19.5 flex-col items-center justify-center rounded-lg bg-emerald-50 dark:bg-gray-600"
 				>
 					<dt
 						class="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-sm font-medium text-emerald-600 dark:bg-gray-500 dark:text-emerald-300"
@@ -123,7 +137,7 @@
 					<dd class="text-sm font-medium text-emerald-600 dark:text-emerald-300">Resuelto</dd>
 				</dl>
 				<dl
-					class="flex h-[78px] flex-col items-center justify-center rounded-lg bg-red-50 dark:bg-gray-600"
+					class="flex h-19.5 flex-col items-center justify-center rounded-lg bg-red-50 dark:bg-gray-600"
 				>
 					<dt
 						class="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-sm font-medium text-red-600 dark:bg-gray-500 dark:text-red-300"

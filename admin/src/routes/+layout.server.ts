@@ -9,10 +9,9 @@ export const load: LayoutServerLoad = async ({ fetch, locals: { safeGetSession }
 	if (session) {
 		const userResponse = await fetch(new URL(`user/${session.user.id}`, PUBLIC_API_URL));
 
-		if (!userResponse.ok) {
-			//TODO: Mostrar error en login
-			console.error('Error al obtener usuario:', userResponse.status);
-		}
+		// if (!userResponse.ok) {
+		// 	console.error('Error al obtener usuario:', userResponse.status);
+		// }
 
 		loggedUser = (await userResponse.json()) as User;
 	}

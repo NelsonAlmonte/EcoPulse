@@ -54,6 +54,6 @@
 </script>
 
 <button onclick={() => changeStatus()}>
-	{@render children(isLoading, status)}
+	{@render children(isLoading, status.replace('_', ' '))}
 </button>
 <br />

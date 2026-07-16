@@ -10,7 +10,7 @@
 	import { userSession } from '$lib/store/userSession.svelte.js';
 
 	let { data } = $props();
-	const insights: InsightProps[] = [
+	const insights = $derived<InsightProps[]>([
 		{
 			label: 'Total de incidencias',
 			value: data.issuesCount,
@@ -30,6 +30,28 @@
 			label: 'Usuarios activos',
 			value: data.activeUsersCount,
 			icon: 'Users'
+		}
+	]);
+	const shortcuts = [
+		{
+			href: '/admin/issue',
+			label: 'Listado de incidencias',
+			icon: FileSearch
+		},
+		{
+			href: '/admin/issue/map',
+			label: 'Mapa de incidencias',
+			icon: MapPinned
+		},
+		{
+			href: '/admin/statistic',
+			label: 'Reportes',
+			icon: ChartColumn
+		},
+		{
+			href: '/admin/user',
+			label: 'Listado de usuarios',
+			icon: Users
 		}
 	];
 	const pageHeaderProps: PageHeader = {
@@ -53,25 +75,14 @@
 	</h5>
 	<p class="mb-3 font-normal text-gray-600">Opciones destacadas para una gestión más eficiente.</p>
 	<div class="space-y-2 lg:space-y-0">
-		<Button href="/admin/issue" color="alternative" pill>
-			<FileSearch class="me-2" size="20" />
-			Listado de incidencias
-		</Button>
+		{#each shortcuts as shortcut (shortcut.href)}
+			{@const Icon = shortcut.icon}
 
-		<Button href="/admin/issue/map" color="alternative" pill>
-			<MapPinned class="me-2" size="20" />
-			Mapa de incidencias
-		</Button>
-
-		<Button href="/admin/statistic" color="alternative" pill>
-			<ChartColumn class="me-2" size="20" />
-			Reportes
-		</Button>
-
-		<Button href="/admin/user" color="alternative" pill>
-			<Users class="me-2" size="20" />
-			Listado de usuarios
-		</Button>
+			<Button class="me-2" href={shortcut.href} color="alternative" pill>
+				<Icon class="me-2" size="20" />
+				{shortcut.label}
+			</Button>
+		{/each}
 	</div>
 </Card>
 <div class="mb-4 flex items-center justify-between">
