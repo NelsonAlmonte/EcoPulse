@@ -220,15 +220,15 @@ export class ReportModalComponent {
     const coordinates = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
     });
-    const { latitude, longitude } =
-      this.getRandomCoordinatesInDominicanRepublic();
+    // const { latitude, longitude } =
+    //   this.getRandomCoordinatesInDominicanRepublic();
     const issue: CreateIssueDto = {
       photo: this.photo().toString(),
       status: DEFAULT_STATUS,
-      latitude: latitude,
-      longitude: longitude,
-      // latitude: coordinates.coords.latitude,
-      // longitude: coordinates.coords.longitude,
+      // latitude: latitude,
+      // longitude: longitude,
+      latitude: coordinates.coords.latitude,
+      longitude: coordinates.coords.longitude,
       comment: this.comment,
       category: this.selectedCategory!.id,
       user: this.authService.user()!.id,
