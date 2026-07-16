@@ -25,7 +25,7 @@ export class HighlightController {
 
     if (!highlight) {
       throw new BadRequestException(
-        'Unexpected error when creating a highlight',
+        'Error inesperado al resaltar este reporte.',
       );
     }
 
@@ -43,7 +43,7 @@ export class HighlightController {
 
     if (!highlight) {
       throw new BadRequestException(
-        'Unexpected error when deleting a highlight',
+        'Error inesperado al quitar el resalte de este reporte.',
       );
     }
 

@@ -69,7 +69,7 @@ export class CategoryController {
 
     if (!category) {
       throw new BadRequestException(
-        'Unexpected error when creating a category',
+        'Error inesperado al crear esta categoria.',
       );
     }
 
@@ -89,7 +89,7 @@ export class CategoryController {
 
     if (!category) {
       throw new BadRequestException(
-        'Unexpected error when updating a category',
+        'Error inesperado al actualizar esta categoria.',
       );
     }
 
@@ -105,7 +105,7 @@ export class CategoryController {
 
     if (!category) {
       throw new BadRequestException(
-        'Unexpected error when deleting a category',
+        'Error inesperado al eliminar esta categoria.',
       );
     }
 

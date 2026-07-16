@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Issue, Prisma } from '@prisma/client';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
@@ -12,7 +8,6 @@ import {
 } from 'src/issue/issue.dto';
 import { PrismaService } from 'src/prisma.service';
 import { PaginationParams } from 'src/util/interfaces/response.params';
-import type { Multer } from 'multer';
 
 @Injectable()
 export class IssueService {
@@ -152,10 +147,17 @@ export class IssueService {
         id: issueId,
       },
       include: {
-        category: true,
-        user: {
+        category: {
           omit: {
-            role: true,
+            id: true,
+            isActive: true,
+            createdAt: true,
+          },
+        },
+        user: {
+          select: {
+            name: true,
+            last: true,
           },
         },
         highlights: {
@@ -175,9 +177,7 @@ export class IssueService {
       },
     });
 
-    if (!issue) {
-      throw new NotFoundException(`No existe un issue con ID ${issueId}`);
-    }
+    if (!issue) return null;
 
     const transformedIssue = {
       ...issue,
@@ -258,7 +258,7 @@ export class IssueService {
       .upload(file.originalname, file.buffer, {
         contentType: 'image/jpeg',
       });
-    console.log(error);
+
     if (error) return null;
 
     return data;

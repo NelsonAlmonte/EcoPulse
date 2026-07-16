@@ -228,7 +228,7 @@ export class IssueController {
     const createdIssue = await this.issueService.createIssue(issue);
 
     if (!createdIssue) {
-      throw new BadRequestException('Unexpected error when creating a issue');
+      throw new BadRequestException('Error inesperado al crear este reporte.');
     }
 
     return {
@@ -259,7 +259,9 @@ export class IssueController {
     const updatedIssue = await this.issueService.updateIssue(issue, id);
 
     if (!updatedIssue) {
-      throw new BadRequestException('Unexpected error when updating a issue');
+      throw new BadRequestException(
+        'Error inesperado al actualizar este reporte.',
+      );
     }
 
     return {
@@ -274,7 +276,9 @@ export class IssueController {
     const issue = await this.issueService.deleteIssue(id);
 
     if (!issue) {
-      throw new BadRequestException('Unexpected error when deleting a issue');
+      throw new BadRequestException(
+        'Error inesperado al eliminar este reporte.',
+      );
     }
 
     return {
@@ -292,9 +296,7 @@ export class IssueController {
     const uploadedPhoto = await this.issueService.uploadPhoto(photo);
 
     if (!uploadedPhoto) {
-      throw new BadRequestException(
-        'Unexpected error when uploading the photo',
-      );
+      throw new BadRequestException('Error inesperado al subir esta imagen.');
     }
 
     return uploadedPhoto;
