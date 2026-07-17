@@ -22,7 +22,7 @@ function generateIssueInfoItems(issue: Issue): InfoItem[] {
 		},
 		{
 			label: 'Estado',
-			value: issue.status.toLocaleLowerCase(),
+			value: issue.status.replace('_', ' ').toLocaleLowerCase(),
 			icon: 'CircleDot'
 		},
 		{

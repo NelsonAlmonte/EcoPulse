@@ -1,4 +1,5 @@
 import { PUBLIC_GOOGLE_MAPS_API_KEY } from '$env/static/public';
+import { disableGoogleMapsFonts } from '$lib/utils/googleMapsFonts';
 
 class MapService {
 	#isInitialized = false;
@@ -9,6 +10,8 @@ class MapService {
 
 		if (!this.#initPromise) {
 			this.#initPromise = (async () => {
+				disableGoogleMapsFonts();
+
 				const { setOptions } = await import('@googlemaps/js-api-loader');
 
 				setOptions({

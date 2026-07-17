@@ -77,7 +77,7 @@
 			<Dropdown simple class="cursor-pointer px-2 font-medium">
 				<DropdownItem class="flex items-center rounded-lg text-base">
 					<span> Cambiar estado </span>
-					<ChevronRight size="20" class="ms-2 text-gray-900  dark:text-white" />
+					<ChevronRight size="20" class="ms-2 text-gray-900" />
 				</DropdownItem>
 				<Dropdown simple placement="right-start" class="px-2">
 					<ChangeStatus

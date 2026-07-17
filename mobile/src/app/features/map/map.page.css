@@ -2,6 +2,11 @@
   touch-action: none;
 }
 
+ion-content {
+  --background: var(--md-sys-color-surface);
+  --color: var(--md-sys-color-on-background);
+}
+
 ion-spinner {
   width: 50px;
   height: 50px;
