@@ -23,7 +23,7 @@
         </div>
         <div>
           <h2 class="text-xl font-bold my-0!">
-            {{ issue().category.name }}
+            {{ issue().category.name.replace("_", " ") }}
           </h2>
           <span class="opacity-75 font-medium"
             >Reporte {{ issue().status.toLocaleLowerCase() }}</span
