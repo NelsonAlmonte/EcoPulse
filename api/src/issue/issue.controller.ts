@@ -179,6 +179,40 @@ export class IssueController {
   }
 
   @UseGuards(SupabaseAuthGuard)
+  @Get('coords')
+  async issuesCoordinates(
+    @Query('status') status?: string,
+    @Query('defined_date') defined_date?: string,
+    @Query('start_date') start_date?: string,
+    @Query('end_date') end_date?: string,
+    @Query('categories') categories?: string,
+    @Query('all') all?: string,
+  ): Promise<List<Pick<Issue, 'latitude' | 'longitude'>[]> | null> {
+    const where = buildFilterParams(
+      status,
+      defined_date,
+      start_date,
+      end_date,
+      categories,
+      all,
+    );
+    const issues = await this.issueService.getIssuesCoordinates(where);
+
+    if (!issues) return null;
+
+    const issueList: List<Pick<Issue, 'latitude' | 'longitude'>[]> = {
+      data: issues,
+      pagination: {
+        page: 1,
+        amount: 10,
+        total: await this.issueService.countIssues(where),
+      },
+    };
+
+    return issueList;
+  }
+
+  @UseGuards(SupabaseAuthGuard)
   @Get('count')
   async countIssues(@Query('status') status?: Status): Promise<number | null> {
     const where: Prisma.IssueWhereInput = {

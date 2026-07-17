@@ -1,14 +1,15 @@
 import type { Actions } from './$types';
 import { fail } from '@sveltejs/kit';
-import { RESET_PASSWORD_URL } from '$env/static/private';
 
 export const actions = {
-	default: async ({ request, locals: { supabase } }) => {
+	default: async ({ request, url, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const email = formData.get('email') as string;
 
+		const redirectUrl = new URL('/auth/update-password', url.origin);
+
 		const { error } = await supabase.auth.resetPasswordForEmail(email, {
-			redirectTo: RESET_PASSWORD_URL
+			redirectTo: redirectUrl.toString()
 		});
 
 		if (error) {
@@ -16,7 +17,7 @@ export const actions = {
 				email,
 				alert: {
 					message:
-						'Ocurrio un error al enviar esta solicitud. Verifique que el correo exista o intentelo de nuevo mas tarde',
+						'Ocurrió un error al enviar esta solicitud. Verifique que el correo exista o inténtelo de nuevo más tarde',
 					color: 'red'
 				}
 			});

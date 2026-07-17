@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   googleMapsApiKey: 'AIzaSyCNsKl8JuAYqzyMkcWy2Nspr9IPvg_jSNA',
-  apiUrl: 'https://ecopulse-hos2.onrender.com/',
+  apiUrl: 'https://ecopulse-production-419b.up.railway.app/',
   publicBucketUrl:
     'https://fjspordcnfubfezttyvt.supabase.co/storage/v1/object/public/',
   forgotPasswordUrl: 'http://localhost:5173/auth/reset-password',
