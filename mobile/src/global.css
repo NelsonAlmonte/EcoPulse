@@ -300,6 +300,9 @@ ion-content {
 }
 
 .issue-detail-modal {
+  --background: var(--md-sys-color-surface);
+  --color: var(--md-sys-color-on-background);
+  
   .issue-detail-card {
     height: 100%;
 

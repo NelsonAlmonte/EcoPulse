@@ -4,7 +4,7 @@ export const environment = {
   apiUrl: 'https://ecopulse-production-419b.up.railway.app/',
   publicBucketUrl:
     'https://fjspordcnfubfezttyvt.supabase.co/storage/v1/object/public/',
-  forgotPasswordUrl: 'http://localhost:5173/auth/reset-password',
+  forgotPasswordUrl: 'https://ecopulse-portal.netlify.app/auth/reset-password',
   supabaseUrl: 'https://fjspordcnfubfezttyvt.supabase.co',
   supabasePublishableKey: 'sb_publishable_arvw9ZlO_u7UGw_BspGexw_GvJRNj-A',
 };
