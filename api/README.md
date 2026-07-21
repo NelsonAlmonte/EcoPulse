@@ -1,98 +1,427 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+<br />
+<div align="center">
+  <a href="https://github.com/NelsonAlmonte/EcoPulse">
+    <img src="images/logo.png" alt="Logo" width="90">
+  </a>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+  <h2 align="center">EcoPulse API</h2>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+  <h4 align="center">
+    API REST para la gestión de incidencias urbanas y servicios de la plataforma EcoPulse
+  </h4>
+</div>
 
-## Description
+<details>
+  <summary>Tabla de contenido</summary>
+  <ol>
+    <li>
+      <a href="#acerca-del-proyecto">Acerca del proyecto</a>
+    </li>
+    <li>
+      <a href="#características">Características</a>
+    </li>
+    <li>
+      <a href="#tecnologías-utilizadas">Tecnologías utilizadas</a>
+    </li>
+    <li>
+      <a href="#primeros-pasos">Primeros pasos</a>
+      <ul>
+        <li><a href="#prerrequisitos">Prerrequisitos</a></li>
+        <li><a href="#instalación">Instalación</a></li>
+        <li><a href="#variables-de-entorno">Variables de entorno</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#configuración-inicial">Configuración inicial</a>
+    </li>
+    <li><a href="#uso">Uso</a></li>
+    <li><a href="#contribuciones">Contribuciones</a></li>
+    <li><a href="#licencia">Licencia</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="#agradecimientos">Agradecimientos</a></li>
+  </ol>
+</details>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Acerca del proyecto
 
-## Project setup
+EcoPulse API es el backend de la plataforma EcoPulse. Está desarrollado con NestJS y proporciona una API REST encargada de centralizar toda la lógica de negocio, autenticación, gestión de incidencias y comunicación entre la aplicación móvil y el panel de administración.
+
+La API administra el ciclo de vida completo de los reportes ciudadanos, incluyendo la autenticación de usuarios, almacenamiento de imágenes, envío de notificaciones, administración de categorías y consulta de estadísticas. Además, integra Supabase como proveedor de base de datos PostgreSQL, autenticación y almacenamiento de archivos, mientras que Prisma ORM facilita el acceso y la gestión de los datos.
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+## Características
+
+- **API REST** desarrollada con NestJS siguiendo una arquitectura modular y escalable.
+- **Gestión completa de incidencias**, incluyendo creación, consulta, actualización y seguimiento de reportes.
+- **Administración de categorías** de incidencias.
+- **Almacenamiento de imágenes** utilizando Supabase Storage.
+- **Obtención de estadísticas** para el panel administrativo.
+- **Consultas geográficas** para mapas, mapas de calor y análisis geoespacial.
+- **Validación y autorización** mediante Guards, Pipes e Interceptors de NestJS.
+- **Persistencia de datos** utilizando Prisma ORM sobre PostgreSQL.
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+## Tecnologías utilizadas
+
+[![NestJS][NestJS]][NestJS-url]
+[![Prisma][Prisma]][Prisma-url]
+[![Supabase][Supabase]][Supabase-url]
+
+### Librerías utilizadas
+
+- [Supabase](https://supabase.com/)
+- [Prisma ORM](https://www.prisma.io/)
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+## Primeros pasos
+
+### Prerrequisitos
+
+Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
+
+- Node.js 20 o superior
+- npm (incluido con Node.js)
+- Una cuenta en Supabase
+- Un proyecto creado en Supabase
+
+### Instalación
+
+1. Clona el repositorio.
 
 ```bash
-$ npm install
+git clone https://github.com/NelsonAlmonte/EcoPulse.git
 ```
 
-## Compile and run the project
+2. Accede al directorio de la API.
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cd api
 ```
 
-## Run tests
+3. Instala las dependencias.
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+4. Renombra el archivo `.env.example` a `.env` y completa las variables de entorno.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Variables de entorno
+
+Antes de ejecutar la API, configura las siguientes variables en el archivo `.env`:
+
+| Variable | Descripción | Dónde obtenerla |
+|----------|-------------|-----------------|
+| `DATABASE_URL` | URL de conexión a PostgreSQL utilizada por Prisma mediante PgBouncer. | Dashboard de Supabase → **Connect**. |
+| `DIRECT_URL` | URL de conexión directa a PostgreSQL utilizada por Prisma para ejecutar migraciones. | Dashboard de Supabase → **Connect**. |
+| `PUBLIC_SUPABASE_URL` | URL del proyecto de Supabase. | Dashboard de Supabase → **Settings → API**. |
+| `PUBLIC_SUPABASE_SERVICE_ROLE_KEY` | Clave **Service Role** del proyecto de Supabase utilizada por la API para realizar operaciones privilegiadas. | Dashboard de Supabase → **Settings → API**. |
+| `PUBLIC_BUCKET_URL` | URL pública del bucket donde se almacenan las imágenes de los reportes. | Dashboard de Supabase → **Storage**. |
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+## Configuración inicial
+
+### Aplicar las migraciones de Prisma
+
+Una vez creado el proyecto en Supabase y configuradas las variables `DATABASE_URL` y `DIRECT_URL`, aplica todas las migraciones ejecutando:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx prisma migrate deploy
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Este comando creará automáticamente todas las tablas, relaciones e índices necesarios para el funcionamiento de la aplicación.
 
-## Resources
+Documentación oficial:
 
-Check out a few resources that may come in handy when working with NestJS:
+https://www.prisma.io/docs/orm/prisma-client/deployment/deploy-database-changes-with-prisma-migrate
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Crear el bucket para las imágenes
 
-## Stay in touch
+Desde el Dashboard de Supabase navega a:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+Storage
+└── Buckets
+```
 
-## License
+Crea un nuevo bucket llamado:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```
+issues
+```
+
+Este bucket será utilizado para almacenar las imágenes asociadas a los reportes enviados desde la aplicación móvil.
+
+Documentación oficial:
+
+https://supabase.com/docs/guides/storage
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+### Configurar SMTP
+
+La autenticación mediante correo electrónico utiliza un servidor SMTP para enviar los correos de recuperación de contraseña.
+
+Desde el Dashboard de Supabase navega a:
+
+```
+Authentication
+└── Emails
+    └── SMTP Settings
+```
+
+Configura un proveedor SMTP. Se recomienda utilizar Gmail SMTP para proyectos personales o de desarrollo.
+
+Documentación oficial:
+
+https://supabase.com/docs/guides/auth/auth-smtp
+
+Tutorial recomendado:
+
+https://www.youtube.com/results?search_query=supabase+gmail+smtp
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+### Configurar las URLs de autenticación
+
+El proceso de recuperación y restablecimiento de contraseña se realiza desde el panel administrativo, por lo que es necesario configurar las URLs utilizadas por Supabase Authentication.
+
+Desde el Dashboard de Supabase navega a:
+
+```
+Authentication
+└── URL Configuration
+```
+
+En **Site URL** agrega:
+
+```
+http://localhost:5173/*
+```
+
+En **Redirect URLs** agrega las siguientes direcciones:
+
+```
+http://localhost:5173/auth/update-password
+
+http://localhost:5173/auth/reset-password
+```
+
+> **Importante:** Una vez la aplicación sea desplegada en producción, recuerda agregar también las URLs correspondientes a tu dominio de producción.
+
+Documentación oficial:
+
+https://supabase.com/docs/guides/auth/redirect-urls
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+### Crear la función `insert_notification`
+
+Cada vez que cambia el estado de un reporte, la API registra automáticamente una notificación para informar al usuario. Para ello es necesario crear la siguiente función en la base de datos.
+
+Desde el Dashboard de Supabase navega a:
+
+```
+Database
+└── Functions
+    └── New Function
+```
+
+Configura la función con los siguientes valores:
+
+| Propiedad | Valor |
+|-----------|-------|
+| Nombre | `insert_notification` |
+| Schema | `public` |
+| Tipo | `Trigger Function` |
+| Retorno | `trigger` |
+
+Utiliza el siguiente código:
+
+```sql
+begin
+    if OLD.status is distinct from NEW.status then
+        insert into "Notification" (
+            id,
+            "recipientId",
+            "issueId",
+            "statusFrom",
+            "statusTo"
+        )
+        values (
+            gen_random_uuid()::text,
+            NEW."userId",
+            NEW.id,
+            OLD.status,
+            NEW.status
+        );
+    end if;
+
+    return NEW;
+end;
+```
+
+Documentación oficial:
+
+https://supabase.com/docs/guides/database/functions
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+### Crear el Trigger
+
+Una vez creada la función, crea el trigger que la ejecutará automáticamente cuando cambie el estado de un reporte.
+
+Desde el Dashboard de Supabase navega a:
+
+```
+Database
+└── Triggers
+    └── New Trigger
+```
+
+Configura el trigger con los siguientes valores:
+
+| Propiedad | Valor |
+|-----------|-------|
+| Nombre | `insert_notification` |
+| Tabla | `Issue` |
+| Evento | `AFTER UPDATE` |
+| Orientation | `ROW` |
+| Función | `insert_notification` |
+
+Este trigger generará automáticamente una notificación cada vez que el estado de un reporte sea modificado.
+
+Documentación oficial:
+
+https://supabase.com/docs/guides/database/postgres/triggers
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+## Uso
+
+### Ejecutar la API en desarrollo
+
+Inicia el servidor de desarrollo con:
+
+```bash
+nest start --dev
+```
+
+La API estará disponible en:
+
+```
+http://localhost:3000
+```
+
+---
+
+### Compilar para producción
+
+Genera la versión compilada de la aplicación ejecutando:
+
+```bash
+npm run build
+```
+
+---
+
+### Ejecutar la versión compilada
+
+```bash
+npm run start:prod
+```
+
+---
+
+### Documentación oficial
+
+Para obtener más información sobre las tecnologías utilizadas, consulta la documentación oficial:
+
+- [NestJS](https://docs.nestjs.com/)
+- [Prisma ORM](https://www.prisma.io/docs)
+- [Supabase](https://supabase.com/docs)
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+## Contribuciones
+
+Si tienes alguna sugerencia para mejorar este proyecto, haz un fork del repositorio y crea un Pull Request. También puedes abrir un Issue utilizando la etiqueta **enhancement**.
+
+Si este proyecto te resulta útil, considera darle una ⭐ al repositorio.
+
+1. Haz un Fork del proyecto.
+2. Crea una nueva rama (`git checkout -b feature/nueva-funcionalidad`).
+3. Realiza tus cambios (`git commit -m 'Agrega nueva funcionalidad'`).
+4. Sube tus cambios (`git push origin feature/nueva-funcionalidad`).
+5. Abre un Pull Request.
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+## Licencia
+
+Distribuido bajo la licencia MIT. Consulta el archivo `LICENSE` para más información.
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+## Contacto
+
+Nelson Almonte - almontetejedanelson@gmail.com
+
+Repositorio del proyecto:
+
+https://github.com/NelsonAlmonte/EcoPulse
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+## Agradecimientos
+
+- [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
+- [NestJS](https://nestjs.com/)
+- [Prisma ORM](https://www.prisma.io/)
+- [Supabase](https://supabase.com/)
+- [Shields.io](https://shields.io/)
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+[NestJS]: https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white
+[NestJS-url]: https://nestjs.com/
+
+[Prisma]: https://img.shields.io/badge/prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white
+[Prisma-url]: https://www.prisma.io/
+
+[Supabase]: https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white
+[Supabase-url]: https://supabase.com/

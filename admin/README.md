@@ -4,10 +4,10 @@
     <img src="images/logo.png" alt="Logo" width="90">
   </a>
 
-  <h2 align="center">EcoPulse API</h2>
+  <h2 align="center">EcoPulse Admin</h2>
 
   <h4 align="center">
-    API REST para la gestión de incidencias urbanas y servicios de la plataforma EcoPulse
+    Panel de administración para la gestión y análisis de incidencias urbanas
   </h4>
 </div>
 
@@ -21,6 +21,12 @@
       <a href="#características">Características</a>
     </li>
     <li>
+      <a href="#imágenes">Imágenes</a>
+    </li>
+    <li>
+      <a href="#demo">Demo</a>
+    </li>
+    <li>
       <a href="#tecnologías-utilizadas">Tecnologías utilizadas</a>
     </li>
     <li>
@@ -28,11 +34,7 @@
       <ul>
         <li><a href="#prerrequisitos">Prerrequisitos</a></li>
         <li><a href="#instalación">Instalación</a></li>
-        <li><a href="#variables-de-entorno">Variables de entorno</a></li>
       </ul>
-    </li>
-    <li>
-      <a href="#configuración-inicial">Configuración inicial</a>
     </li>
     <li><a href="#uso">Uso</a></li>
     <li><a href="#contribuciones">Contribuciones</a></li>
@@ -44,9 +46,9 @@
 
 ## Acerca del proyecto
 
-EcoPulse API es el backend de la plataforma EcoPulse. Está desarrollado con NestJS y proporciona una API REST encargada de centralizar toda la lógica de negocio, autenticación, gestión de incidencias y comunicación entre la aplicación móvil y el panel de administración.
+EcoPulse Admin es el panel de administración de la plataforma EcoPulse, desarrollado para facilitar la gestión, supervisión y análisis de las incidencias reportadas por la ciudadanía. Proporciona a las entidades responsables una interfaz moderna e intuitiva para administrar reportes, visualizar información geoespacial y obtener estadísticas en tiempo real que apoyen la toma de decisiones.
 
-La API administra el ciclo de vida completo de los reportes ciudadanos, incluyendo la autenticación de usuarios, almacenamiento de imágenes, envío de notificaciones, administración de categorías y consulta de estadísticas. Además, integra Supabase como proveedor de base de datos PostgreSQL, autenticación y almacenamiento de archivos, mientras que Prisma ORM facilita el acceso y la gestión de los datos.
+La aplicación combina mapas interactivos, filtros avanzados y herramientas de análisis que permiten identificar tendencias, priorizar incidencias y monitorear el estado general de la plataforma. Además, centraliza la administración de usuarios y categorías de incidencias desde un único lugar, simplificando las tareas de gestión del sistema.
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
@@ -54,14 +56,63 @@ La API administra el ciclo de vida completo de los reportes ciudadanos, incluyen
 
 ## Características
 
-- **API REST** desarrollada con NestJS siguiendo una arquitectura modular y escalable.
-- **Gestión completa de incidencias**, incluyendo creación, consulta, actualización y seguimiento de reportes.
-- **Administración de categorías** de incidencias.
-- **Almacenamiento de imágenes** utilizando Supabase Storage.
-- **Obtención de estadísticas** para el panel administrativo.
-- **Consultas geográficas** para mapas, mapas de calor y análisis geoespacial.
-- **Validación y autorización** mediante Guards, Pipes e Interceptors de NestJS.
-- **Persistencia de datos** utilizando Prisma ORM sobre PostgreSQL.
+- **Gestiona los reportes ciudadanos** mediante un listado con filtros avanzados por estado, categoría, fecha y otros criterios.
+- **Explora las incidencias en un mapa interactivo**, con una experiencia similar a Airbnb para facilitar la navegación geográfica de los reportes.
+- **Administra los usuarios** registrados tanto en la aplicación móvil como en el panel administrativo.
+- **Visualiza estadísticas en tiempo real** mediante gráficos por estado, categoría, fecha y otros indicadores relevantes.
+- **Analiza las incidencias mediante un panel geoespacial interactivo**, donde las métricas y gráficos se actualizan automáticamente según el área visible del mapa.
+- **Identifica las zonas con mayor concentración de incidencias** utilizando un mapa de calor interactivo.
+- **Administra las categorías de incidencias**, permitiendo consultar y agregar nuevos tipos de reportes según las necesidades del sistema.
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+## Imágenes
+
+<table align="center">
+<tr>
+<td align="center">
+<img src="images/image-1.png" width="250"><br>
+<b>Página principal</b>
+</td>
+
+<td align="center">
+<img src="images/image-2.png" width="250"><br>
+<b>Mapa de reportes</b>
+</td>
+
+<td align="center">
+<img src="images/image-3.png" width="250"><br>
+<b>Estadísticas</b>
+</td>
+</tr>
+
+<tr>
+<td align="center">
+<img src="images/image-4.png" width="250"><br>
+<b>Mapa estadístico</b>
+</td>
+
+<td align="center">
+<img src="images/image-5.png" width="250"><br>
+<b>Mapa de calor</b>
+</td>
+
+<td align="center">
+<img src="images/image-6.png" width="250"><br>
+<b>Categorías</b>
+</td>
+</tr>
+</table>
+
+<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
+---
+
+## Demo
+
+[Demo funcional alojado en Netlify](https://ecopulse-portal.netlify.app/)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
@@ -69,14 +120,16 @@ La API administra el ciclo de vida completo de los reportes ciudadanos, incluyen
 
 ## Tecnologías utilizadas
 
-[![NestJS][NestJS]][NestJS-url]
-[![Prisma][Prisma]][Prisma-url]
+[![SvelteKit][SvelteKit]][SvelteKit-url]
+[![Tailwindcss][Tailwindcss]][Tailwindcss-url]
 [![Supabase][Supabase]][Supabase-url]
 
 ### Librerías utilizadas
 
-- [Supabase](https://supabase.com/)
-- [Prisma ORM](https://www.prisma.io/)
+- [Flowbite Svelte](https://flowbite-svelte.com/)
+- [Google Maps](https://www.npmjs.com/package/@googlemaps/js-api-loader)
+- [Deck.gl](https://deck.gl/)
+- [Lucide Icons](https://lucide.dev/)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
@@ -90,8 +143,6 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
 
 - Node.js 20 o superior
 - npm (incluido con Node.js)
-- Una cuenta en Supabase
-- Un proyecto creado en Supabase
 
 ### Instalación
 
@@ -101,10 +152,10 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
 git clone https://github.com/NelsonAlmonte/EcoPulse.git
 ```
 
-2. Accede al directorio de la API.
+2. Accede al directorio del proyecto.
 
 ```bash
-cd api
+cd admin
 ```
 
 3. Instala las dependencias.
@@ -113,256 +164,65 @@ cd api
 npm install
 ```
 
-4. Renombra el archivo `.env.example` a `.env` y completa las variables de entorno.
+4. Crea un archivo `.env` en la raíz del proyecto.
 
----
+5. Renombra el archivo `.env.example` a `.env.development` o `.env.production` y sigue a la siguiente sección.
 
 ### Variables de entorno
 
-Antes de ejecutar la API, configura las siguientes variables en el archivo `.env`:
+Antes de ejecutar la aplicación, configura las siguientes variables en el archivo `.env.development` o `.env.production`:
 
 | Variable | Descripción | Dónde obtenerla |
 |----------|-------------|-----------------|
-| `DATABASE_URL` | URL de conexión a PostgreSQL utilizada por Prisma mediante PgBouncer. | Dashboard de Supabase → **Connect**. |
-| `DIRECT_URL` | URL de conexión directa a PostgreSQL utilizada por Prisma para ejecutar migraciones. | Dashboard de Supabase → **Connect**. |
+| `PUBLIC_API_URL` | URL base de la API desarrollada con NestJS. | Despliegue de la API o entorno local. |
+| `PUBLIC_BUCKET_URL` | URL pública del bucket de almacenamiento utilizado para las imágenes de los reportes. | Dashboard de Supabase → **Storage**. |
+| `GOOGLE_MAPS_API_KEY` | Clave de API utilizada por Capacitor para la integración nativa de Google Maps. | Google Cloud Console. |
+| `PUBLIC_GOOGLE_MAPS_API_KEY` | Clave de API utilizada por Google Maps en la aplicación web. | Google Cloud Console. |
 | `PUBLIC_SUPABASE_URL` | URL del proyecto de Supabase. | Dashboard de Supabase → **Settings → API**. |
-| `PUBLIC_SUPABASE_SERVICE_ROLE_KEY` | Clave **Service Role** del proyecto de Supabase utilizada por la API para realizar operaciones privilegiadas. | Dashboard de Supabase → **Settings → API**. |
-| `PUBLIC_BUCKET_URL` | URL pública del bucket donde se almacenan las imágenes de los reportes. | Dashboard de Supabase → **Storage**. |
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
-## Configuración inicial
-
-### Aplicar las migraciones de Prisma
-
-Una vez creado el proyecto en Supabase y configuradas las variables `DATABASE_URL` y `DIRECT_URL`, aplica todas las migraciones ejecutando:
-
-```bash
-npx prisma migrate deploy
-```
-
-Este comando creará automáticamente todas las tablas, relaciones e índices necesarios para el funcionamiento de la aplicación.
-
-Documentación oficial:
-
-https://www.prisma.io/docs/orm/prisma-client/deployment/deploy-database-changes-with-prisma-migrate
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
----
-
-### Crear el bucket para las imágenes
-
-Desde el Dashboard de Supabase navega a:
-
-```
-Storage
-└── Buckets
-```
-
-Crea un nuevo bucket llamado:
-
-```
-issues
-```
-
-Este bucket será utilizado para almacenar las imágenes asociadas a los reportes enviados desde la aplicación móvil.
-
-Documentación oficial:
-
-https://supabase.com/docs/guides/storage
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
----
-
-### Configurar SMTP
-
-La autenticación mediante correo electrónico utiliza un servidor SMTP para enviar los correos de recuperación de contraseña.
-
-Desde el Dashboard de Supabase navega a:
-
-```
-Authentication
-└── Emails
-    └── SMTP Settings
-```
-
-Configura un proveedor SMTP. Se recomienda utilizar Gmail SMTP para proyectos personales o de desarrollo.
-
-Documentación oficial:
-
-https://supabase.com/docs/guides/auth/auth-smtp
-
-Tutorial recomendado:
-
-https://www.youtube.com/results?search_query=supabase+gmail+smtp
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
----
-
-### Configurar las URLs de autenticación
-
-El proceso de recuperación y restablecimiento de contraseña se realiza desde el panel administrativo, por lo que es necesario configurar las URLs utilizadas por Supabase Authentication.
-
-Desde el Dashboard de Supabase navega a:
-
-```
-Authentication
-└── URL Configuration
-```
-
-En **Site URL** agrega:
-
-```
-http://localhost:5173/*
-```
-
-En **Redirect URLs** agrega las siguientes direcciones:
-
-```
-http://localhost:5173/auth/update-password
-
-http://localhost:5173/auth/reset-password
-```
-
-> **Importante:** Una vez la aplicación sea desplegada en producción, recuerda agregar también las URLs correspondientes a tu dominio de producción.
-
-Documentación oficial:
-
-https://supabase.com/docs/guides/auth/redirect-urls
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
----
-
-### Crear la función `insert_notification`
-
-Cada vez que cambia el estado de un reporte, la API registra automáticamente una notificación para informar al usuario. Para ello es necesario crear la siguiente función en la base de datos.
-
-Desde el Dashboard de Supabase navega a:
-
-```
-Database
-└── Functions
-    └── New Function
-```
-
-Configura la función con los siguientes valores:
-
-| Propiedad | Valor |
-|-----------|-------|
-| Nombre | `insert_notification` |
-| Schema | `public` |
-| Tipo | `Trigger Function` |
-| Retorno | `trigger` |
-
-Utiliza el siguiente código:
-
-```sql
-begin
-    if OLD.status is distinct from NEW.status then
-        insert into "Notification" (
-            id,
-            "recipientId",
-            "issueId",
-            "statusFrom",
-            "statusTo"
-        )
-        values (
-            gen_random_uuid()::text,
-            NEW."userId",
-            NEW.id,
-            OLD.status,
-            NEW.status
-        );
-    end if;
-
-    return NEW;
-end;
-```
-
-Documentación oficial:
-
-https://supabase.com/docs/guides/database/functions
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
----
-
-### Crear el Trigger
-
-Una vez creada la función, crea el trigger que la ejecutará automáticamente cuando cambie el estado de un reporte.
-
-Desde el Dashboard de Supabase navega a:
-
-```
-Database
-└── Triggers
-    └── New Trigger
-```
-
-Configura el trigger con los siguientes valores:
-
-| Propiedad | Valor |
-|-----------|-------|
-| Nombre | `insert_notification` |
-| Tabla | `Issue` |
-| Evento | `AFTER UPDATE` |
-| Orientation | `ROW` |
-| Función | `insert_notification` |
-
-Este trigger generará automáticamente una notificación cada vez que el estado de un reporte sea modificado.
-
-Documentación oficial:
-
-https://supabase.com/docs/guides/database/postgres/triggers
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+| `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Clave pública (Publishable Key) del proyecto de Supabase. | Dashboard de Supabase → **Settings → API**. |
 
 ## Uso
 
-### Ejecutar la API en desarrollo
+### Ejecutar el proyecto en desarrollo
 
 Inicia el servidor de desarrollo con:
 
 ```bash
-nest start --dev
+npm run dev
 ```
 
-La API estará disponible en:
+La aplicación estará disponible en:
 
 ```
-http://localhost:3000
+http://localhost:5173
 ```
 
 ---
 
 ### Compilar para producción
 
-Genera la versión compilada de la aplicación ejecutando:
+Genera una versión optimizada de la aplicación ejecutando:
 
 ```bash
 npm run build
 ```
 
----
-
-### Ejecutar la versión compilada
+Para previsualizar la compilación de producción de forma local:
 
 ```bash
-npm run start:prod
+npm run preview
 ```
 
 ---
 
 ### Documentación oficial
 
-Para obtener más información sobre las tecnologías utilizadas, consulta la documentación oficial:
+Para obtener más información sobre SvelteKit y las tecnologías utilizadas, consulta la documentación oficial:
 
-- [NestJS](https://docs.nestjs.com/)
-- [Prisma ORM](https://www.prisma.io/docs)
+- [SvelteKit Documentation](https://svelte.dev/docs/kit/introduction)
+- [Flowbite Svelte](https://flowbite-svelte.com/)
+- [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript)
+- [Deck.gl](https://deck.gl/)
 - [Supabase](https://supabase.com/docs)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
@@ -408,20 +268,31 @@ https://github.com/NelsonAlmonte/EcoPulse
 ## Agradecimientos
 
 - [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
-- [NestJS](https://nestjs.com/)
-- [Prisma ORM](https://www.prisma.io/)
+- [SvelteKit](https://svelte.dev/docs/kit/introduction)
+- [Flowbite Svelte](https://flowbite-svelte.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Google Maps Platform](https://developers.google.com/maps)
+- [Deck.gl](https://deck.gl/)
 - [Supabase](https://supabase.com/)
+- [Lucide Icons](https://lucide.dev/)
 - [Shields.io](https://shields.io/)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
 ---
 
-[NestJS]: https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white
-[NestJS-url]: https://nestjs.com/
+[SvelteKit]: https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=svelte&logoColor=white
+[SvelteKit-url]: https://svelte.dev/docs/kit/introduction
 
-[Prisma]: https://img.shields.io/badge/prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white
-[Prisma-url]: https://www.prisma.io/
+[Tailwindcss]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
+[Tailwindcss-url]: https://tailwindcss.com/
 
 [Supabase]: https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white
 [Supabase-url]: https://supabase.com/
+
+[image-1]: images/1.png
+[image-2]: images/2.png
+[image-3]: images/3.png
+[image-4]: images/4.png
+[image-5]: images/5.png
+[image-6]: images/6.png
